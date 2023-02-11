@@ -19,7 +19,7 @@
     "skipLibCheck": true,
     "rootDir": "src",
     "outDir": "build/types",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
   },
   "exclude": [
     "./build/**/*"

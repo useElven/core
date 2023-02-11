@@ -9,22 +9,22 @@ import { HWProvider } from '@multiversx/sdk-hw-provider';
 
 export interface BaseNetworkType
   extends Record<string, string | string[] | undefined> {
-  chainType: string;
-  shortId: string;
-  name: string;
-  egldLabel: string;
-  egldDenomination: string;
-  decimals: string;
-  gasPerDataByte: string;
-  walletConnectDeepLink: string;
-  walletAddress: string;
-  apiAddress: string;
-  explorerAddress: string;
-  apiTimeout: string;
+  chainType?: string;
+  shortId?: string;
+  name?: string;
+  egldLabel?: string;
+  egldDenomination?: string;
+  decimals?: string;
+  gasPerDataByte?: string;
+  walletConnectDeepLink?: string;
+  walletAddress?: string;
+  apiAddress?: string;
+  explorerAddress?: string;
+  apiTimeout?: string;
 }
 
 export interface NetworkType extends BaseNetworkType {
-  walletConnectBridgeAddresses: string[];
+  walletConnectBridgeAddresses?: string[];
 }
 
 export type DappProvider =

@@ -75,7 +75,7 @@ export function useTransaction(
         nonce: currentNonce,
         receiver: new Address(address),
         gasLimit,
-        chainID: configStateSnap.shortId,
+        chainID: configStateSnap.shortId || 'D',
         data,
         ...(value ? { value: TokenPayment.egldFromAmount(value) } : {}),
         sender: new Address(accountSnap.address),

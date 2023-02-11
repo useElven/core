@@ -6,7 +6,7 @@ const pkg = require('./package.json');
 const shared = {
   entryPoints: ['./src/index.tsx'],
   bundle: true,
-  minify: false,
+  minify: true,
   external: [
     ...Object.keys(pkg.dependencies),
     ...Object.keys(pkg.peerDependencies),
