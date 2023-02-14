@@ -10,7 +10,7 @@
 
 `useElven` is a set of hooks and tools designed to work with React-base applications.
 
-The tool is a wrapper for [sdk-js](https://docs.multiversx.com/sdk-and-tools/sdk-js/) - a set of Typescript/Javascript libraries.
+It is a wrapper for [sdk-js](https://docs.multiversx.com/sdk-and-tools/sdk-js/) - a set of Typescript/Javascript libraries.
 
 ### Install
 
@@ -30,8 +30,8 @@ Check all of the hooks here: [SDK Reference](https://www.useElven.com/docs/sdk-r
 
 See ready to use demo templates: 
 
-- [Next.js Dapp Template]()
-- [React + Vite Dapp Template]()
+- [Next.js Dapp Template](https://github.com/xdevguild/nextjs-dapp-template)
+- [React + Vite Dapp Template](https://useElven-react-vite-demo.netlify.app)
 
 ### Development
 
