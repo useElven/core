@@ -25,6 +25,8 @@ export const useExtensionLogin = (params?: Login) => {
 
     try {
       if (!providerInstance.isInitialized()) {
+        setLoggingInState('pending', true);
+
         const isSuccessfullyInitialized: boolean =
           await providerInstance.init();
 
@@ -48,7 +50,6 @@ export const useExtensionLogin = (params?: Login) => {
       };
 
       try {
-        setLoggingInState('pending', true);
         await providerInstance.login(providerLoginData);
       } catch (e) {
         const err = errorParse(e);
