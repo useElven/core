@@ -25,8 +25,6 @@ export const useExtensionLogin = (params?: Login) => {
 
     try {
       if (!providerInstance.isInitialized()) {
-        setLoggingInState('pending', true);
-
         const isSuccessfullyInitialized: boolean =
           await providerInstance.init();
 
@@ -51,9 +49,12 @@ export const useExtensionLogin = (params?: Login) => {
 
       try {
         await providerInstance.login(providerLoginData);
+        setLoggingInState('pending', true);
       } catch (e) {
         const err = errorParse(e);
-        console.warn(`Something went wrong trying to login the user: ${err}`);
+        throw new Error(
+          `Something went wrong trying to login the user: ${err}`
+        );
       }
 
       setNetworkState('dappProvider', providerInstance);
@@ -77,7 +78,7 @@ export const useExtensionLogin = (params?: Login) => {
           setAccountState('balance', userAccountInstance.balance.toString());
         } catch (e) {
           const err = errorParse(e);
-          console.warn(
+          throw new Error(
             `Something went wrong trying to synchronize the user account: ${err}`
           );
         }

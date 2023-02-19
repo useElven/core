@@ -77,6 +77,7 @@ export const sendTxOperations = async (
     }
     if (loginInfoSnap.loginMethod !== LoginMethodsEnum.wallet) {
       await apiNetworkProvider.sendTransaction(tx);
+      setTransaction(tx);
       await postSendTxOperations(
         tx,
         setTransaction,

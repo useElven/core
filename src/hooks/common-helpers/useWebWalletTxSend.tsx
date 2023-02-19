@@ -61,6 +61,7 @@ export const useWebWalletTxSend = ({
           await networkStateSnap.apiNetworkProvider.sendTransaction(
             transaction
           );
+          setTransaction(transaction);
           await postSendTxOperations(
             transaction,
             setTransaction,
