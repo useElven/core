@@ -1,4 +1,4 @@
-### [0.0.3](https://github.com/useElven/core/releases/tag/v0.0.3) (2023-02-15)
+### [0.0.3](https://github.com/useElven/core/releases/tag/v0.0.3) (2023-02-19)
 - fix package.json configuration
 - improvements in extension signing states management
 - return transaction data in useTransaction before it is completed on chain
