@@ -5,7 +5,7 @@ import {
   Transaction,
   ITransactionPayload,
   IGasLimit,
-  TokenPayment,
+  ITransactionValue,
   ITransactionOnNetwork,
 } from '@multiversx/sdk-core';
 import { useWebWalletTxSend } from './common-helpers/useWebWalletTxSend';
@@ -24,7 +24,7 @@ interface TransactionParams {
   address: string;
   gasLimit: IGasLimit;
   data?: ITransactionPayload;
-  value?: number;
+  value?: ITransactionValue;
 }
 
 interface TransactionArgs {
@@ -77,7 +77,7 @@ export function useTransaction(
         gasLimit,
         chainID: configStateSnap.shortId || 'D',
         data,
-        ...(value ? { value: TokenPayment.egldFromAmount(value) } : {}),
+        value: value || 0,
         sender: new Address(accountSnap.address),
       });
 

@@ -1,3 +1,6 @@
+### [0.0.6](https://github.com/useElven/core/releases/tag/v0.0.6) (2023-02-22)
+- useTransaction now takes `ITransactionValue` instead of `Number` for value
+
 ### [0.0.5](https://github.com/useElven/core/releases/tag/v0.0.5) (2023-02-22)
 - fix for useConfig, missing IPFSGateway param
 
