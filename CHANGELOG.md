@@ -1,3 +1,6 @@
+### [0.0.5](https://github.com/useElven/core/releases/tag/v0.0.5) (2023-02-22)
+- fix for useConfig, missing IPFSGateway param
+
 ### [0.0.4](https://github.com/useElven/core/releases/tag/v0.0.4) (2023-02-22)
 - added public MultiversX IPFS gateways to the default configuration
 
