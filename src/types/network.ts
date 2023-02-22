@@ -20,6 +20,7 @@ export interface BaseNetworkType
   walletAddress?: string;
   apiAddress?: string;
   explorerAddress?: string;
+  IPFSGateway?: string;
   apiTimeout?: string;
 }
 

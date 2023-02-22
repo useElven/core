@@ -19,6 +19,7 @@ export const networkConfig: Record<string, NetworkType> = {
     walletAddress: 'https://devnet-wallet.multiversx.com',
     apiAddress: 'https://devnet-api.multiversx.com',
     explorerAddress: 'https://devnet-explorer.multiversx.com',
+    IPFSGateway: 'https://devnet-media.multiversx.com/nfts/asset/',
     apiTimeout: '4000',
   },
 
@@ -36,6 +37,7 @@ export const networkConfig: Record<string, NetworkType> = {
     walletAddress: 'https://testnet-wallet.multiversx.com',
     apiAddress: 'https://testnet-api.multiversx.com',
     explorerAddress: 'https://testnet-explorer.multiversx.com',
+    IPFSGateway: 'https://testnet-media.multiversx.com/nfts/asset/',
     apiTimeout: '4000',
   },
 
@@ -53,6 +55,7 @@ export const networkConfig: Record<string, NetworkType> = {
     walletAddress: 'https://wallet.multiversx.com',
     apiAddress: 'https://api.multiversx.com',
     explorerAddress: 'https://explorer.multiversx.com',
+    IPFSGateway: 'https://media.multiversx.com/nfts/asset/',
     apiTimeout: '4000',
   },
 };
