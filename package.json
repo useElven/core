@@ -1,6 +1,6 @@
 {
   "name": "@useelven/core",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Core hooks for MultiversX React DApps",
   "license": "MIT",
   "author": "Julian Ćwirko <julian.io>",
@@ -44,30 +44,30 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@multiversx/sdk-core": "11.3.0",
+    "@multiversx/sdk-core": "11.4.1",
     "@multiversx/sdk-extension-provider": "2.0.7",
     "@multiversx/sdk-hw-provider": "3.0.3",
     "@multiversx/sdk-network-providers": "1.3.0",
     "@multiversx/sdk-wallet-connect-provider": "3.0.1",
     "@multiversx/sdk-web-wallet-provider": "2.2.1",
     "lodash.clonedeep": "4.5.0",
-    "swr": "2.0.3",
-    "valtio": "1.10.2"
+    "swr": "2.0.4",
+    "valtio": "1.10.3"
   },
   "devDependencies": {
     "@types/lodash.clonedeep": "4.5.7",
-    "@types/node": "18.13.0",
+    "@types/node": "18.14.2",
     "@types/react": "18.0.28",
-    "@typescript-eslint/eslint-plugin": "5.52.0",
-    "@typescript-eslint/parser": "5.52.0",
-    "esbuild": "0.17.8",
-    "eslint": "8.34.0",
+    "@typescript-eslint/eslint-plugin": "5.54.0",
+    "@typescript-eslint/parser": "5.54.0",
+    "esbuild": "0.17.10",
+    "eslint": "8.35.0",
     "eslint-config-prettier": "8.6.0",
     "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-react": "7.32.2",
     "eslint-plugin-react-hooks": "4.6.0",
     "prettier": "2.8.4",
-    "rimraf": "4.1.2",
+    "rimraf": "4.1.3",
     "typescript": "4.9.5"
   },
   "peerDependencies": {

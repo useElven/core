@@ -27,7 +27,7 @@ interface TransactionParams {
   value?: ITransactionValue;
 }
 
-interface TransactionArgs {
+export interface TransactionArgs {
   webWalletRedirectUrl?: string;
   cb?: (params: TransactionCallbackParams) => void;
 }

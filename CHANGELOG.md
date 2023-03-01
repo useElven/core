@@ -1,3 +1,7 @@
+### [0.0.7](https://github.com/useElven/core/releases/tag/v0.0.7) (2023-03-01)
+- export `TransactionArgs` type
+- dependencies update
+
 ### [0.0.6](https://github.com/useElven/core/releases/tag/v0.0.6) (2023-02-22)
 - useTransaction now takes `ITransactionValue` instead of `Number` for value
 
