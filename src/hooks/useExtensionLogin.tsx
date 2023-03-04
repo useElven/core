@@ -29,9 +29,10 @@ export const useExtensionLogin = (params?: Login) => {
           await providerInstance.init();
 
         if (!isSuccessfullyInitialized) {
-          console.warn(
-            'Something went wrong trying to redirect to wallet login..'
-          );
+          const error =
+            'Something went wrong trying to redirect to wallet login..';
+          console.warn(error);
+          setLoggingInState('error', `Error logging in ${error}`);
           return;
         }
       }
@@ -52,9 +53,9 @@ export const useExtensionLogin = (params?: Login) => {
         setLoggingInState('pending', true);
       } catch (e) {
         const err = errorParse(e);
-        throw new Error(
-          `Something went wrong trying to login the user: ${err}`
-        );
+        console.warn(err);
+        setLoggingInState('error', `Error logging in ${err}`);
+        return;
       }
 
       setNetworkState('dappProvider', providerInstance);
@@ -78,9 +79,9 @@ export const useExtensionLogin = (params?: Login) => {
           setAccountState('balance', userAccountInstance.balance.toString());
         } catch (e) {
           const err = errorParse(e);
-          throw new Error(
-            `Something went wrong trying to synchronize the user account: ${err}`
-          );
+          console.warn(err);
+          setLoggingInState('error', `Error logging in ${err}`);
+          return;
         }
       }
 

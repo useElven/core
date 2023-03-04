@@ -1,13 +1,16 @@
 import { useRef, MutableRefObject } from 'react';
 import { ApiNetworkProvider } from '@multiversx/sdk-network-providers';
 import { WalletProvider } from '@multiversx/sdk-web-wallet-provider';
-import { WalletConnectProvider } from '@multiversx/sdk-wallet-connect-provider';
+import {
+  WalletConnectV2Provider,
+  SessionEventTypes,
+} from '@multiversx/sdk-wallet-connect-provider';
 import { ExtensionProvider } from '@multiversx/sdk-extension-provider';
 import * as network from '../../store/network';
 import { HWProvider } from '@multiversx/sdk-hw-provider';
 import { DappProvider } from '../../types/network';
 import { DAPP_INIT_ROUTE } from '../../config/network';
-import { getBridgeAddressFromNetwork } from '../../utils/bridgeAddress';
+import { getRelayAddressFromNetwork } from '../../utils/relayAddress';
 import { getParamFromUrl } from '../../utils/getParamFromUrl';
 import { LoginMethodsEnum } from '../../types/enums';
 import { WcOnLogin } from '../../utils/walletConnectCbs';
@@ -74,22 +77,49 @@ export const useDappProvidersSync = (
           }
           // xPortal mobile app auth
           case LoginMethodsEnum.walletconnect: {
+            if (!configStateSnap.shortId || !configStateSnap.chainType) {
+              console.warn(
+                'Please configure chainType in useSyncNetwork hook!'
+              );
+              return;
+            }
+
+            if (!configStateSnap.walletConnectV2ProjectId) {
+              console.warn(
+                'Please configure walletConnectV2ProjectId in useSyncNetwork hook!'
+              );
+              return;
+            }
+
             const providerHandlers = {
               onClientLogin: () =>
                 WcOnLogin(
                   apiNetworkProviderRef?.current,
-                  dappProviderRef?.current as WalletConnectProvider
+                  dappProviderRef?.current as WalletConnectV2Provider
                 ),
               onClientLogout: () =>
                 logout({ dappProvider: dappProviderRef?.current }),
+              onClientEvent: (event: SessionEventTypes['event']) => {
+                console.log('wc2 session event: ', event);
+              },
             };
 
-            const bridgeAddress = getBridgeAddressFromNetwork(
-              configStateSnap.walletConnectBridgeAddresses as string[]
+            const relayAddress = getRelayAddressFromNetwork(
+              configStateSnap.walletConnectV2RelayAddresses as string[]
             );
-            dappProvider = new WalletConnectProvider(
-              bridgeAddress,
-              providerHandlers
+
+            if (!relayAddress) {
+              console.warn(
+                "Can't read the relay address. Try to provide one in useSyncNetwok hook!"
+              );
+              return;
+            }
+
+            dappProvider = new WalletConnectV2Provider(
+              providerHandlers,
+              configStateSnap.shortId,
+              relayAddress,
+              configStateSnap.walletConnectV2ProjectId
             );
             dappProviderRef.current = dappProvider;
             try {

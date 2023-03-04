@@ -1,5 +1,5 @@
 import { Address, Account } from '@multiversx/sdk-core';
-import { WalletConnectProvider } from '@multiversx/sdk-wallet-connect-provider';
+import { WalletConnectV2Provider } from '@multiversx/sdk-wallet-connect-provider';
 import { ApiNetworkProvider } from '@multiversx/sdk-network-providers';
 import { setAccountState, setLoginInfoState } from '../store/auth';
 import { LoginMethodsEnum } from '../types/enums';
@@ -8,7 +8,7 @@ import { errorParse } from './errorParse';
 
 export const WcOnLogin = async (
   apiNetworkProvider?: ApiNetworkProvider,
-  dappProvider?: WalletConnectProvider,
+  dappProvider?: WalletConnectV2Provider,
   callbackRoute?: string
 ) => {
   const address = await dappProvider?.getAddress();

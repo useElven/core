@@ -16,7 +16,8 @@ export const useConfig = () => {
     explorerAddress,
     apiTimeout,
     IPFSGateway,
-    walletConnectBridgeAddresses,
+    walletConnectV2RelayAddresses,
+    walletConnectV2ProjectId,
   } = useProxy(configState);
 
   return {
@@ -33,6 +34,7 @@ export const useConfig = () => {
     explorerAddress,
     apiTimeout,
     IPFSGateway,
-    walletConnectBridgeAddresses,
+    walletConnectV2RelayAddresses,
+    walletConnectV2ProjectId,
   };
 };

@@ -1,3 +1,6 @@
+### [0.1.0](https://github.com/useElven/core/releases/tag/v0.1.0) (2023-03-04)
+- migration to Wallet Connect 2. Check the changes in configuration. You will need your own WC project id.
+
 ### [0.0.7](https://github.com/useElven/core/releases/tag/v0.0.7) (2023-03-01)
 - export `TransactionArgs` type
 - dependencies update

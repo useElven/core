@@ -1,7 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useRef } from 'react';
 import { Account, Address } from '@multiversx/sdk-core';
-import { WalletConnectProvider } from '@multiversx/sdk-wallet-connect-provider';
+import {
+  WalletConnectV2Provider,
+  SessionEventTypes,
+} from '@multiversx/sdk-wallet-connect-provider';
 import { LoginMethodsEnum } from '../types/enums';
 import {
   setAccountState,
@@ -9,7 +12,7 @@ import {
   setLoginInfoState,
 } from '../store/auth';
 import { setNetworkState } from '../store/network';
-import { getBridgeAddressFromNetwork } from '../utils/bridgeAddress';
+import { getRelayAddressFromNetwork } from '../utils/relayAddress';
 import { getNewLoginExpiresTimestamp } from '../utils/expiresAt';
 import { WcOnLogin } from '../utils/walletConnectCbs';
 import { useLogout } from './useLogout';
@@ -40,19 +43,36 @@ export const useMobileAppLogin = (params?: Login) => {
   };
 
   const login = async () => {
-    const bridgeAddress = getBridgeAddressFromNetwork(
-      configStateSnap.walletConnectBridgeAddresses as string[]
+    const relayAddress = getRelayAddressFromNetwork(
+      configStateSnap.walletConnectV2RelayAddresses as string[]
     );
 
-    if (!bridgeAddress || !networkStateSnap.apiNetworkProvider) {
-      throw Error(
-        "Something wen't wrong with the initialization (ApiNetworkProvider or Wallet Connect Bridge address), plese try to refresh the page!"
-      );
+    if (!relayAddress || !networkStateSnap.apiNetworkProvider) {
+      const error =
+        "Something wen't wrong with the initialization (ApiNetworkProvider or Wallet Connect Relay address), plese try to refresh the page!";
+      console.warn(error);
+      setLoggingInState('error', `Error logging in ${error}`);
+      return;
+    }
+
+    if (!configStateSnap.shortId || !configStateSnap.chainType) {
+      const error = 'Please configure chainType in useSyncNetwork hook!';
+      console.warn(error);
+      setLoggingInState('error', `Error logging in ${error}`);
+      return;
+    }
+
+    if (!configStateSnap.walletConnectV2ProjectId) {
+      const error =
+        'Please configure walletConnectV2ProjectId in useSyncNetwork hook!';
+      console.warn(error);
+      setLoggingInState('error', `Error logging in ${error}`);
+      return;
     }
 
     const providerHandlers = {
       onClientLogin: async () => {
-        if (dappProviderRef.current instanceof WalletConnectProvider) {
+        if (dappProviderRef.current instanceof WalletConnectV2Provider) {
           const address = await dappProviderRef.current.getAddress();
           const signature = await dappProviderRef.current.getSignature();
           const account = new Account(new Address(address));
@@ -79,10 +99,13 @@ export const useMobileAppLogin = (params?: Login) => {
         }
       },
       onClientLogout: handleOnLogout,
+      onClientEvent: (event: SessionEventTypes['event']) => {
+        console.log('wc2 session event: ', event);
+      },
     };
 
-    const generateWcUri = (bridgeAddress: string, walletConnectUri: string) => {
-      if (!bridgeAddress) return;
+    const generateWcUri = (relayAddress: string, walletConnectUri: string) => {
+      if (!relayAddress) return;
 
       const hasUri = Boolean(walletConnectUri);
 
@@ -96,9 +119,11 @@ export const useMobileAppLogin = (params?: Login) => {
       }
     };
 
-    const providerInstance = new WalletConnectProvider(
-      bridgeAddress,
-      providerHandlers
+    const providerInstance = new WalletConnectV2Provider(
+      providerHandlers,
+      configStateSnap.shortId,
+      relayAddress,
+      configStateSnap.walletConnectV2ProjectId
     );
 
     try {
@@ -110,7 +135,7 @@ export const useMobileAppLogin = (params?: Login) => {
       setLoginInfoState('expires', getNewLoginExpiresTimestamp());
       setLoginInfoState('loginMethod', LoginMethodsEnum.walletconnect);
 
-      generateWcUri(bridgeAddress, walletConnectUri);
+      generateWcUri(relayAddress, walletConnectUri);
       setLoggingInState('pending', true);
     } catch (e) {
       const err = errorParse(e);
@@ -123,6 +148,9 @@ export const useMobileAppLogin = (params?: Login) => {
   return {
     login,
     walletConnectUri,
+    // list pairings
+    // login using chosen pairing
+    // remove pairing
     loggedIn,
     pending,
     error,
