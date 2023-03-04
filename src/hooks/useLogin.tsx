@@ -18,6 +18,9 @@ export const useLogin = (params?: Login) => {
     loggedIn: mobileIsLoggedIn,
     pending: mobileIsLoggingIn,
     walletConnectUri,
+    walletConnectPairingLogin,
+    walletConnectPairings,
+    walletConnectRemovePairing,
     error: mobileLoginError,
   } = useMobileAppLogin(params);
 
@@ -54,6 +57,9 @@ export const useLogin = (params?: Login) => {
 
   return {
     walletConnectUri,
+    walletConnectPairingLogin,
+    walletConnectPairings,
+    walletConnectRemovePairing,
     getHWAccounts,
     login,
     isLoggedIn:

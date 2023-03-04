@@ -4,6 +4,7 @@ import { Account, Address } from '@multiversx/sdk-core';
 import {
   WalletConnectV2Provider,
   SessionEventTypes,
+  PairingTypes,
 } from '@multiversx/sdk-wallet-connect-provider';
 import { LoginMethodsEnum } from '../types/enums';
 import {
@@ -28,6 +29,9 @@ export const useMobileAppLogin = (params?: Login) => {
   const { logout } = useLogout();
   const { loggedIn, pending, error } = useLoggingIn();
   const [walletConnectUri, setWalletConnectUri] = useState('');
+  const [walletConnectPairings, setWalletConnectPairings] = useState<
+    PairingTypes.Struct[] | undefined
+  >();
   const networkStateSnap = useNetwork();
   const configStateSnap = useConfig();
 
@@ -100,7 +104,7 @@ export const useMobileAppLogin = (params?: Login) => {
       },
       onClientLogout: handleOnLogout,
       onClientEvent: (event: SessionEventTypes['event']) => {
-        console.log('wc2 session event: ', event);
+        console.info('wc2 session event: ', event);
       },
     };
 
@@ -127,16 +131,26 @@ export const useMobileAppLogin = (params?: Login) => {
     );
 
     try {
-      const walletConnectUri: string | undefined =
-        await providerInstance.login();
-
       dappProviderRef.current = providerInstance;
 
-      setLoginInfoState('expires', getNewLoginExpiresTimestamp());
-      setLoginInfoState('loginMethod', LoginMethodsEnum.walletconnect);
+      const { uri: walletConnectUri, approval } =
+        await providerInstance.connect({
+          methods: ['erd_cancelAction'],
+        });
 
-      generateWcUri(relayAddress, walletConnectUri);
-      setLoggingInState('pending', true);
+      if (walletConnectUri) {
+        setLoginInfoState('loginMethod', LoginMethodsEnum.walletconnect);
+        generateWcUri(relayAddress, walletConnectUri);
+        setWalletConnectPairings(providerInstance.pairings);
+
+        await providerInstance.login({
+          token: params?.token,
+          approval,
+        });
+
+        setLoggingInState('pending', true);
+        setLoginInfoState('expires', getNewLoginExpiresTimestamp());
+      }
     } catch (e) {
       const err = errorParse(e);
       setLoggingInState('error', `Error logging in ${err}`);
@@ -145,12 +159,58 @@ export const useMobileAppLogin = (params?: Login) => {
     }
   };
 
+  const walletConnectPairingLogin = async (topic: string) => {
+    const dappProvider = dappProviderRef.current;
+    if (dappProvider instanceof WalletConnectV2Provider) {
+      try {
+        const { approval } = await dappProvider.connect({
+          topic,
+          methods: ['erd_cancelAction'],
+        });
+
+        setLoginInfoState('loginMethod', LoginMethodsEnum.walletconnect);
+
+        await dappProvider.login({
+          token: params?.token,
+          approval,
+        });
+
+        setLoggingInState('pending', true);
+        setLoginInfoState('expires', getNewLoginExpiresTimestamp());
+      } catch (e) {
+        const err = errorParse(e);
+        setLoggingInState('error', `Error logging in ${err}`);
+      } finally {
+        setLoggingInState('pending', false);
+      }
+    }
+  };
+
+  const walletConnectRemovePairing = async (topic: string) => {
+    const dappProvider = dappProviderRef.current;
+    if (dappProvider instanceof WalletConnectV2Provider && topic) {
+      try {
+        await dappProvider.logout({
+          topic,
+        });
+      } catch (e) {
+        const err = errorParse(e);
+        setLoggingInState(
+          'error',
+          `Something went wrong trying to remove the existing pairing: ${err}`
+        );
+      } finally {
+        setWalletConnectPairings(dappProvider.pairings);
+      }
+    }
+  };
+
   return {
     login,
     walletConnectUri,
-    // list pairings
-    // login using chosen pairing
-    // remove pairing
+    walletConnectPairings,
+    walletConnectPairingLogin,
+    walletConnectRemovePairing,
     loggedIn,
     pending,
     error,

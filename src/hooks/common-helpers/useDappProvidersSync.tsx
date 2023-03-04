@@ -100,7 +100,7 @@ export const useDappProvidersSync = (
               onClientLogout: () =>
                 logout({ dappProvider: dappProviderRef?.current }),
               onClientEvent: (event: SessionEventTypes['event']) => {
-                console.log('wc2 session event: ', event);
+                console.info('wc2 session event: ', event);
               },
             };
 
