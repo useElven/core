@@ -15,6 +15,25 @@ export const setConfigState = (
   configState[key] = value;
 };
 
+// When there is a custom configuration replace keys in defaults
+// When there is only a change in the chainType replace the rest with defaults but by the chainType
+export const initConfigState = (config: NetworkType | undefined) => {
+  const customConfig = { ...config };
+
+  Object.keys(initialState).forEach((key) => {
+    if (customConfig[key]) {
+      setConfigState(key, customConfig[key] as string | string[]);
+    } else if (customConfig.chainType) {
+      setConfigState(
+        key,
+        networkConfig[customConfig.chainType][key] as string | string[]
+      );
+    } else {
+      setConfigState(key, initialState[key] as string | string[]);
+    }
+  });
+};
+
 export const clearConfigState = () => {
   const resetObj = cloneDeep(initialState);
   Object.keys(resetObj).forEach((key) => {

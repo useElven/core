@@ -6,16 +6,16 @@ import { useLocalStorageSync } from './common-helpers/useLocalStorageSync';
 import { useApiProviderSync } from './common-helpers/useApiProviderSync';
 import { useDappProvidersSync } from './common-helpers/useDappProvidersSync';
 import { useAccountNetworkSync } from './common-helpers/useAccountNetworkSync';
-import { useConfigurationSync } from './common-helpers/useConfigurationSync';
+import { initConfigState } from '../store/config';
 
 export const useNetworkSync = (config?: NetworkType) => {
+  // Sync main configuration
+  initConfigState(config);
+
   const [accountDone, setAccountDone] = useState(false);
   const [loginInfoDone, setLoginInfoDone] = useState(false);
 
   const apiNetworkProviderRef = useRef<ApiNetworkProvider>();
-
-  // Sync main configuration
-  useConfigurationSync(config);
 
   // Sync data from local storage
   useLocalStorageSync(setAccountDone, setLoginInfoDone);

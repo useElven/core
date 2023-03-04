@@ -1,5 +1,5 @@
 // Hooks
-export * from './hooks/useSyncNetwork';
+export * from './hooks/useNetworkSync';
 export * from './hooks/useTransaction';
 export * from './hooks/useLogout';
 export * from './hooks/useLogin';
