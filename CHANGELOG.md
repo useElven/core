@@ -1,3 +1,6 @@
+### [0.0.8](https://github.com/useElven/core/releases/tag/v0.0.8) (2023-03-04)
+- bugfix for not passing the configuration setup in `useNetworkSync`
+
 ### [0.0.7](https://github.com/useElven/core/releases/tag/v0.0.7) (2023-03-01)
 - export `TransactionArgs` type
 - dependencies update
