@@ -27,7 +27,12 @@ import { useNetworkSync } from '@useelven/core';
 
 const NextJSDappTemplate = ({ Component, pageProps }: AppProps) => {
 
-  useNetworkSync({ chainType: 'devnet' });
+  useNetworkSync({
+    chainType: 'devnet',
+    // If you want to use xPortal signing, 
+    // you would need to configure your Wallet Connect project id here: https://cloud.walletconnect.com
+    walletConnectV2ProjectId: '<your_wallet_connect_project_id_here>'
+  });
 
   return (
     <ChakraProvider theme={theme}>
