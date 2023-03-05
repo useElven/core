@@ -22,3 +22,4 @@ export * from './types/enums';
 export * from './types/network';
 export { TransactionCallbackParams } from './hooks/common-helpers/sendTxOperations';
 export { SCQueryType } from './hooks/useScQuery';
+export { PairingTypes } from '@multiversx/sdk-wallet-connect-provider';

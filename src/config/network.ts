@@ -15,7 +15,8 @@ export const networkConfig: Record<string, NetworkType> = {
     gasPerDataByte: '1500',
     walletConnectDeepLink:
       'https://maiar.page.link/?apn=com.elrond.maiar.wallet&isi=1519405832&ibi=com.elrond.maiar.wallet&link=https://xportal.com/',
-    walletConnectBridgeAddresses: ['https://bridge.walletconnect.org'],
+    walletConnectV2RelayAddresses: ['wss://relay.walletconnect.com'],
+    walletConnectV2ProjectId: '',
     walletAddress: 'https://devnet-wallet.multiversx.com',
     apiAddress: 'https://devnet-api.multiversx.com',
     explorerAddress: 'https://devnet-explorer.multiversx.com',
@@ -33,7 +34,8 @@ export const networkConfig: Record<string, NetworkType> = {
     gasPerDataByte: '1500',
     walletConnectDeepLink:
       'https://maiar.page.link/?apn=com.elrond.maiar.wallet&isi=1519405832&ibi=com.elrond.maiar.wallet&link=https://xportal.com/',
-    walletConnectBridgeAddresses: ['https://bridge.walletconnect.org'],
+    walletConnectV2RelayAddresses: ['wss://relay.walletconnect.com'],
+    walletConnectV2ProjectId: '',
     walletAddress: 'https://testnet-wallet.multiversx.com',
     apiAddress: 'https://testnet-api.multiversx.com',
     explorerAddress: 'https://testnet-explorer.multiversx.com',
@@ -51,7 +53,8 @@ export const networkConfig: Record<string, NetworkType> = {
     gasPerDataByte: '1500',
     walletConnectDeepLink:
       'https://maiar.page.link/?apn=com.elrond.maiar.wallet&isi=1519405832&ibi=com.elrond.maiar.wallet&link=https://xportal.com/',
-    walletConnectBridgeAddresses: ['https://bridge.walletconnect.org'],
+    walletConnectV2RelayAddresses: ['wss://relay.walletconnect.com'],
+    walletConnectV2ProjectId: '',
     walletAddress: 'https://wallet.multiversx.com',
     apiAddress: 'https://api.multiversx.com',
     explorerAddress: 'https://explorer.multiversx.com',

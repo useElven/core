@@ -7,7 +7,7 @@ import {
   ITransactionOnNetwork,
 } from '@multiversx/sdk-core';
 import { ExtensionProvider } from '@multiversx/sdk-extension-provider';
-import { WalletConnectProvider } from '@multiversx/sdk-wallet-connect-provider';
+import { WalletConnectV2Provider } from '@multiversx/sdk-wallet-connect-provider';
 import { HWProvider } from '@multiversx/sdk-hw-provider';
 import { setAccountState, LoginInfoState } from '../../store/auth';
 import { NetworkState } from '../../store/network';
@@ -69,7 +69,7 @@ export const sendTxOperations = async (
     if (dappProvider instanceof ExtensionProvider) {
       await dappProvider.signTransaction(tx);
     }
-    if (dappProvider instanceof WalletConnectProvider) {
+    if (dappProvider instanceof WalletConnectV2Provider) {
       await dappProvider.signTransaction(tx);
     }
     if (dappProvider instanceof HWProvider) {

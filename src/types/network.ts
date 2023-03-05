@@ -1,5 +1,5 @@
 import { WalletProvider } from '@multiversx/sdk-web-wallet-provider';
-import { WalletConnectProvider } from '@multiversx/sdk-wallet-connect-provider';
+import { WalletConnectV2Provider } from '@multiversx/sdk-wallet-connect-provider';
 import { ExtensionProvider } from '@multiversx/sdk-extension-provider';
 import {
   ApiNetworkProvider,
@@ -25,12 +25,13 @@ export interface BaseNetworkType
 }
 
 export interface NetworkType extends BaseNetworkType {
-  walletConnectBridgeAddresses?: string[];
+  walletConnectV2RelayAddresses?: string[];
+  walletConnectV2ProjectId?: string;
 }
 
 export type DappProvider =
   | ExtensionProvider
-  | WalletConnectProvider
+  | WalletConnectV2Provider
   | WalletProvider
   | HWProvider;
 

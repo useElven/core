@@ -4,37 +4,25 @@ import { useMobileAppLogin } from './useMobileAppLogin';
 import { useLedgerLogin } from './useLedgerLogin';
 import { Login } from '../types/account';
 import { LoginMethodsEnum } from '../types/enums';
+import { useLoggingIn } from './useLoggingIn';
+import { setLoggingInState } from '../store/auth';
 
 export const useLogin = (params?: Login) => {
-  const {
-    login: webLogin,
-    loggedIn: webIsLoggedIn,
-    pending: webIsLoggingIn,
-    error: webLoginError,
-  } = useWebWalletLogin(params);
+  const loggingInStates = useLoggingIn();
+
+  const { login: webLogin } = useWebWalletLogin(params);
 
   const {
     login: mobileLogin,
-    loggedIn: mobileIsLoggedIn,
-    pending: mobileIsLoggingIn,
     walletConnectUri,
-    error: mobileLoginError,
+    walletConnectPairingLogin,
+    walletConnectPairings,
+    walletConnectRemovePairing,
   } = useMobileAppLogin(params);
 
-  const {
-    login: extensionLogin,
-    loggedIn: extensionIsLoggedIn,
-    pending: extensionIsLoggingIn,
-    error: extensionLoginError,
-  } = useExtensionLogin(params);
+  const { login: extensionLogin } = useExtensionLogin(params);
 
-  const {
-    login: ledgerLogin,
-    loggedIn: ledgerIsLoggedIn,
-    pending: ledgerIsLoggingIn,
-    error: ledgerLoginError,
-    getHWAccounts,
-  } = useLedgerLogin(params);
+  const { login: ledgerLogin, getHWAccounts } = useLedgerLogin(params);
 
   const login = async (type: LoginMethodsEnum, ledgerAccountIndex?: number) => {
     if (type === LoginMethodsEnum.extension) {
@@ -54,22 +42,14 @@ export const useLogin = (params?: Login) => {
 
   return {
     walletConnectUri,
+    walletConnectPairingLogin,
+    walletConnectPairings,
+    walletConnectRemovePairing,
     getHWAccounts,
     login,
-    isLoggedIn:
-      webIsLoggedIn ||
-      mobileIsLoggedIn ||
-      extensionIsLoggedIn ||
-      ledgerIsLoggedIn,
-    isLoggingIn:
-      webIsLoggingIn ||
-      mobileIsLoggingIn ||
-      extensionIsLoggingIn ||
-      ledgerIsLoggingIn,
-    error:
-      webLoginError ||
-      mobileLoginError ||
-      extensionLoginError ||
-      ledgerLoginError,
+    isLoggedIn: loggingInStates.loggedIn,
+    isLoggingIn: loggingInStates.pending,
+    error: loggingInStates.error,
+    setLoggingInState,
   };
 };

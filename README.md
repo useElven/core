@@ -1,10 +1,12 @@
 ## useElven core
 
-**Please be aware that the tools are still in the development phase.**
+Please be aware that the tools are still in the development phase. You can use it, but versions below 1.0.0 will still have breaking changes.
 
 ### Docs
 
 - [useElven.com](https://www.useElven.com)
+
+The documentation is also under development. There will be more complete examples soon.
 
 ### About
 
@@ -18,13 +20,68 @@ It is a wrapper for [sdk-js](https://docs.multiversx.com/sdk-and-tools/sdk-js/) 
 npm install @useelven/core --save
 ```
 
-and then for example:
+Initialize:
 
 ```jsx
 import { useNetworkSync } from '@useelven/core';
+
+const NextJSDappTemplate = ({ Component, pageProps }: AppProps) => {
+
+  useNetworkSync({
+    chainType: 'devnet',
+    // If you want to use xPortal signing, 
+    // you would need to configure your Wallet Connect project id here: https://cloud.walletconnect.com
+    walletConnectV2ProjectId: '<your_wallet_connect_project_id_here>'
+  });
+
+  return (
+    <ChakraProvider theme={theme}>
+      <Component {...pageProps} />
+    </ChakraProvider>
+  );
+};
+```
+
+Login:
+
+```jsx
+import { useLogin } from '@useelven/core';
+
+(...)
+
+const { login, isLoggedIn, error } = useLogin({
+  token: 'some_hash_here',
+});
+```
+
+Sign and send transaction:
+
+```jsx
+import { useTransaction } from '@useelven/core';
+import { TransactionPayload, TokenPayment } from '@multiversx/sdk-core';
+
+(...)
+
+const { pending, triggerTx, transaction, txResult, error } = useTransaction();
+
+const handleSendTx = () => {
+  const demoMessage = 'Transaction demo!';
+  triggerTx({
+    address: 'erd123.....',
+    gasLimit: 50000 + 1500 * demoMessage.length,
+    data: new TransactionPayload(demoMessage),
+    value: TokenPayment.egldFromBigInteger(1_000_000_000_000_000_000),
+  });
+};
 ```
 
 Check all of the hooks here: [SDK Reference](https://www.useElven.com/docs/sdk-reference.html)
+
+### UI
+
+There will be a separate package for React UI components. These will be simple components required in every dapp. Like auth button, QR code, WC pairings list, ProtectedRoute, Authenticated, etc.
+
+All of these you can already find in [Next.js Dapp Template](https://github.com/xdevguild/nextjs-dapp-template), but soon they will land in a separate package. They won't rely on any CSS framework or way of styling.
 
 ### Examples
 

@@ -54,6 +54,7 @@ export const useWebWalletLogin = (params?: Login) => {
     pending,
     error,
     logout,
+    setLoggingInState,
   };
 };
 
