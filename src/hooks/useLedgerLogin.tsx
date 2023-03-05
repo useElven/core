@@ -37,6 +37,8 @@ export const useLedgerLogin = (params?: Login) => {
       }
     }
 
+    setLoginInfoState('loginMethod', LoginMethodsEnum.ledger);
+
     if (params?.token) {
       setLoginInfoState('loginToken', String(params.token));
     }
@@ -46,7 +48,6 @@ export const useLedgerLogin = (params?: Login) => {
     let userAddress;
 
     try {
-      setLoggingInState('pending', true);
       if (params?.token) {
         if (dappProvider instanceof HWProvider) {
           const loginInfo = await dappProvider.tokenLogin({
@@ -71,6 +72,8 @@ export const useLedgerLogin = (params?: Login) => {
         }
       }
 
+      setLoggingInState('pending', true);
+
       if (userAddress) {
         setAccountState('address', userAddress);
         setLoggingInState('loggedIn', Boolean(userAddress));
@@ -88,7 +91,6 @@ export const useLedgerLogin = (params?: Login) => {
         }
       }
 
-      setLoginInfoState('loginMethod', LoginMethodsEnum.ledger);
       setLoginInfoState('expires', getNewLoginExpiresTimestamp());
 
       optionalRedirect(params?.callbackRoute);
@@ -129,5 +131,6 @@ export const useLedgerLogin = (params?: Login) => {
     getHWAccounts,
     error,
     logout,
+    setLoggingInState,
   };
 };

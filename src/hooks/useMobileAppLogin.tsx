@@ -162,6 +162,7 @@ export const useMobileAppLogin = (params?: Login) => {
   const walletConnectPairingLogin = async (topic: string) => {
     const dappProvider = dappProviderRef.current;
     if (dappProvider instanceof WalletConnectV2Provider) {
+      setLoggingInState('pending', true);
       try {
         const { approval } = await dappProvider.connect({
           topic,
@@ -175,7 +176,6 @@ export const useMobileAppLogin = (params?: Login) => {
           approval,
         });
 
-        setLoggingInState('pending', true);
         setLoginInfoState('expires', getNewLoginExpiresTimestamp());
       } catch (e) {
         const err = errorParse(e);
@@ -215,5 +215,6 @@ export const useMobileAppLogin = (params?: Login) => {
     pending,
     error,
     logout,
+    setLoggingInState,
   };
 };

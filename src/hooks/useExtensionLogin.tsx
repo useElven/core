@@ -37,6 +37,8 @@ export const useExtensionLogin = (params?: Login) => {
         }
       }
 
+      setLoginInfoState('loginMethod', LoginMethodsEnum.extension);
+
       const callbackUrl: string =
         typeof window !== 'undefined'
           ? encodeURIComponent(
@@ -91,7 +93,7 @@ export const useExtensionLogin = (params?: Login) => {
       if (params?.token) {
         setLoginInfoState('loginToken', String(params.token));
       }
-      setLoginInfoState('loginMethod', LoginMethodsEnum.extension);
+
       setLoginInfoState('expires', getNewLoginExpiresTimestamp());
 
       setLoggingInState('loggedIn', Boolean(address));
@@ -111,5 +113,6 @@ export const useExtensionLogin = (params?: Login) => {
     pending,
     error,
     logout,
+    setLoggingInState,
   };
 };
