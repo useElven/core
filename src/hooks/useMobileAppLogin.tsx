@@ -133,9 +133,11 @@ export const useMobileAppLogin = (params?: Login) => {
     try {
       dappProviderRef.current = providerInstance;
 
+      await providerInstance.init();
+
       const { uri: walletConnectUri, approval } =
         await providerInstance.connect({
-          methods: ['erd_cancelAction'],
+          methods: ['mvx_cancelAction'],
         });
 
       if (walletConnectUri) {
@@ -166,7 +168,7 @@ export const useMobileAppLogin = (params?: Login) => {
       try {
         const { approval } = await dappProvider.connect({
           topic,
-          methods: ['erd_cancelAction'],
+          methods: ['mvx_cancelAction'],
         });
 
         setLoginInfoState('loginMethod', LoginMethodsEnum.walletconnect);

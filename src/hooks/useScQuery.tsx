@@ -1,7 +1,6 @@
 import useSWR, { Fetcher } from 'swr';
 import {
   ResultsParser,
-  SmartContractAbi,
   SmartContract,
   Address,
   AbiRegistry,
@@ -25,7 +24,7 @@ interface SCQueryData {
   abiJSON?: {
     name: string;
     endpoints: unknown[];
-    types: unknown;
+    types: Record<string, any> | undefined;
   };
 }
 
@@ -109,10 +108,9 @@ export function useScQuery<T extends number | string | boolean | unknown>({
     ) {
       const parser = new ResultsParser();
       const abiRegistry = AbiRegistry.create(abiJSON);
-      const abi = new SmartContractAbi(abiRegistry, [abiJSON.name]);
       const contract = new SmartContract({
         address: new Address(payload.scAddress as string),
-        abi: abi,
+        abi: abiRegistry,
       });
       const endpointDefinition = contract.getEndpoint(
         payload.funcName as string

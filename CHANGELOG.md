@@ -1,3 +1,8 @@
+### [0.2.0](https://github.com/useElven/core/releases/tag/v0.2.0) (2023-04-23)
+- migration to new major versions of `sdk-core` and `sdk-hw-provider`
+- other minor dependecies updates
+- adjustments in the code
+
 ### [0.1.0](https://github.com/useElven/core/releases/tag/v0.1.0) (2023-03-05)
 - migration to Wallet Connect 2. Check the changes in [configuration](https://www.useelven.com/docs/sdk-reference.html). You will need your own WC project id.
 

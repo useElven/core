@@ -58,7 +58,7 @@ Sign and send transaction:
 
 ```jsx
 import { useTransaction } from '@useelven/core';
-import { TransactionPayload, TokenPayment } from '@multiversx/sdk-core';
+import { TransactionPayload, TokenTransfer } from '@multiversx/sdk-core';
 
 (...)
 
@@ -70,7 +70,7 @@ const handleSendTx = () => {
     address: 'erd123.....',
     gasLimit: 50000 + 1500 * demoMessage.length,
     data: new TransactionPayload(demoMessage),
-    value: TokenPayment.egldFromBigInteger(1_000_000_000_000_000_000),
+    value: TokenTransfer.egldFromBigInteger(1_000_000_000_000_000_000),
   });
 };
 ```
