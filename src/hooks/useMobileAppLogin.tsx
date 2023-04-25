@@ -202,7 +202,10 @@ export const useMobileAppLogin = (params?: Login) => {
           `Something went wrong trying to remove the existing pairing: ${err}`
         );
       } finally {
-        setWalletConnectPairings(dappProvider.pairings);
+        const activePairings = walletConnectPairings?.filter(
+          (pairing) => pairing.topic !== topic
+        );
+        setWalletConnectPairings(activePairings);
       }
     }
   };

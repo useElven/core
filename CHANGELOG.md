@@ -1,3 +1,6 @@
+### [0.2.1](https://github.com/useElven/core/releases/tag/v0.2.1) (2023-04-25)
+- fixed a bug related to WalletConnect pairings removal and state management in UI
+
 ### [0.2.0](https://github.com/useElven/core/releases/tag/v0.2.0) (2023-04-23)
 - migration to new major versions of `sdk-core` and `sdk-hw-provider`
 - other minor dependecies updates
