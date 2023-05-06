@@ -16,31 +16,34 @@ export const useLogout = () => {
   const networkStateSnap = useNetwork();
 
   const logout = async (params?: Logout) => {
-    const provider = params?.dappProvider || networkStateSnap.dappProvider;
-    if (!provider) return;
+    const dappProvider = params?.dappProvider || networkStateSnap.dappProvider;
 
-    try {
-      setLoggingInState('pending', true);
-      await provider.logout();
-
+    if (!dappProvider) {
       clearAuthStates();
-      clearDappProvider();
-
-      if (params?.callbackRoute) {
-        if (typeof params?.redirectFn === 'function') {
-          params?.redirectFn(params?.callbackRoute);
-        } else if (typeof window !== 'undefined') {
-          window.location.href = params?.callbackRoute;
-        }
-      }
-
       setLoggingInState('loggedIn', false);
-    } catch (e) {
-      const err = errorParse(e);
-      console.error('error logging out', err);
-      setLoggingInState('error', err);
-    } finally {
-      setLoggingInState('pending', false);
+    } else {
+      try {
+        setLoggingInState('pending', true);
+        await dappProvider.logout();
+
+        if (params?.callbackRoute) {
+          if (typeof params?.redirectFn === 'function') {
+            params?.redirectFn(params?.callbackRoute);
+          } else if (typeof window !== 'undefined') {
+            window.location.href = params?.callbackRoute;
+          }
+        }
+
+        setLoggingInState('loggedIn', false);
+      } catch (e) {
+        const err = errorParse(e);
+        console.error('error logging out', err);
+        setLoggingInState('error', err);
+      } finally {
+        setLoggingInState('pending', false);
+        clearAuthStates();
+        clearDappProvider();
+      }
     }
   };
 

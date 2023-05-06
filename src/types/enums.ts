@@ -13,3 +13,8 @@ export enum EnvironmentsEnum {
   mainnet = 'mainnet',
   notDefined = '',
 }
+
+export enum LocalstorageKeys {
+  account = 'useElven_dapp__account',
+  loginInfo = 'useElven_dapp__loginInfo',
+}

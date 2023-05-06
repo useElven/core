@@ -88,5 +88,5 @@ export const useWebWalletTxSend = ({
       send();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [networkStateSnap.apiNetworkProvider, networkStateSnap.dappProvider]);
 };

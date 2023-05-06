@@ -8,6 +8,7 @@ import {
 import { useEffectOnlyOnUpdate } from '../useEffectOnlyOnUpdate';
 import { useAccount } from '../useAccount';
 import { useLoginInfo } from '../useLoginInfo';
+import { LocalstorageKeys } from '../../types/enums';
 
 export const useLocalStorageSync = (
   setAccountDone: (state: boolean) => void,
@@ -17,7 +18,7 @@ export const useLocalStorageSync = (
   const loginInfoSnap = useLoginInfo();
 
   useEffect(() => {
-    const accountStorage = localStorage.getItem('useElven_dapp__account');
+    const accountStorage = localStorage.getItem(LocalstorageKeys.account);
     const parsedStorage = accountStorage ? JSON.parse(accountStorage) : null;
 
     if (!parsedStorage?.address) {
@@ -33,7 +34,7 @@ export const useLocalStorageSync = (
   }, []);
 
   useEffect(() => {
-    const loginInfoStorage = localStorage.getItem('useElven_dapp__loginInfo');
+    const loginInfoStorage = localStorage.getItem(LocalstorageKeys.loginInfo);
     if (loginInfoStorage) {
       const parsedStorage = JSON.parse(loginInfoStorage);
       setLoginInfoState('loginMethod', parsedStorage.loginMethod);
@@ -45,7 +46,7 @@ export const useLocalStorageSync = (
   }, []);
 
   useEffectOnlyOnUpdate(() => {
-    localStorage.setItem('useElven_dapp__account', JSON.stringify(accountSnap));
+    localStorage.setItem(LocalstorageKeys.account, JSON.stringify(accountSnap));
   }, [
     accountSnap.address,
     accountSnap.nonce,
@@ -55,7 +56,7 @@ export const useLocalStorageSync = (
 
   useEffectOnlyOnUpdate(() => {
     localStorage.setItem(
-      'useElven_dapp__loginInfo',
+      LocalstorageKeys.loginInfo,
       JSON.stringify(loginInfoSnap)
     );
   }, [

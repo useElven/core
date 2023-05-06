@@ -60,7 +60,7 @@ export const useLedgerLogin = (params?: Login) => {
           }
 
           if (loginInfo.signature) {
-            setLoginInfoState('signature', loginInfo.signature.hex());
+            setLoginInfoState('signature', loginInfo.signature.toString('hex'));
           }
         }
       } else {
@@ -104,18 +104,14 @@ export const useLedgerLogin = (params?: Login) => {
 
   const getHWAccounts = async (page = 0, pageSize = 10) => {
     try {
-      const dappProvider = networkStateSnap.dappProvider;
-      let hwWalletProvider;
-
-      if (dappProvider instanceof HWProvider) {
-        hwWalletProvider = dappProvider;
-        if (!hwWalletProvider.isInitialized()) await hwWalletProvider.init();
-      } else {
-        hwWalletProvider = new HWProvider();
-        await hwWalletProvider.init();
+      const hwWalletProvider =
+        networkStateSnap.dappProvider || new HWProvider();
+      if (hwWalletProvider instanceof HWProvider) {
+        !hwWalletProvider.isInitialized() && (await hwWalletProvider.init());
         setNetworkState('dappProvider', hwWalletProvider);
+        return await hwWalletProvider.getAccounts(page, pageSize);
       }
-      return hwWalletProvider.getAccounts(page, pageSize);
+      return [];
     } catch (e) {
       const err = errorParse(e);
       console.warn(err);

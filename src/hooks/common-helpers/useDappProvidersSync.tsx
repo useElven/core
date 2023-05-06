@@ -12,7 +12,7 @@ import { DappProvider } from '../../types/network';
 import { DAPP_INIT_ROUTE } from '../../config/network';
 import { getRelayAddressFromNetwork } from '../../utils/relayAddress';
 import { getParamFromUrl } from '../../utils/getParamFromUrl';
-import { LoginMethodsEnum } from '../../types/enums';
+import { LoginMethodsEnum, LocalstorageKeys } from '../../types/enums';
 import { WcOnLogin } from '../../utils/walletConnectCbs';
 import { clearDappProvider } from '../../store/network';
 import {
@@ -49,7 +49,8 @@ export const useDappProvidersSync = (
       if (loginExpires && isLoginExpired(loginExpires)) {
         clearAuthStates();
         clearDappProvider();
-        localStorage.clear();
+        localStorage.removeItem(LocalstorageKeys.account);
+        localStorage.removeItem(LocalstorageKeys.loginInfo);
         return;
       }
 
@@ -60,12 +61,11 @@ export const useDappProvidersSync = (
             dappProvider = ExtensionProvider.getInstance();
             try {
               await dappProvider.init();
-
               if (!dappProvider.isInitialized()) {
                 console.warn(
                   'Something went wrong trying to sync with the extension! Try to connect again.'
                 );
-                return;
+                await logout();
               } else {
                 dappProvider.setAddress(accountSnap.address);
                 network.setNetworkState('dappProvider', dappProvider);
@@ -128,6 +128,7 @@ export const useDappProvidersSync = (
                 console.warn(
                   'Something went wrong trying to sync with the xPortal app!'
                 );
+                await logout();
               } else {
                 network.setNetworkState('dappProvider', dappProvider);
               }
@@ -165,6 +166,7 @@ export const useDappProvidersSync = (
                 console.warn(
                   'Something went wrong trying to sync with the Ledger!'
                 );
+                await logout();
               } else {
                 dappProvider.setAddressIndex(accountSnap.addressIndex);
                 network.setNetworkState('dappProvider', dappProvider);
