@@ -59,27 +59,30 @@ export const sendTxOperations = async (
   webWalletRedirectUrl?: string,
   cb?: (params: TransactionCallbackParams) => void
 ) => {
+  let signedTx = tx;
   try {
     if (dappProvider instanceof WalletProvider) {
       const currentUrl = window?.location.href;
       await dappProvider.signTransaction(tx, {
         callbackUrl: webWalletRedirectUrl || currentUrl,
       });
+      // web wallet provider doesn't return signed transaction
+      signedTx = tx;
     }
     if (dappProvider instanceof ExtensionProvider) {
-      await dappProvider.signTransaction(tx);
+      signedTx = await dappProvider.signTransaction(tx);
     }
     if (dappProvider instanceof WalletConnectV2Provider) {
-      await dappProvider.signTransaction(tx);
+      signedTx = await dappProvider.signTransaction(tx);
     }
     if (dappProvider instanceof HWProvider) {
-      await dappProvider.signTransaction(tx);
+      signedTx = await dappProvider.signTransaction(tx);
     }
     if (loginInfoSnap.loginMethod !== LoginMethodsEnum.wallet) {
-      await apiNetworkProvider.sendTransaction(tx);
-      setTransaction(tx);
+      await apiNetworkProvider.sendTransaction(signedTx);
+      setTransaction(signedTx);
       await postSendTxOperations(
-        tx,
+        signedTx,
         setTransaction,
         setTxResult,
         apiNetworkProvider,

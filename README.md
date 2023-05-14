@@ -1,6 +1,6 @@
 ## useElven core
 
-Please be aware that the tools are still in the development phase. You can use it, but versions below 1.0.0 will still have breaking changes.
+Please be aware that the tools are still in the development phase. You can use them, but versions below 1.0.0 will still have breaking changes.
 
 ### Docs
 

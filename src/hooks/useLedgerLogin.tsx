@@ -24,7 +24,7 @@ export const useLedgerLogin = (params?: Login) => {
     const apiNetworkProvider = networkStateSnap.apiNetworkProvider;
     const dappProvider = networkStateSnap.dappProvider;
 
-    if (!dappProvider) {
+    if (!dappProvider || !(dappProvider instanceof HWProvider)) {
       try {
         const hwWalletProvider = new HWProvider();
         await hwWalletProvider.init();
@@ -105,13 +105,12 @@ export const useLedgerLogin = (params?: Login) => {
   const getHWAccounts = async (page = 0, pageSize = 10) => {
     try {
       const hwWalletProvider =
-        networkStateSnap.dappProvider || new HWProvider();
-      if (hwWalletProvider instanceof HWProvider) {
-        !hwWalletProvider.isInitialized() && (await hwWalletProvider.init());
-        setNetworkState('dappProvider', hwWalletProvider);
-        return await hwWalletProvider.getAccounts(page, pageSize);
-      }
-      return [];
+        networkStateSnap.dappProvider instanceof HWProvider
+          ? networkStateSnap.dappProvider
+          : new HWProvider();
+      !hwWalletProvider.isInitialized() && (await hwWalletProvider.init());
+      setNetworkState('dappProvider', hwWalletProvider);
+      return await hwWalletProvider.getAccounts(page, pageSize);
     } catch (e) {
       const err = errorParse(e);
       console.warn(err);

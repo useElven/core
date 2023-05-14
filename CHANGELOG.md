@@ -1,3 +1,7 @@
+### [0.4.0](https://github.com/useElven/core/releases/tag/v0.4.0) (2023-05-14)
+- update HW and Web Wallet providers, adjust the code
+- fix HW initialization when other provider was used before
+
 ### [0.3.0](https://github.com/useElven/core/releases/tag/v0.3.0) (2023-05-06)
 - update HW provider
 - fix bugs related to state handling
