@@ -14,13 +14,24 @@ import { Login } from '../types/account';
 import { useLoggingIn } from './useLoggingIn';
 import { errorParse } from '../utils/errorParse';
 import { useNetwork } from './useNetwork';
+import { useNativeAuthLoginToken } from './useNativeAuthLoginToken';
 
 export const useLedgerLogin = (params?: Login) => {
   const { logout } = useLogout();
   const { loggedIn, pending, error } = useLoggingIn();
   const networkStateSnap = useNetwork();
+  const { loginToken, nativeAuthClient } = useNativeAuthLoginToken();
 
   const login = async (addressIndex = 0) => {
+    if (!loginToken) {
+      setLoggingInState(
+        'error',
+        'Login token is not present. Please try again.'
+      );
+      setLoggingInState('pending', false);
+      return;
+    }
+
     const apiNetworkProvider = networkStateSnap.apiNetworkProvider;
     const dappProvider = networkStateSnap.dappProvider;
 
@@ -38,37 +49,31 @@ export const useLedgerLogin = (params?: Login) => {
     }
 
     setLoginInfoState('loginMethod', LoginMethodsEnum.ledger);
-
-    if (params?.token) {
-      setLoginInfoState('loginToken', String(params.token));
-    }
-
+    setLoginInfoState('loginToken', loginToken);
     setAccountState('addressIndex', addressIndex);
 
     let userAddress;
 
     try {
-      if (params?.token) {
-        if (dappProvider instanceof HWProvider) {
-          const loginInfo = await dappProvider.tokenLogin({
-            token: Buffer.from(`${params?.token}{}`),
-            addressIndex,
-          });
+      if (dappProvider instanceof HWProvider) {
+        const loginInfo = await dappProvider.tokenLogin({
+          token: Buffer.from(`${loginToken}{}`),
+          addressIndex,
+        });
 
-          if (loginInfo.address) {
-            userAddress = loginInfo.address;
-          }
-
-          if (loginInfo.signature) {
-            setLoginInfoState('signature', loginInfo.signature.toString('hex'));
-          }
+        if (loginInfo.address) {
+          userAddress = loginInfo.address;
         }
-      } else {
-        if (dappProvider instanceof HWProvider) {
-          const address = await dappProvider.login({ addressIndex });
-          if (address) {
-            userAddress = address;
-          }
+
+        if (loginInfo.signature && nativeAuthClient) {
+          const sigString = loginInfo.signature.toString('hex');
+          setLoginInfoState('signature', sigString);
+          const accessToken = nativeAuthClient.getToken(
+            loginInfo.address,
+            loginToken,
+            sigString
+          );
+          setLoginInfoState('accessToken', accessToken);
         }
       }
 

@@ -27,6 +27,7 @@ import { useLogout } from '../useLogout';
 import { useConfig } from '../useConfig';
 import { useAccount } from '../useAccount';
 import { useLoginInfo } from '../useLoginInfo';
+import { NativeAuthClient } from '@multiversx/sdk-native-auth-client';
 
 export const useDappProvidersSync = (
   accountDone: boolean,
@@ -43,6 +44,7 @@ export const useDappProvidersSync = (
   useEffectOnlyOnUpdate(() => {
     const askForDappProvider = async () => {
       const loginMethod = loginInfoSnap.loginMethod;
+      const loginToken = loginInfoSnap.loginToken;
       const loginExpires = loginInfoSnap.expires;
       let dappProvider = dappProviderRef?.current;
 
@@ -144,15 +146,28 @@ export const useDappProvidersSync = (
             if (signature) {
               setLoginInfoState('signature', signature);
             }
+
             if (address) {
               dappProvider = new WalletProvider(
                 `${configStateSnap.walletAddress}${DAPP_INIT_ROUTE}`
               );
-              dappProviderRef.current = dappProvider;
               network.setNetworkState('dappProvider', dappProvider);
               const userAddressInstance = new Address(address);
               const userAccountInstance = new Account(userAddressInstance);
               setAccountState('address', userAccountInstance.address.bech32());
+            }
+
+            if (signature && address && loginToken) {
+              const nativeAuthClient = new NativeAuthClient({
+                apiUrl: configStateSnap.apiAddress,
+              });
+              const accessToken = nativeAuthClient.getToken(
+                address,
+                loginToken,
+                signature
+              );
+              setLoginInfoState('accessToken', accessToken);
+              dappProviderRef.current = dappProvider;
             }
             break;
           }

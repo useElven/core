@@ -24,6 +24,7 @@ import { DappProvider } from '../types/network';
 import { ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
 import { useConfig } from './useConfig';
 import { useNetwork } from './useNetwork';
+import { useNativeAuthLoginToken } from './useNativeAuthLoginToken';
 
 export const useMobileAppLogin = (params?: Login) => {
   const { logout } = useLogout();
@@ -34,6 +35,7 @@ export const useMobileAppLogin = (params?: Login) => {
   >();
   const networkStateSnap = useNetwork();
   const configStateSnap = useConfig();
+  const { loginToken, nativeAuthClient } = useNativeAuthLoginToken();
 
   const dappProviderRef = useRef<DappProvider>(
     networkStateSnap.dappProvider as DappProvider
@@ -47,6 +49,15 @@ export const useMobileAppLogin = (params?: Login) => {
   };
 
   const login = async () => {
+    if (!loginToken) {
+      setLoggingInState(
+        'error',
+        'Login token is not present. Please try again.'
+      );
+      setLoggingInState('pending', false);
+      return;
+    }
+
     const relayAddress = getRelayAddressFromNetwork(
       configStateSnap.walletConnectV2RelayAddresses as string[]
     );
@@ -86,12 +97,16 @@ export const useMobileAppLogin = (params?: Login) => {
           setAccountState('nonce', account.nonce.valueOf());
 
           setLoggingInState('loggedIn', Boolean(address));
-          if (signature) {
+          if (signature && nativeAuthClient) {
             setLoginInfoState('signature', signature);
+            const accessToken = nativeAuthClient.getToken(
+              address,
+              loginToken,
+              signature
+            );
+            setLoginInfoState('accessToken', accessToken);
           }
-          if (params?.token) {
-            setLoginInfoState('loginToken', params?.token);
-          }
+          setLoginInfoState('loginToken', loginToken);
 
           setNetworkState('dappProvider', dappProviderRef.current);
 
@@ -115,12 +130,8 @@ export const useMobileAppLogin = (params?: Login) => {
 
       if (!hasUri) return;
 
-      if (!params?.token) {
-        setWalletConnectUri(walletConnectUri);
-      } else {
-        const wcUriWithToken = `${walletConnectUri}&token=${params.token}`;
-        setWalletConnectUri(wcUriWithToken);
-      }
+      const wcUriWithToken = `${walletConnectUri}&token=${loginToken}`;
+      setWalletConnectUri(wcUriWithToken);
     };
 
     const providerInstance = new WalletConnectV2Provider(
@@ -146,7 +157,7 @@ export const useMobileAppLogin = (params?: Login) => {
         setWalletConnectPairings(providerInstance.pairings);
 
         await providerInstance.login({
-          token: params?.token,
+          token: loginToken,
           approval,
         });
 
@@ -174,7 +185,7 @@ export const useMobileAppLogin = (params?: Login) => {
         setLoginInfoState('loginMethod', LoginMethodsEnum.walletconnect);
 
         await dappProvider.login({
-          token: params?.token,
+          token: loginToken,
           approval,
         });
 

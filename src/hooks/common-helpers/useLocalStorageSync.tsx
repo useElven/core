@@ -41,6 +41,7 @@ export const useLocalStorageSync = (
       setLoginInfoState('expires', parsedStorage.expires);
       setLoginInfoState('loginToken', parsedStorage.loginToken);
       setLoginInfoState('signature', parsedStorage.signature);
+      setLoginInfoState('accessToken', parsedStorage.accessToken);
       setLoginInfoDone(true);
     }
   }, []);
@@ -64,5 +65,6 @@ export const useLocalStorageSync = (
     loginInfoSnap.expires,
     loginInfoSnap.loginToken,
     loginInfoSnap.signature,
+    loginInfoSnap.accessToken,
   ]);
 };

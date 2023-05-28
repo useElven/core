@@ -38,6 +38,7 @@ export interface LoginInfoState extends Record<string, unknown> {
   expires: number;
   loginToken: string;
   signature: string;
+  accessToken: string;
 }
 
 const loginInfoInitialState: LoginInfoState = {
@@ -45,6 +46,7 @@ const loginInfoInitialState: LoginInfoState = {
   expires: 0,
   loginToken: '',
   signature: '',
+  accessToken: '',
 };
 
 export const loginInfoState = proxy<LoginInfoState>(loginInfoInitialState);

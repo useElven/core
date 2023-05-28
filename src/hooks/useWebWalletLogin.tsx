@@ -8,14 +8,25 @@ import { Login } from '../types/account';
 import { useLoggingIn } from './useLoggingIn';
 import { errorParse } from '../utils/errorParse';
 import { useConfig } from './useConfig';
+import { useNativeAuthLoginToken } from './useNativeAuthLoginToken';
 
 export const useWebWalletLogin = (params?: Login) => {
   const { logout } = useLogout();
   const { loggedIn, pending, error } = useLoggingIn();
   const configStateSnap = useConfig();
+  const { loginToken } = useNativeAuthLoginToken();
 
   const login = async () => {
     setLoggingInState('pending', true);
+
+    if (!loginToken) {
+      setLoggingInState(
+        'error',
+        'Login token is not present. Please try again.'
+      );
+      setLoggingInState('pending', false);
+      return;
+    }
 
     const providerInstance = new WalletProvider(
       `${configStateSnap.walletAddress}${DAPP_INIT_ROUTE}`
@@ -29,16 +40,14 @@ export const useWebWalletLogin = (params?: Login) => {
         : '/';
     const providerLoginData = {
       callbackUrl,
-      ...(params?.token && { token: params?.token }),
+      token: loginToken,
     };
 
     try {
       setLoginInfoState('loginMethod', LoginMethodsEnum.wallet);
       await providerInstance.login(providerLoginData);
       setLoginInfoState('expires', getNewLoginExpiresTimestamp());
-      if (params?.token) {
-        setLoginInfoState('loginToken', params.token);
-      }
+      setLoginInfoState('loginToken', loginToken);
     } catch (e) {
       const err = errorParse(e);
       setLoggingInState('error', `Error logging in ${err}`);

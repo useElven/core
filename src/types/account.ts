@@ -6,5 +6,4 @@ export interface LocalAccountInstance {
 
 export interface Login {
   callbackRoute?: string;
-  token?: string;
 }

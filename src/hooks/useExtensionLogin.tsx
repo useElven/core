@@ -14,13 +14,24 @@ import { Login } from '../types/account';
 import { useLoggingIn } from './useLoggingIn';
 import { errorParse } from '../utils/errorParse';
 import { useNetwork } from './useNetwork';
+import { useNativeAuthLoginToken } from './useNativeAuthLoginToken';
 
 export const useExtensionLogin = (params?: Login) => {
   const { logout } = useLogout();
   const { loggedIn, pending, error } = useLoggingIn();
   const networkStateSnap = useNetwork();
+  const { loginToken, nativeAuthClient } = useNativeAuthLoginToken();
 
   const login = async () => {
+    if (!loginToken) {
+      setLoggingInState(
+        'error',
+        'Login token is not present. Please try again.'
+      );
+      setLoggingInState('pending', false);
+      return;
+    }
+
     const providerInstance = ExtensionProvider.getInstance();
 
     try {
@@ -47,7 +58,7 @@ export const useExtensionLogin = (params?: Login) => {
           : '/';
       const providerLoginData = {
         callbackUrl,
-        ...(params?.token && { token: params?.token }),
+        token: loginToken,
       };
 
       try {
@@ -87,16 +98,19 @@ export const useExtensionLogin = (params?: Login) => {
         }
       }
 
-      if (signature) {
-        setLoginInfoState('signature', signature);
-      }
-      if (params?.token) {
-        setLoginInfoState('loginToken', String(params.token));
-      }
-
+      setLoginInfoState('loginToken', loginToken);
       setLoginInfoState('expires', getNewLoginExpiresTimestamp());
-
       setLoggingInState('loggedIn', Boolean(address));
+
+      if (signature && nativeAuthClient) {
+        setLoginInfoState('signature', signature);
+        const accessToken = nativeAuthClient.getToken(
+          address,
+          loginToken,
+          signature
+        );
+        setLoginInfoState('accessToken', accessToken);
+      }
 
       optionalRedirect(params?.callbackRoute);
     } catch (e) {

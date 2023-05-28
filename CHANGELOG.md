@@ -1,3 +1,7 @@
+### [0.5.0](https://github.com/useElven/core/releases/tag/v0.5.0) (2023-05-28)
+- Breaking: switch to using sdk-native-auth-client instead passing string-based login tokens. There is no fallback or other option, so it is a breaking change. Native Auth is recommended. The old way of doing that will be deprecated. Please freeze the previous version if you are not ready to switch yet
+- update dependencies
+
 ### [0.4.0](https://github.com/useElven/core/releases/tag/v0.4.0) (2023-05-14)
 - update HW and Web Wallet providers, adjust the code
 - fix HW initialization when other provider was used before

@@ -49,9 +49,7 @@ import { useLogin } from '@useelven/core';
 
 (...)
 
-const { login, isLoggedIn, error } = useLogin({
-  token: 'some_hash_here',
-});
+const { login, isLoggedIn, error } = useLogin();
 ```
 
 Sign and send transaction:
