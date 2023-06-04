@@ -7,8 +7,9 @@ import { Transaction, ITransactionOnNetwork } from '@multiversx/sdk-core';
 import { getParamFromUrl } from '../../utils/getParamFromUrl';
 import {
   postSendTxOperations,
+  preSendTxOperations,
   TransactionCallbackParams,
-} from './sendTxOperations';
+} from './signAndSendTxOperations';
 import { errorParse } from '../../utils/errorParse';
 import { ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
 import { useAccount } from '../useAccount';
@@ -59,6 +60,7 @@ export const useWebWalletTxSend = ({
         const transaction = Transaction.fromPlainObject(transactionObj);
 
         try {
+          preSendTxOperations(transaction);
           await networkStateSnap.apiNetworkProvider.sendTransaction(
             transaction
           );

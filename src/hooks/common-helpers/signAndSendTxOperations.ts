@@ -24,6 +24,14 @@ export interface TransactionCallbackParams {
   txResult?: ITransactionOnNetwork | null;
 }
 
+export const preSendTxOperations = (signedTx: Transaction) => {
+  const sender = signedTx.getSender();
+  const currentNonce = signedTx.getNonce().valueOf();
+  const senderAccount = new Account(sender);
+  senderAccount.incrementNonce();
+  setAccountState('nonce', currentNonce + 1);
+};
+
 export const postSendTxOperations = async (
   signedTx: Transaction,
   setTransaction: Dispatch<SetStateAction<Transaction | null>>,
@@ -47,7 +55,7 @@ export const postSendTxOperations = async (
   }
 };
 
-export const sendTxOperations = async (
+export const signAndSendTxOperations = async (
   dappProvider: DappProvider,
   tx: Transaction,
   loginInfoSnap: LoginInfoState,
@@ -77,6 +85,7 @@ export const sendTxOperations = async (
       signedTx = await dappProvider.signTransaction(tx);
     }
     if (loginInfoSnap.loginMethod !== LoginMethodsEnum.wallet) {
+      preSendTxOperations(signedTx);
       await apiNetworkProvider.sendTransaction(signedTx);
       await postSendTxOperations(
         signedTx,

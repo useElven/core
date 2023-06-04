@@ -7,15 +7,13 @@ import {
   IGasLimit,
   ITransactionValue,
   ITransactionOnNetwork,
-  Account,
 } from '@multiversx/sdk-core';
 import { useWebWalletTxSend } from './common-helpers/useWebWalletTxSend';
 import {
   TransactionCallbackParams,
-  sendTxOperations,
-} from './common-helpers/sendTxOperations';
+  signAndSendTxOperations,
+} from './common-helpers/signAndSendTxOperations';
 import { DappProvider } from '../types/network';
-import { setAccountState } from '../store/auth';
 import { ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
 import { useConfig } from './useConfig';
 import { useLoginInfo } from './useLoginInfo';
@@ -85,11 +83,7 @@ export function useTransaction(
         sender,
       });
 
-      const senderAccount = new Account(sender);
-      senderAccount.incrementNonce();
-      setAccountState('nonce', currentNonce + 1);
-
-      sendTxOperations(
+      signAndSendTxOperations(
         networkStateSnap.dappProvider as DappProvider,
         tx,
         loginInfoSnap,
