@@ -25,24 +25,24 @@ export interface TransactionCallbackParams {
 }
 
 export const postSendTxOperations = async (
-  tx: Transaction,
+  signedTx: Transaction,
   setTransaction: Dispatch<SetStateAction<Transaction | null>>,
   setTxResult: Dispatch<SetStateAction<ITransactionOnNetwork | null>>,
   apiNetworkProvider: NetworkState['apiNetworkProvider'],
   cb?: (params: TransactionCallbackParams) => void
 ) => {
+  setTransaction(signedTx);
   if (apiNetworkProvider) {
     const transactionWatcher = new TransactionWatcher(apiNetworkProvider);
-    const txResult = await transactionWatcher.awaitCompleted(tx);
-    setTransaction(tx);
+    const txResult = await transactionWatcher.awaitCompleted(signedTx);
+    setTransaction(signedTx);
     setTxResult(txResult);
-    cb?.({ transaction: tx, pending: false, txResult });
-    const sender = tx.getSender();
+    cb?.({ transaction: signedTx, pending: false, txResult });
+    const sender = signedTx.getSender();
     const senderAccount = new Account(sender);
     const userAccountOnNetwork = await apiNetworkProvider.getAccount(sender);
     senderAccount.update(userAccountOnNetwork);
     setAccountState('address', senderAccount.address.bech32());
-    setAccountState('nonce', senderAccount.getNonceThenIncrement());
     setAccountState('balance', senderAccount.balance.toString());
   }
 };
@@ -66,8 +66,6 @@ export const sendTxOperations = async (
       await dappProvider.signTransaction(tx, {
         callbackUrl: webWalletRedirectUrl || currentUrl,
       });
-      // web wallet provider doesn't return signed transaction
-      signedTx = tx;
     }
     if (dappProvider instanceof ExtensionProvider) {
       signedTx = await dappProvider.signTransaction(tx);
@@ -80,7 +78,6 @@ export const sendTxOperations = async (
     }
     if (loginInfoSnap.loginMethod !== LoginMethodsEnum.wallet) {
       await apiNetworkProvider.sendTransaction(signedTx);
-      setTransaction(signedTx);
       await postSendTxOperations(
         signedTx,
         setTransaction,

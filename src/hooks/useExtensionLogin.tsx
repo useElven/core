@@ -87,7 +87,6 @@ export const useExtensionLogin = (params?: Login) => {
           userAccountInstance.update(userAccountOnNetwork);
 
           setAccountState('address', userAccountInstance.address.bech32());
-
           setAccountState('nonce', userAccountInstance.nonce.valueOf());
           setAccountState('balance', userAccountInstance.balance.toString());
         } catch (e) {

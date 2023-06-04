@@ -7,6 +7,7 @@ import {
   IGasLimit,
   ITransactionValue,
   ITransactionOnNetwork,
+  Account,
 } from '@multiversx/sdk-core';
 import { useWebWalletTxSend } from './common-helpers/useWebWalletTxSend';
 import {
@@ -14,6 +15,7 @@ import {
   sendTxOperations,
 } from './common-helpers/sendTxOperations';
 import { DappProvider } from '../types/network';
+import { setAccountState } from '../store/auth';
 import { ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
 import { useConfig } from './useConfig';
 import { useLoginInfo } from './useLoginInfo';
@@ -71,6 +73,8 @@ export function useTransaction(
       setPending(true);
       cb?.({ pending: true });
 
+      const sender = new Address(accountSnap.address);
+
       const tx = new Transaction({
         nonce: currentNonce,
         receiver: new Address(address),
@@ -78,10 +82,12 @@ export function useTransaction(
         chainID: configStateSnap.shortId || 'D',
         data,
         value: value || 0,
-        sender: new Address(accountSnap.address),
+        sender,
       });
 
-      tx.setNonce(currentNonce);
+      const senderAccount = new Account(sender);
+      senderAccount.incrementNonce();
+      setAccountState('nonce', currentNonce + 1);
 
       sendTxOperations(
         networkStateSnap.dappProvider as DappProvider,

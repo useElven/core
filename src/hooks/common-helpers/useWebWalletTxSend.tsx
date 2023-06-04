@@ -12,6 +12,7 @@ import {
 import { errorParse } from '../../utils/errorParse';
 import { ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
 import { useAccount } from '../useAccount';
+import { setAccountState } from '../../store/auth';
 import { useNetwork } from '../useNetwork';
 
 interface UseWebWalletTxSendProps {
@@ -56,7 +57,7 @@ export const useWebWalletTxSend = ({
         setPending(true);
         cb?.({ pending: true });
         const transaction = Transaction.fromPlainObject(transactionObj);
-        transaction.setNonce(currentNonce);
+
         try {
           await networkStateSnap.apiNetworkProvider.sendTransaction(
             transaction
@@ -76,6 +77,7 @@ export const useWebWalletTxSend = ({
         } finally {
           setPending(false);
           cb?.({ pending: false });
+          setAccountState('nonce', currentNonce + 1);
         }
       }
     };
