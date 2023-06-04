@@ -72,7 +72,12 @@ export const signAndSendTxOperations = async (
     if (dappProvider instanceof WalletProvider) {
       const currentUrl = window?.location.href;
       await dappProvider.signTransaction(tx, {
-        callbackUrl: webWalletRedirectUrl || currentUrl,
+        callbackUrl:
+          webWalletRedirectUrl && window
+            ? encodeURIComponent(
+                `${window.location.origin}${webWalletRedirectUrl}`
+              )
+            : currentUrl,
       });
     }
     if (dappProvider instanceof ExtensionProvider) {

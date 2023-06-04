@@ -65,7 +65,6 @@ export function useTransaction(
       networkStateSnap.dappProvider &&
       networkStateSnap.apiNetworkProvider &&
       currentNonce !== undefined &&
-      !pending &&
       accountSnap.address
     ) {
       setPending(true);

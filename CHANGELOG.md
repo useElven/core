@@ -1,5 +1,5 @@
 ### [0.6.0](https://github.com/useElven/core/releases/tag/v0.6.0) (2023-06-04)
-- improvements for nonce incrementation to let triggering multiple transactions at the same time. The logic is slightly different, but it shouldn't break anything
+- improvements for nonce incrementation to let trigger multiple transactions at the same time. The logic is slightly different, but it shouldn't break anything (you can test it [here](https://useelven-react-vite-demo.netlify.app/). For now, additional steps are required for the Web Wallet to manage the pending states in UI properly. They solution is presented in the [demo here](https://github.com/useElven/react-vite/blob/main/src/components/demo/EgldTx.tsx)). There will be more improvements in that regard.
 
 ### [0.5.0](https://github.com/useElven/core/releases/tag/v0.5.0) (2023-05-28)
 - Breaking: switch to using sdk-native-auth-client instead passing string-based login tokens. There is no fallback or other option, so it is a breaking change. Native Auth is recommended. The old way of doing that will be deprecated. Please freeze the previous version if you are not ready to switch yet

@@ -54,7 +54,7 @@ export const useWebWalletTxSend = ({
         transactionObj.data = Buffer.from(transactionObj.data).toString(
           'base64'
         );
-        window.history.replaceState(null, '', window.location.pathname);
+
         setPending(true);
         cb?.({ pending: true });
         const transaction = Transaction.fromPlainObject(transactionObj);
@@ -80,6 +80,7 @@ export const useWebWalletTxSend = ({
           setPending(false);
           cb?.({ pending: false });
           setAccountState('nonce', currentNonce + 1);
+          window.history.replaceState(null, '', window.location.pathname);
         }
       }
     };
