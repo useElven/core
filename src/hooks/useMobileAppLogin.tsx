@@ -24,7 +24,7 @@ import { DappProvider } from '../types/network';
 import { ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
 import { useConfig } from './useConfig';
 import { useNetwork } from './useNetwork';
-import { getLoginToken } from './common-helpers/loginTokenState';
+import { getLoginToken } from './common-helpers/getLoginToken';
 import { getNativeAuthClient } from 'src/utils/getNativeAuthClient';
 
 export const useMobileAppLogin = (params?: Login) => {

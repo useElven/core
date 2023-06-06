@@ -4,15 +4,21 @@ import {
   loginInfoState,
   setLoggingInState,
 } from '../../store/auth';
+import { errorParse } from 'src/utils/errorParse';
 
 export const getLoginToken = async () => {
   const client = getNativeAuthClient();
   let token = loginInfoState.loginToken;
 
   if (!token) {
-    setLoggingInState('pending', true);
-    token = await client.initialize();
-    setLoggingInState('pending', false);
+    try {
+      setLoggingInState('pending', true);
+      token = await client.initialize();
+    } catch (e) {
+      setLoggingInState('error', errorParse(e));
+    } finally {
+      setLoggingInState('pending', false);
+    }
   }
 
   setLoginInfoState('loginToken', token);

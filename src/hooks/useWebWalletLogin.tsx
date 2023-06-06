@@ -8,7 +8,7 @@ import { Login } from '../types/account';
 import { useLoggingIn } from './useLoggingIn';
 import { errorParse } from '../utils/errorParse';
 import { useConfig } from './useConfig';
-import { getLoginToken } from './common-helpers/loginTokenState';
+import { getLoginToken } from './common-helpers/getLoginToken';
 
 export const useWebWalletLogin = (params?: Login) => {
   const { logout } = useLogout();

@@ -13,7 +13,7 @@ import { useLogout } from './useLogout';
 import { Login } from '../types/account';
 import { useLoggingIn } from './useLoggingIn';
 import { errorParse } from '../utils/errorParse';
-import { getLoginToken } from './common-helpers/loginTokenState';
+import { getLoginToken } from './common-helpers/getLoginToken';
 import { useNetwork } from './useNetwork';
 import { getNativeAuthClient } from 'src/utils/getNativeAuthClient';
 

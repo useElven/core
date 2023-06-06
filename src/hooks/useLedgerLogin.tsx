@@ -14,7 +14,7 @@ import { Login } from '../types/account';
 import { useLoggingIn } from './useLoggingIn';
 import { errorParse } from '../utils/errorParse';
 import { useNetwork } from './useNetwork';
-import { getLoginToken } from './common-helpers/loginTokenState';
+import { getLoginToken } from './common-helpers/getLoginToken';
 import { getNativeAuthClient } from 'src/utils/getNativeAuthClient';
 
 export const useLedgerLogin = (params?: Login) => {
