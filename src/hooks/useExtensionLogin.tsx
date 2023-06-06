@@ -13,24 +13,17 @@ import { useLogout } from './useLogout';
 import { Login } from '../types/account';
 import { useLoggingIn } from './useLoggingIn';
 import { errorParse } from '../utils/errorParse';
+import { getLoginToken } from './common-helpers/loginTokenState';
 import { useNetwork } from './useNetwork';
-import { useNativeAuthLoginToken } from './useNativeAuthLoginToken';
+import { getNativeAuthClient } from 'src/utils/getNativeAuthClient';
 
 export const useExtensionLogin = (params?: Login) => {
   const { logout } = useLogout();
   const { loggedIn, pending, error } = useLoggingIn();
   const networkStateSnap = useNetwork();
-  const { loginToken, nativeAuthClient } = useNativeAuthLoginToken();
 
   const login = async () => {
-    if (!loginToken) {
-      setLoggingInState(
-        'error',
-        'Login token is not present. Please try again.'
-      );
-      setLoggingInState('pending', false);
-      return;
-    }
+    const loginToken = await getLoginToken();
 
     const providerInstance = ExtensionProvider.getInstance();
 
@@ -100,6 +93,8 @@ export const useExtensionLogin = (params?: Login) => {
       setLoginInfoState('loginToken', loginToken);
       setLoginInfoState('expires', getNewLoginExpiresTimestamp());
       setLoggingInState('loggedIn', Boolean(address));
+
+      const nativeAuthClient = getNativeAuthClient();
 
       if (signature && nativeAuthClient) {
         setLoginInfoState('signature', signature);
