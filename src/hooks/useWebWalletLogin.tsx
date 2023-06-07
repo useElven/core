@@ -8,25 +8,17 @@ import { Login } from '../types/account';
 import { useLoggingIn } from './useLoggingIn';
 import { errorParse } from '../utils/errorParse';
 import { useConfig } from './useConfig';
-import { useNativeAuthLoginToken } from './useNativeAuthLoginToken';
+import { getLoginToken } from './common-helpers/getLoginToken';
 
 export const useWebWalletLogin = (params?: Login) => {
   const { logout } = useLogout();
   const { loggedIn, pending, error } = useLoggingIn();
   const configStateSnap = useConfig();
-  const { loginToken } = useNativeAuthLoginToken();
 
   const login = async () => {
     setLoggingInState('pending', true);
 
-    if (!loginToken) {
-      setLoggingInState(
-        'error',
-        'Login token is not present. Please try again.'
-      );
-      setLoggingInState('pending', false);
-      return;
-    }
+    const loginToken = await getLoginToken();
 
     const providerInstance = new WalletProvider(
       `${configStateSnap.walletAddress}${DAPP_INIT_ROUTE}`

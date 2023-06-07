@@ -14,23 +14,16 @@ import { Login } from '../types/account';
 import { useLoggingIn } from './useLoggingIn';
 import { errorParse } from '../utils/errorParse';
 import { useNetwork } from './useNetwork';
-import { useNativeAuthLoginToken } from './useNativeAuthLoginToken';
+import { getLoginToken } from './common-helpers/getLoginToken';
+import { getNativeAuthClient } from 'src/utils/getNativeAuthClient';
 
 export const useLedgerLogin = (params?: Login) => {
   const { logout } = useLogout();
   const { loggedIn, pending, error } = useLoggingIn();
   const networkStateSnap = useNetwork();
-  const { loginToken, nativeAuthClient } = useNativeAuthLoginToken();
 
   const login = async (addressIndex = 0) => {
-    if (!loginToken) {
-      setLoggingInState(
-        'error',
-        'Login token is not present. Please try again.'
-      );
-      setLoggingInState('pending', false);
-      return;
-    }
+    const loginToken = await getLoginToken();
 
     const apiNetworkProvider = networkStateSnap.apiNetworkProvider;
     const dappProvider = networkStateSnap.dappProvider;
@@ -64,6 +57,8 @@ export const useLedgerLogin = (params?: Login) => {
         if (loginInfo.address) {
           userAddress = loginInfo.address;
         }
+
+        const nativeAuthClient = getNativeAuthClient();
 
         if (loginInfo.signature && nativeAuthClient) {
           const sigString = loginInfo.signature.toString('hex');

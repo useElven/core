@@ -24,7 +24,8 @@ import { DappProvider } from '../types/network';
 import { ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
 import { useConfig } from './useConfig';
 import { useNetwork } from './useNetwork';
-import { useNativeAuthLoginToken } from './useNativeAuthLoginToken';
+import { getLoginToken } from './common-helpers/getLoginToken';
+import { getNativeAuthClient } from 'src/utils/getNativeAuthClient';
 
 export const useMobileAppLogin = (params?: Login) => {
   const { logout } = useLogout();
@@ -35,7 +36,6 @@ export const useMobileAppLogin = (params?: Login) => {
   >();
   const networkStateSnap = useNetwork();
   const configStateSnap = useConfig();
-  const { loginToken, nativeAuthClient } = useNativeAuthLoginToken();
 
   const dappProviderRef = useRef<DappProvider>(
     networkStateSnap.dappProvider as DappProvider
@@ -49,14 +49,7 @@ export const useMobileAppLogin = (params?: Login) => {
   };
 
   const login = async () => {
-    if (!loginToken) {
-      setLoggingInState(
-        'error',
-        'Login token is not present. Please try again.'
-      );
-      setLoggingInState('pending', false);
-      return;
-    }
+    const loginToken = await getLoginToken();
 
     const relayAddress = getRelayAddressFromNetwork(
       configStateSnap.walletConnectV2RelayAddresses as string[]
@@ -97,6 +90,9 @@ export const useMobileAppLogin = (params?: Login) => {
           setAccountState('nonce', account.nonce.valueOf());
 
           setLoggingInState('loggedIn', Boolean(address));
+
+          const nativeAuthClient = getNativeAuthClient();
+
           if (signature && nativeAuthClient) {
             setLoginInfoState('signature', signature);
             const accessToken = nativeAuthClient.getToken(
@@ -183,6 +179,8 @@ export const useMobileAppLogin = (params?: Login) => {
         });
 
         setLoginInfoState('loginMethod', LoginMethodsEnum.walletconnect);
+
+        const loginToken = await getLoginToken();
 
         await dappProvider.login({
           token: loginToken,
