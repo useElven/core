@@ -1,3 +1,7 @@
+### [0.7.0](https://github.com/useElven/core/releases/tag/v0.7.0) (2023-06-18)
+- A new `useTokenTransfer` hook. It is a wrapper over `useTransaction` and should simplify transfering tokens, also to smart contracts with or without calling endpoints. You can still achieve the same using `useTransaction` with payload builders.
+- updated dependencies
+
 ### [0.6.1](https://github.com/useElven/core/releases/tag/v0.6.1) (2023-06-07)
 - fix native auth login token handling
 

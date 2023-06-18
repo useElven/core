@@ -6,6 +6,7 @@ const pkg = require('./package.json');
 const shared = {
   entryPoints: ['./src/index.tsx'],
   bundle: true,
+  target: 'ES2020',
   minify: true,
   external: [
     ...Object.keys(pkg.dependencies),
