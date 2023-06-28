@@ -1,3 +1,8 @@
+### [0.8.0](https://github.com/useElven/core/releases/tag/v0.8.0) (2023-06-29)
+- switch to tsup instead of bare esbuild and tsc, now the configuration should be more reliable
+- remove problematic export of `PairingTypes` (**breaking change**). Now it is a custom `PairingTypesStruct`, which is similar to the original one from WalletConnect
+- update dependencies
+
 ### [0.7.0](https://github.com/useElven/core/releases/tag/v0.7.0) (2023-06-18)
 - A new `useTokenTransfer` hook. It is a wrapper over `useTransaction` and should simplify transfering tokens, also to smart contracts with or without calling endpoints. You can still achieve the same using `useTransaction` with payload builders.
 - updated dependencies

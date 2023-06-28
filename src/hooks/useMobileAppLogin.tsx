@@ -4,7 +4,6 @@ import { Account, Address } from '@multiversx/sdk-core';
 import {
   WalletConnectV2Provider,
   SessionEventTypes,
-  PairingTypes,
 } from '@multiversx/sdk-wallet-connect-provider';
 import { LoginMethodsEnum } from '../types/enums';
 import {
@@ -27,12 +26,33 @@ import { useNetwork } from './useNetwork';
 import { getLoginToken } from './common-helpers/getLoginToken';
 import { getNativeAuthClient } from 'src/utils/getNativeAuthClient';
 
+export interface PairingTypesStruct {
+  topic: string;
+  expiry: number;
+  relay: {
+    protocol: string;
+    data?: string;
+  };
+  active: boolean;
+  peerMetadata?: {
+    name: string;
+    description: string;
+    url: string;
+    icons: string[];
+    verifyUrl?: string;
+    redirect?: {
+      native?: string;
+      universal?: string;
+    };
+  };
+}
+
 export const useMobileAppLogin = (params?: Login) => {
   const { logout } = useLogout();
   const { loggedIn, pending, error } = useLoggingIn();
   const [walletConnectUri, setWalletConnectUri] = useState('');
   const [walletConnectPairings, setWalletConnectPairings] = useState<
-    PairingTypes.Struct[] | undefined
+    PairingTypesStruct[] | undefined
   >();
   const networkStateSnap = useNetwork();
   const configStateSnap = useConfig();

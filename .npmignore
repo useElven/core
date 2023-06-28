@@ -2,5 +2,5 @@ src
 .editorconfig          
 .eslintrc              
 .prettierrc
-esbuild.config.cjs
 tsconfig.json
+.vscode
