@@ -4,6 +4,7 @@ import { Account, Address } from '@multiversx/sdk-core';
 import {
   WalletConnectV2Provider,
   SessionEventTypes,
+  OptionalOperation,
 } from '@multiversx/sdk-wallet-connect-provider';
 import { LoginMethodsEnum } from '../types/enums';
 import {
@@ -164,7 +165,10 @@ export const useMobileAppLogin = (params?: Login) => {
 
       const { uri: walletConnectUri, approval } =
         await providerInstance.connect({
-          methods: ['mvx_cancelAction'],
+          methods: [
+            OptionalOperation.CANCEL_ACTION,
+            OptionalOperation.SIGN_NATIVE_AUTH_TOKEN,
+          ],
         });
 
       if (walletConnectUri) {
@@ -195,7 +199,10 @@ export const useMobileAppLogin = (params?: Login) => {
       try {
         const { approval } = await dappProvider.connect({
           topic,
-          methods: ['mvx_cancelAction'],
+          methods: [
+            OptionalOperation.CANCEL_ACTION,
+            OptionalOperation.SIGN_NATIVE_AUTH_TOKEN,
+          ],
         });
 
         setLoginInfoState('loginMethod', LoginMethodsEnum.walletconnect);

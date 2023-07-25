@@ -1,6 +1,6 @@
 {
   "name": "@useelven/core",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Core hooks for MultiversX React DApps",
   "license": "MIT",
   "author": "Julian Ćwirko <julian.io>",
@@ -62,11 +62,11 @@
   },
   "dependencies": {
     "@multiversx/sdk-core": "12.4.3",
-    "@multiversx/sdk-extension-provider": "2.0.7",
+    "@multiversx/sdk-extension-provider": "3.0.0",
     "@multiversx/sdk-hw-provider": "6.1.0",
     "@multiversx/sdk-native-auth-client": "1.0.4",
     "@multiversx/sdk-network-providers": "1.5.0",
-    "@multiversx/sdk-wallet-connect-provider": "3.2.1",
+    "@multiversx/sdk-wallet-connect-provider": "4.0.2",
     "@multiversx/sdk-web-wallet-provider": "3.0.0",
     "lodash.clonedeep": "4.5.0",
     "swr": "2.1.5",
