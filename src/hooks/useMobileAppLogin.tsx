@@ -25,7 +25,7 @@ import { ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
 import { useConfig } from './useConfig';
 import { useNetwork } from './useNetwork';
 import { getLoginToken } from './common-helpers/getLoginToken';
-import { getNativeAuthClient } from 'src/utils/getNativeAuthClient';
+import { getNativeAuthClient } from '../utils/getNativeAuthClient';
 
 export interface PairingTypesStruct {
   topic: string;

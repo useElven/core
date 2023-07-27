@@ -1,4 +1,4 @@
-import useSWR, { Fetcher } from 'swr';
+import useSWR, { Fetcher, KeyedMutator } from 'swr';
 import {
   ResultsParser,
   SmartContract,
@@ -6,7 +6,7 @@ import {
   AbiRegistry,
 } from '@multiversx/sdk-core';
 import { ContractQueryResponse } from '@multiversx/sdk-network-providers';
-import useSwrMutation from 'swr/mutation';
+import useSwrMutation, { SWRMutationResponse } from 'swr/mutation';
 import { apiCall } from '../utils/apiCall';
 
 export enum SCQueryType {
@@ -50,7 +50,13 @@ export function useScQuery<T extends number | string | boolean | unknown>({
   options,
   autoInit = true,
   abiJSON,
-}: SCQueryData) {
+}: SCQueryData): {
+  data: T;
+  isLoading: boolean;
+  isValidating: boolean;
+  error: any;
+  fetch: KeyedMutator<any> | SWRMutationResponse['trigger'];
+} {
   let url = '';
 
   switch (type) {

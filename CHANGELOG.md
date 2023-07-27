@@ -1,3 +1,7 @@
+### [0.9.0](https://github.com/useElven/core/releases/tag/v0.9.0) (2023-07-28)
+- support for guardians (big thanks to @radumojic)
+- update all dependencies
+
 ### [0.8.0](https://github.com/useElven/core/releases/tag/v0.8.0) (2023-06-29)
 - switch to tsup instead of bare esbuild and tsc, now the configuration should be more reliable
 - remove problematic export of `PairingTypes` (**breaking change**). Now it is a custom `PairingTypesStruct`, which is similar to the original one from WalletConnect

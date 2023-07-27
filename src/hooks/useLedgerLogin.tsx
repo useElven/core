@@ -15,7 +15,7 @@ import { useLoggingIn } from './useLoggingIn';
 import { errorParse } from '../utils/errorParse';
 import { useNetwork } from './useNetwork';
 import { getLoginToken } from './common-helpers/getLoginToken';
-import { getNativeAuthClient } from 'src/utils/getNativeAuthClient';
+import { getNativeAuthClient } from '../utils/getNativeAuthClient';
 
 export const useLedgerLogin = (params?: Login) => {
   const { logout } = useLogout();
