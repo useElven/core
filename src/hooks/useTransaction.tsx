@@ -71,6 +71,7 @@ export function useTransaction(
       cb?.({ pending: true });
 
       const sender = new Address(accountSnap.address);
+      const activeGuardianAddress = accountSnap.activeGuardianAddress;
 
       const tx = new Transaction({
         nonce: currentNonce,
@@ -92,7 +93,9 @@ export function useTransaction(
         setError,
         setPending,
         webWalletRedirectUrl,
-        cb
+        cb,
+        activeGuardianAddress,
+        configStateSnap.walletAddress
       );
     } else {
       setError(

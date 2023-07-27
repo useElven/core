@@ -1,8 +1,9 @@
 import { useProxy } from './useProxy';
-import { networkState } from '../store/network';
+import { networkState, NetworkState } from '../store/network';
 
 export const useNetwork = () => {
-  const { dappProvider, apiNetworkProvider } = useProxy(networkState);
-
+  const { dappProvider, apiNetworkProvider } = useProxy(
+    networkState
+  ) as NetworkState;
   return { dappProvider, apiNetworkProvider };
 };

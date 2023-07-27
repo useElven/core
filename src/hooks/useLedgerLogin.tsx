@@ -84,8 +84,18 @@ export const useLedgerLogin = (params?: Login) => {
           const userAccountOnNetwork = await apiNetworkProvider.getAccount(
             addressInstance
           );
+          const userGuardianOnNetwork =
+            await apiNetworkProvider.getGuardianData(addressInstance);
+
           userAccountInstance.update(userAccountOnNetwork);
 
+          setAccountState(
+            'activeGuardianAddress',
+            userGuardianOnNetwork.guarded &&
+              userGuardianOnNetwork.activeGuardian?.address.bech32()
+              ? userGuardianOnNetwork.activeGuardian.address.bech32()
+              : ''
+          );
           setAccountState('nonce', userAccountInstance.nonce.valueOf());
           setAccountState('balance', userAccountInstance.balance.toString());
         }

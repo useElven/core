@@ -21,8 +21,18 @@ export const WcOnLogin = async (
       const userAccountOnNetwork = await apiNetworkProvider.getAccount(
         userAddressInstance
       );
+      const userGuardianOnNetwork = await apiNetworkProvider.getGuardianData(
+        userAddressInstance
+      );
       userAccountInstance.update(userAccountOnNetwork);
       setAccountState('address', userAccountInstance.address.bech32());
+      setAccountState(
+        'activeGuardianAddress',
+        userGuardianOnNetwork.guarded &&
+          userGuardianOnNetwork.activeGuardian?.address.bech32()
+          ? userGuardianOnNetwork.activeGuardian.address.bech32()
+          : ''
+      );
     } catch (e) {
       const err = errorParse(e);
       console.warn(

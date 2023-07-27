@@ -77,8 +77,20 @@ export const useExtensionLogin = (params?: Login) => {
             await networkStateSnap.apiNetworkProvider.getAccount(
               userAddressInstance
             );
+          const userGuardianOnNetwork =
+            await networkStateSnap.apiNetworkProvider.getGuardianData(
+              userAddressInstance
+            );
+
           userAccountInstance.update(userAccountOnNetwork);
 
+          setAccountState(
+            'activeGuardianAddress',
+            userGuardianOnNetwork.guarded &&
+              userGuardianOnNetwork.activeGuardian?.address.bech32()
+              ? userGuardianOnNetwork.activeGuardian.address.bech32()
+              : ''
+          );
           setAccountState('address', userAccountInstance.address.bech32());
           setAccountState('nonce', userAccountInstance.nonce.valueOf());
           setAccountState('balance', userAccountInstance.balance.toString());
