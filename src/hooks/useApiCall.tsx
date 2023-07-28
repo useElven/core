@@ -1,5 +1,5 @@
-import useSWR from 'swr';
-import useSwrMutation from 'swr/mutation';
+import useSWR, { KeyedMutator } from 'swr';
+import useSwrMutation, { SWRMutationResponse } from 'swr/mutation';
 import { apiCall } from '../utils/apiCall';
 
 interface ApiCallData {
@@ -43,7 +43,13 @@ export function useApiCall<T>({
   options,
   autoInit = true,
   baseEndpoint,
-}: ApiCallData) {
+}: ApiCallData): {
+  data: T;
+  isLoading: boolean;
+  isValidating: boolean;
+  error: any;
+  fetch: KeyedMutator<any> | SWRMutationResponse['trigger'];
+} {
   const { data, error, mutate, isValidating, isLoading } = useSWR(
     autoInit ? { url, payload, type, baseEndpoint } : null,
     apiCallFetcher,

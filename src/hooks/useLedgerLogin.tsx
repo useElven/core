@@ -15,7 +15,7 @@ import { useLoggingIn } from './useLoggingIn';
 import { errorParse } from '../utils/errorParse';
 import { useNetwork } from './useNetwork';
 import { getLoginToken } from './common-helpers/getLoginToken';
-import { getNativeAuthClient } from 'src/utils/getNativeAuthClient';
+import { getNativeAuthClient } from '../utils/getNativeAuthClient';
 
 export const useLedgerLogin = (params?: Login) => {
   const { logout } = useLogout();
@@ -84,8 +84,18 @@ export const useLedgerLogin = (params?: Login) => {
           const userAccountOnNetwork = await apiNetworkProvider.getAccount(
             addressInstance
           );
+          const userGuardianOnNetwork =
+            await apiNetworkProvider.getGuardianData(addressInstance);
+
           userAccountInstance.update(userAccountOnNetwork);
 
+          setAccountState(
+            'activeGuardianAddress',
+            userGuardianOnNetwork.guarded &&
+              userGuardianOnNetwork.activeGuardian?.address.bech32()
+              ? userGuardianOnNetwork.activeGuardian.address.bech32()
+              : ''
+          );
           setAccountState('nonce', userAccountInstance.nonce.valueOf());
           setAccountState('balance', userAccountInstance.balance.toString());
         }

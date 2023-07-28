@@ -28,10 +28,20 @@ export const useAccountNetworkSync = (
           const userAccountOnNetwork = await apiNetworkProvider.getAccount(
             userAddressInstance
           );
+          const userGuardianOnNetwork =
+            await apiNetworkProvider.getGuardianData(userAddressInstance);
+
           userAccountInstance.update(userAccountOnNetwork);
           setAccountState('address', address);
           setAccountState('nonce', userAccountInstance.nonce.valueOf());
           setAccountState('balance', userAccountInstance.balance.toString());
+          setAccountState(
+            'activeGuardianAddress',
+            userGuardianOnNetwork.guarded &&
+              userGuardianOnNetwork.activeGuardian?.address.bech32()
+              ? userGuardianOnNetwork.activeGuardian.address.bech32()
+              : ''
+          );
           setLoggingInState('loggedIn', Boolean(address));
         } catch (e) {
           const err = errorParse(e);

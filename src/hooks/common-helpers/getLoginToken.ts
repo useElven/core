@@ -1,10 +1,10 @@
-import { getNativeAuthClient } from 'src/utils/getNativeAuthClient';
+import { getNativeAuthClient } from '../../utils/getNativeAuthClient';
 import {
   setLoginInfoState,
   loginInfoState,
   setLoggingInState,
 } from '../../store/auth';
-import { errorParse } from 'src/utils/errorParse';
+import { errorParse } from '../../utils/errorParse';
 
 export const getLoginToken = async () => {
   const client = getNativeAuthClient();

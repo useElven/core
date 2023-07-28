@@ -4,6 +4,8 @@ import {
   WALLET_PROVIDER_CALLBACK_PARAM_TX_SIGNED,
 } from '@multiversx/sdk-web-wallet-provider';
 import { Transaction, ITransactionOnNetwork } from '@multiversx/sdk-core';
+import { WalletProvider } from '@multiversx/sdk-web-wallet-provider';
+import { PlainSignedTransaction } from '@multiversx/sdk-web-wallet-provider/out/plainSignedTransaction';
 import { getParamFromUrl } from '../../utils/getParamFromUrl';
 import {
   postSendTxOperations,
@@ -14,7 +16,11 @@ import { errorParse } from '../../utils/errorParse';
 import { ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
 import { useAccount } from '../useAccount';
 import { setAccountState } from '../../store/auth';
+import { useConfig } from '../useConfig';
 import { useNetwork } from '../useNetwork';
+import { useLoginInfo } from '../useLoginInfo';
+import { LoginMethodsEnum, WebWalletUrlParamsEnum } from '../../types/enums';
+import { DAPP_INIT_ROUTE } from '../../config/network';
 
 interface UseWebWalletTxSendProps {
   setPending: Dispatch<SetStateAction<boolean>>;
@@ -33,27 +39,49 @@ export const useWebWalletTxSend = ({
 }: UseWebWalletTxSendProps) => {
   const accountSnap = useAccount();
   const networkStateSnap = useNetwork();
+  const loginInfoSnap = useLoginInfo();
+  const configStateSnap = useConfig();
   const currentNonce = accountSnap.nonce;
 
   useEffect(() => {
     const walletProviderStatus = getParamFromUrl(
       WALLET_PROVIDER_CALLBACK_PARAM
     );
+    const hasWebWalletGuardianSign = getParamFromUrl(
+      WebWalletUrlParamsEnum.hasWebWalletGuardianSign
+    );
 
     const send = async () => {
       if (
         networkStateSnap.dappProvider &&
-        'getTransactionsFromWalletUrl' in networkStateSnap.dappProvider &&
         networkStateSnap.apiNetworkProvider
       ) {
-        const txs =
-          networkStateSnap.dappProvider.getTransactionsFromWalletUrl();
-        // For now it is prepared for handling one transaction at a time
-        const transactionObj = txs?.[0];
+        let transactionObj: PlainSignedTransaction;
+        if ('getTransactionsFromWalletUrl' in networkStateSnap.dappProvider) {
+          const txs =
+            networkStateSnap.dappProvider.getTransactionsFromWalletUrl();
+
+          // For now it is prepared for handling one transaction at a time
+          transactionObj = txs?.[0];
+          if (!transactionObj) return;
+          transactionObj.data = Buffer.from(transactionObj.data).toString(
+            'base64'
+          );
+        } else if (
+          accountSnap.activeGuardianAddress &&
+          loginInfoSnap.loginMethod !== LoginMethodsEnum.wallet &&
+          hasWebWalletGuardianSign
+        ) {
+          const webWalletProvider = new WalletProvider(
+            `${configStateSnap.walletAddress}${DAPP_INIT_ROUTE}`
+          );
+          const txs = webWalletProvider.getTransactionsFromWalletUrl();
+          transactionObj = txs?.[0];
+        } else {
+          return;
+        }
+
         if (!transactionObj) return;
-        transactionObj.data = Buffer.from(transactionObj.data).toString(
-          'base64'
-        );
 
         setPending(true);
         cb?.({ pending: true });

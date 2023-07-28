@@ -15,7 +15,7 @@ import { useLoggingIn } from './useLoggingIn';
 import { errorParse } from '../utils/errorParse';
 import { getLoginToken } from './common-helpers/getLoginToken';
 import { useNetwork } from './useNetwork';
-import { getNativeAuthClient } from 'src/utils/getNativeAuthClient';
+import { getNativeAuthClient } from '../utils/getNativeAuthClient';
 
 export const useExtensionLogin = (params?: Login) => {
   const { logout } = useLogout();
@@ -77,8 +77,20 @@ export const useExtensionLogin = (params?: Login) => {
             await networkStateSnap.apiNetworkProvider.getAccount(
               userAddressInstance
             );
+          const userGuardianOnNetwork =
+            await networkStateSnap.apiNetworkProvider.getGuardianData(
+              userAddressInstance
+            );
+
           userAccountInstance.update(userAccountOnNetwork);
 
+          setAccountState(
+            'activeGuardianAddress',
+            userGuardianOnNetwork.guarded &&
+              userGuardianOnNetwork.activeGuardian?.address.bech32()
+              ? userGuardianOnNetwork.activeGuardian.address.bech32()
+              : ''
+          );
           setAccountState('address', userAccountInstance.address.bech32());
           setAccountState('nonce', userAccountInstance.nonce.valueOf());
           setAccountState('balance', userAccountInstance.balance.toString());
