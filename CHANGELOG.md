@@ -1,3 +1,7 @@
+### [0.9.1](https://github.com/useElven/core/releases/tag/v0.9.1) (2023-08-27)
+- add 'use client' banner (preparing for better support of the Next.js 'app router' architecture)
+- update dependencies
+
 ### [0.9.0](https://github.com/useElven/core/releases/tag/v0.9.0) (2023-07-28)
 - support for guardians (big thanks to @radumojic)
 - update all dependencies

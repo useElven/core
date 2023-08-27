@@ -1,6 +1,6 @@
 {
   "name": "@useelven/core",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Core hooks for MultiversX React DApps",
   "license": "MIT",
   "author": "Julian Ćwirko <julian.io>",
@@ -39,6 +39,9 @@
     "node": "^14.13.1 || >=16.0.0"
   },
   "tsup": {
+    "banner": {
+      "js": "'use client';"
+    },
     "entry": [
       "./src/index.tsx"
     ],
@@ -49,8 +52,7 @@
     ],
     "dts": true,
     "splitting": true,
-    "minify": "terser",
-    "treeshake": true
+    "minify": true
   },
   "scripts": {
     "build": "rimraf build && tsup",
@@ -61,33 +63,33 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@multiversx/sdk-core": "12.6.0",
+    "@multiversx/sdk-core": "12.7.1",
     "@multiversx/sdk-extension-provider": "3.0.0",
-    "@multiversx/sdk-hw-provider": "6.2.0",
-    "@multiversx/sdk-native-auth-client": "1.0.4",
-    "@multiversx/sdk-network-providers": "1.5.0",
+    "@multiversx/sdk-hw-provider": "6.4.0",
+    "@multiversx/sdk-native-auth-client": "1.0.5",
+    "@multiversx/sdk-network-providers": "2.0.0",
     "@multiversx/sdk-wallet-connect-provider": "4.0.3",
     "@multiversx/sdk-web-wallet-provider": "3.0.0",
     "lodash.clonedeep": "4.5.0",
-    "swr": "2.2.0",
-    "valtio": "1.11.1"
+    "swr": "2.2.2",
+    "valtio": "1.11.2"
   },
   "devDependencies": {
     "@types/lodash.clonedeep": "4.5.7",
-    "@types/node": "20.4.5",
-    "@types/react": "18.2.17",
-    "@typescript-eslint/eslint-plugin": "6.2.0",
-    "@typescript-eslint/parser": "6.2.0",
-    "eslint": "8.45.0",
-    "eslint-config-prettier": "8.9.0",
+    "@types/node": "20.5.6",
+    "@types/react": "18.2.21",
+    "@typescript-eslint/eslint-plugin": "6.4.1",
+    "@typescript-eslint/parser": "6.4.1",
+    "eslint": "8.48.0",
+    "eslint-config-prettier": "9.0.0",
     "eslint-plugin-prettier": "5.0.0",
-    "eslint-plugin-react": "7.33.0",
+    "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "4.6.0",
-    "prettier": "3.0.0",
+    "prettier": "3.0.2",
     "rimraf": "5.0.1",
     "terser": "5.19.2",
-    "tsup": "7.1.0",
-    "typescript": "5.1.6"
+    "tsup": "7.2.0",
+    "typescript": "5.2.2"
   },
   "peerDependencies": {
     "react": "18.2.0"
