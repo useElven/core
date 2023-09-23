@@ -71,12 +71,13 @@ export const useExtensionLogin = (params?: Login) => {
       const userAddressInstance = new Address(address);
       const userAccountInstance = new Account(userAddressInstance);
 
-      if (networkStateSnap.apiNetworkProvider) {
+      if (networkStateSnap.apiNetworkProvider && address) {
         try {
           const userAccountOnNetwork =
             await networkStateSnap.apiNetworkProvider.getAccount(
               userAddressInstance
             );
+
           const userGuardianOnNetwork =
             await networkStateSnap.apiNetworkProvider.getGuardianData(
               userAddressInstance

@@ -81,9 +81,8 @@ export const useLedgerLogin = (params?: Login) => {
         if (apiNetworkProvider) {
           const addressInstance = new Address(userAddress);
           const userAccountInstance = new Account(addressInstance);
-          const userAccountOnNetwork = await apiNetworkProvider.getAccount(
-            addressInstance
-          );
+          const userAccountOnNetwork =
+            await apiNetworkProvider.getAccount(addressInstance);
           const userGuardianOnNetwork =
             await apiNetworkProvider.getGuardianData(addressInstance);
 

@@ -16,14 +16,12 @@ export const WcOnLogin = async (
   const userAddressInstance = new Address(address);
   const userAccountInstance = new Account(userAddressInstance);
 
-  if (apiNetworkProvider) {
+  if (apiNetworkProvider && address) {
     try {
-      const userAccountOnNetwork = await apiNetworkProvider.getAccount(
-        userAddressInstance
-      );
-      const userGuardianOnNetwork = await apiNetworkProvider.getGuardianData(
-        userAddressInstance
-      );
+      const userAccountOnNetwork =
+        await apiNetworkProvider.getAccount(userAddressInstance);
+      const userGuardianOnNetwork =
+        await apiNetworkProvider.getGuardianData(userAddressInstance);
       userAccountInstance.update(userAccountOnNetwork);
       setAccountState('address', userAccountInstance.address.bech32());
       setAccountState(

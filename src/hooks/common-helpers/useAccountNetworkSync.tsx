@@ -7,10 +7,12 @@ import { setAccountState, setLoggingInState } from '../../store/auth';
 import { Address, Account } from '@multiversx/sdk-core';
 import { useAccount } from '../useAccount';
 import { useLoginInfo } from '../useLoginInfo';
+import { useLogout } from '../useLogout';
 
 export const useAccountNetworkSync = (
   apiNetworkProviderRef: MutableRefObject<ApiNetworkProvider | undefined>
 ) => {
+  const { logout } = useLogout();
   const accountSnap = useAccount();
   const loginInfoSnap = useLoginInfo();
 
@@ -25,9 +27,8 @@ export const useAccountNetworkSync = (
         const userAddressInstance = new Address(address);
         const userAccountInstance = new Account(userAddressInstance);
         try {
-          const userAccountOnNetwork = await apiNetworkProvider.getAccount(
-            userAddressInstance
-          );
+          const userAccountOnNetwork =
+            await apiNetworkProvider.getAccount(userAddressInstance);
           const userGuardianOnNetwork =
             await apiNetworkProvider.getGuardianData(userAddressInstance);
 
@@ -51,6 +52,8 @@ export const useAccountNetworkSync = (
         } finally {
           setLoggingInState('pending', false);
         }
+      } else {
+        logout();
       }
     };
 
