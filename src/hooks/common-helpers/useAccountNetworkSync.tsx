@@ -7,12 +7,10 @@ import { setAccountState, setLoggingInState } from '../../store/auth';
 import { Address, Account } from '@multiversx/sdk-core';
 import { useAccount } from '../useAccount';
 import { useLoginInfo } from '../useLoginInfo';
-import { useLogout } from '../useLogout';
 
 export const useAccountNetworkSync = (
   apiNetworkProviderRef: MutableRefObject<ApiNetworkProvider | undefined>
 ) => {
-  const { logout } = useLogout();
   const accountSnap = useAccount();
   const loginInfoSnap = useLoginInfo();
 
@@ -52,8 +50,6 @@ export const useAccountNetworkSync = (
         } finally {
           setLoggingInState('pending', false);
         }
-      } else {
-        logout();
       }
     };
 
