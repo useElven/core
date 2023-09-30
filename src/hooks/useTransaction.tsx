@@ -20,7 +20,7 @@ import { useLoginInfo } from './useLoginInfo';
 import { useAccount } from './useAccount';
 import { useNetwork } from './useNetwork';
 
-interface TransactionParams {
+export interface TransactionParams {
   address: string;
   gasLimit: IGasLimit;
   data?: ITransactionPayload;

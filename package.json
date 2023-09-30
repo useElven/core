@@ -1,6 +1,6 @@
 {
   "name": "@useelven/core",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Core hooks for MultiversX React DApps",
   "license": "MIT",
   "author": "Julian Ćwirko <julian.io>",
@@ -76,7 +76,7 @@
   },
   "devDependencies": {
     "@types/lodash.clonedeep": "4.5.7",
-    "@types/node": "20.7.1",
+    "@types/node": "20.8.0",
     "@types/react": "18.2.23",
     "@typescript-eslint/eslint-plugin": "6.7.3",
     "@typescript-eslint/parser": "6.7.3",

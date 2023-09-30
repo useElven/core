@@ -1,3 +1,7 @@
+### [0.9.4](https://github.com/useElven/core/releases/tag/v0.9.4) (2023-09-30)
+- export `TransactionParams` type
+- update dependencies
+
 ### [0.9.3](https://github.com/useElven/core/releases/tag/v0.9.3) (2023-09-28)
 - support domains with the port number in native auth token initialization
 - pass api url configuration (overwrite) to native auth token initialization

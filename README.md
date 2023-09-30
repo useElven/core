@@ -1,18 +1,18 @@
 ## useElven core
 
-Please be aware that the tools are still in the development phase. You can use them, but versions below 1.0.0 will still have breaking changes.
-
-### Docs
-
-- [useElven.com](https://www.useElven.com)
-
-The documentation is also under development. There will be more complete examples soon.
+Please be aware that versions below 1.0.0 will still have breaking changes. Till then, please 'freeze' the version of useElven in your app, and decide when to upgrade.
 
 ### About
 
 `useElven` is a set of hooks and tools designed to work with React-base applications.
 
 It is a wrapper for [sdk-js](https://docs.multiversx.com/sdk-and-tools/sdk-js/) - a set of Typescript/Javascript libraries.
+
+### Docs
+
+- [useElven.com](https://www.useElven.com)
+
+Below are a couple of steps for a quick start, but please check the docs and example apps.
 
 ### Install
 
@@ -85,8 +85,8 @@ All of these you can already find in [Next.js Dapp Template](https://github.com/
 
 See ready to use demo templates: 
 
-- [Next.js Dapp Template](https://github.com/xdevguild/nextjs-dapp-template)
-- [React + Vite Dapp Template](https://useElven-react-vite-demo.netlify.app)
+- [Next.js Dapp Template (with Shadcn UI, Tailwind, Radix UI)](https://github.com/xdevguild/nextjs-dapp-template)
+- [React + Vite Dapp Template (witch Chakra UI)](https://github.com/useElven/react-vite)
 
 ### Development
 
