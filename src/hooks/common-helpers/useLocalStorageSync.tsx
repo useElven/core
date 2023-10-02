@@ -30,6 +30,10 @@ export const useLocalStorageSync = (
     setAccountState('nonce', parsedStorage.nonce);
     setAccountState('balance', parsedStorage.balance);
     setAccountState('addressIndex', parsedStorage.addressIndex);
+    setAccountState(
+      'activeGuardianAddress',
+      parsedStorage.activeGuardianAddress
+    );
     setAccountDone(true);
   }, []);
 
@@ -53,6 +57,7 @@ export const useLocalStorageSync = (
     accountSnap.nonce,
     accountSnap.balance,
     accountSnap.addressIndex,
+    accountSnap.activeGuardianAddress,
   ]);
 
   useEffectOnlyOnUpdate(() => {

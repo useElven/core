@@ -1,3 +1,7 @@
+### [0.9.5](https://github.com/useElven/core/releases/tag/v0.9.5) (2023-10-02)
+- fix the bug related to reseting the active guardian local storage entry on hard refresh
+- update dependencies
+
 ### [0.9.4](https://github.com/useElven/core/releases/tag/v0.9.4) (2023-09-30)
 - export `TransactionParams` type
 - update dependencies
