@@ -89,7 +89,7 @@ export const useTokenTransfer = (
         .setArgs([
           BytesValue.fromUTF8(tokenId),
           new U64Value(nonce),
-          new BigUIntValue(1),
+          new BigUIntValue(amount || 1),
           new AddressValue(new Address(address)),
           ...(endpointName ? [BytesValue.fromUTF8(endpointName)] : []),
           ...(endpointArgs || []),

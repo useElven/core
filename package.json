@@ -1,6 +1,6 @@
 {
   "name": "@useelven/core",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "Core hooks for MultiversX React DApps",
   "license": "MIT",
   "author": "Julian Ćwirko <julian.io>",
@@ -63,7 +63,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@multiversx/sdk-core": "12.9.0",
+    "@multiversx/sdk-core": "12.11.0",
     "@multiversx/sdk-extension-provider": "3.0.0",
     "@multiversx/sdk-hw-provider": "6.4.0",
     "@multiversx/sdk-native-auth-client": "1.0.5",
@@ -76,18 +76,18 @@
   },
   "devDependencies": {
     "@types/lodash.clonedeep": "4.5.7",
-    "@types/node": "20.8.0",
-    "@types/react": "18.2.24",
-    "@typescript-eslint/eslint-plugin": "6.7.3",
-    "@typescript-eslint/parser": "6.7.3",
-    "eslint": "8.50.0",
+    "@types/node": "20.8.4",
+    "@types/react": "18.2.27",
+    "@typescript-eslint/eslint-plugin": "6.7.5",
+    "@typescript-eslint/parser": "6.7.5",
+    "eslint": "8.51.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-prettier": "5.0.0",
     "eslint-plugin-react": "7.33.2",
     "eslint-plugin-react-hooks": "4.6.0",
     "prettier": "3.0.3",
     "rimraf": "5.0.5",
-    "terser": "5.20.0",
+    "terser": "5.21.0",
     "tsup": "7.2.0",
     "typescript": "5.2.2"
   },
