@@ -171,6 +171,38 @@ export const useDappProvidersSync = (
             }
             break;
           }
+          // xAlias auth
+          case LoginMethodsEnum.xalias: {
+            const address = getParamFromUrl('address') || accountSnap?.address;
+            const signature = getParamFromUrl('signature');
+            if (signature) {
+              setLoginInfoState('signature', signature);
+            }
+
+            if (address) {
+              dappProvider = new WalletProvider(
+                `${configStateSnap.xAliasAddress}${DAPP_INIT_ROUTE}`
+              );
+              network.setNetworkState('dappProvider', dappProvider);
+              const userAddressInstance = new Address(address);
+              const userAccountInstance = new Account(userAddressInstance);
+              setAccountState('address', userAccountInstance.address.bech32());
+            }
+
+            if (signature && address && loginToken) {
+              const nativeAuthClient = new NativeAuthClient({
+                apiUrl: configStateSnap.apiAddress,
+              });
+              const accessToken = nativeAuthClient.getToken(
+                address,
+                loginToken,
+                signature
+              );
+              setLoginInfoState('accessToken', accessToken);
+              dappProviderRef.current = dappProvider;
+            }
+            break;
+          }
           case LoginMethodsEnum.ledger: {
             dappProvider = new HWProvider();
             dappProviderRef.current = dappProvider;

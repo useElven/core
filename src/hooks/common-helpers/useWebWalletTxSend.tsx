@@ -64,12 +64,15 @@ export const useWebWalletTxSend = ({
           // For now it is prepared for handling one transaction at a time
           transactionObj = txs?.[0];
           if (!transactionObj) return;
-          transactionObj.data = Buffer.from(transactionObj.data).toString(
-            'base64'
-          );
+          if (loginInfoSnap.loginMethod === LoginMethodsEnum.wallet) {
+            transactionObj.data = Buffer.from(transactionObj.data).toString(
+              'base64'
+            );
+          }
         } else if (
           accountSnap.activeGuardianAddress &&
           loginInfoSnap.loginMethod !== LoginMethodsEnum.wallet &&
+          loginInfoSnap.loginMethod !== LoginMethodsEnum.xalias &&
           hasWebWalletGuardianSign
         ) {
           const webWalletProvider = new WalletProvider(

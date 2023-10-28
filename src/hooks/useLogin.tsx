@@ -6,11 +6,13 @@ import { Login } from '../types/account';
 import { LoginMethodsEnum } from '../types/enums';
 import { useLoggingIn } from './useLoggingIn';
 import { setLoggingInState } from '../store/auth';
+import { useXaliasLogin } from './useXaliasLogin';
 
 export const useLogin = (params?: Login) => {
   const loggingInStates = useLoggingIn();
 
   const { login: webLogin } = useWebWalletLogin(params);
+  const { login: xAliasLogin } = useXaliasLogin(params);
 
   const {
     login: mobileLogin,
@@ -30,6 +32,9 @@ export const useLogin = (params?: Login) => {
     }
     if (type === LoginMethodsEnum.wallet) {
       await webLogin();
+    }
+    if (type === LoginMethodsEnum.xalias) {
+      await xAliasLogin();
     }
     if (type === LoginMethodsEnum.walletconnect) {
       await mobileLogin();

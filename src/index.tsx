@@ -7,6 +7,7 @@ export * from './hooks/useLoginInfo';
 export * from './hooks/useLoggingIn';
 export * from './hooks/useMobileAppLogin';
 export * from './hooks/useWebWalletLogin';
+export * from './hooks/useXaliasLogin';
 export * from './hooks/useLedgerLogin';
 export * from './hooks/useExtensionLogin';
 export * from './hooks/useAccount';

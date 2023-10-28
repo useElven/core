@@ -166,7 +166,10 @@ export const signAndSendTxOperations = async (
     if (dappProvider instanceof HWProvider) {
       signedTx = await dappProvider.signTransaction(tx);
     }
-    if (loginInfoSnap.loginMethod !== LoginMethodsEnum.wallet) {
+    if (
+      loginInfoSnap.loginMethod !== LoginMethodsEnum.wallet &&
+      loginInfoSnap.loginMethod !== LoginMethodsEnum.xalias
+    ) {
       const needsGuardianSign = checkNeedsGuardianSigning(
         signedTx,
         activeGuardianAddress,
