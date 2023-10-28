@@ -1,6 +1,9 @@
+### [0.10.1](https://github.com/useElven/core/releases/tag/v0.10.1) (2023-10-28)
+- fix xAlias related types
+
 ### [0.10.0](https://github.com/useElven/core/releases/tag/v0.10.0) (2023-10-28)
- - add xAlias login support (check the [docs](https://www.useElven.com) and [demo example](https://multiversx-nextjs-dapp.netlify.app/))
- - update dependencies
+- add xAlias login support (check the [docs](https://www.useElven.com) and [demo example](https://multiversx-nextjs-dapp.netlify.app/))
+- update dependencies
 
 ### [0.9.6](https://github.com/useElven/core/releases/tag/v0.9.6) (2023-10-10)
 - fix the bug related to hardcoded amount for token transfer in case of SFTs

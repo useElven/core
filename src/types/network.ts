@@ -17,7 +17,7 @@ export interface BaseNetworkType
   decimals?: string;
   gasPerDataByte?: string;
   walletConnectDeepLink?: string;
-  xAliasAddress: string;
+  xAliasAddress?: string;
   walletAddress?: string;
   apiAddress?: string;
   explorerAddress?: string;
