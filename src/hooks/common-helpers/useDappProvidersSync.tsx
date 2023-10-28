@@ -27,7 +27,7 @@ import { useLogout } from '../useLogout';
 import { useConfig } from '../useConfig';
 import { useAccount } from '../useAccount';
 import { useLoginInfo } from '../useLoginInfo';
-import { NativeAuthClient } from '@multiversx/sdk-native-auth-client';
+import { getNativeAuthClient } from 'src/utils/getNativeAuthClient';
 
 export const useDappProvidersSync = (
   accountDone: boolean,
@@ -158,9 +158,7 @@ export const useDappProvidersSync = (
             }
 
             if (signature && address && loginToken) {
-              const nativeAuthClient = new NativeAuthClient({
-                apiUrl: configStateSnap.apiAddress,
-              });
+              const nativeAuthClient = getNativeAuthClient();
               const accessToken = nativeAuthClient.getToken(
                 address,
                 loginToken,
@@ -190,9 +188,7 @@ export const useDappProvidersSync = (
             }
 
             if (signature && address && loginToken) {
-              const nativeAuthClient = new NativeAuthClient({
-                apiUrl: configStateSnap.apiAddress,
-              });
+              const nativeAuthClient = getNativeAuthClient();
               const accessToken = nativeAuthClient.getToken(
                 address,
                 loginToken,

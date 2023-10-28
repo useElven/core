@@ -1,3 +1,6 @@
+### [0.10.2](https://github.com/useElven/core/releases/tag/v0.10.2) (2023-10-28)
+- fix NativeAuth configuration
+
 ### [0.10.1](https://github.com/useElven/core/releases/tag/v0.10.1) (2023-10-28)
 - fix xAlias related types
 
