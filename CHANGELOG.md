@@ -1,3 +1,6 @@
+### [0.10.3](https://github.com/useElven/core/releases/tag/v0.10.3) (2023-11-01)
+- update MulitversX sdk-core lib
+
 ### [0.10.2](https://github.com/useElven/core/releases/tag/v0.10.2) (2023-10-28)
 - fix NativeAuth configuration
 
