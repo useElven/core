@@ -1,6 +1,6 @@
 ### [0.11.0](https://github.com/useElven/core/releases/tag/v0.11.0) (2023-11-04)
-- add useMultiEsdtTransfer 
-- some changes in the useTransaction hook. Now you can also pass the whole Transaction object to triggerTx function (in such a case other param are not required). This is optional. Previous functionality stays the same. In some cases, it can be a breaking change.
+- add useMultiTokenTransfer 
+- some changes in the useTransaction hook. Now you can also pass the whole Transaction object to the triggerTx function (in such a case, other param are not required). This is optional. Previous functionality stays the same. In some cases, it can be a breaking change.
 
 ### [0.10.3](https://github.com/useElven/core/releases/tag/v0.10.3) (2023-11-01)
 - update MulitversX sdk-core lib
@@ -9,18 +9,18 @@
 - fix NativeAuth configuration
 
 ### [0.10.1](https://github.com/useElven/core/releases/tag/v0.10.1) (2023-10-28)
-- fix xAlias related types
+- fix xAlias-related types
 
 ### [0.10.0](https://github.com/useElven/core/releases/tag/v0.10.0) (2023-10-28)
 - add xAlias login support (check the [docs](https://www.useElven.com) and [demo example](https://multiversx-nextjs-dapp.netlify.app/))
 - update dependencies
 
 ### [0.9.6](https://github.com/useElven/core/releases/tag/v0.9.6) (2023-10-10)
-- fix the bug related to hardcoded amount for token transfer in case of SFTs
+- fix the bug related to a hardcoded amount for token transfer in case of SFTs
 - update dependencies
 
 ### [0.9.5](https://github.com/useElven/core/releases/tag/v0.9.5) (2023-10-02)
-- fix the bug related to reseting the active guardian local storage entry on hard refresh
+- fix the bug related to resetting the active guardian local storage entry on hard refresh
 - update dependencies
 
 ### [0.9.4](https://github.com/useElven/core/releases/tag/v0.9.4) (2023-09-30)
@@ -29,7 +29,7 @@
 
 ### [0.9.3](https://github.com/useElven/core/releases/tag/v0.9.3) (2023-09-28)
 - support domains with the port number in native auth token initialization
-- pass api url configuration (overwrite) to native auth token initialization
+- Pass API URL configuration (overwrite) to native auth token initialization
 - update dependencies
 
 ### [0.9.2](https://github.com/useElven/core/releases/tag/v0.9.2) (2023-09-23)
@@ -50,22 +50,22 @@
 - update dependencies
 
 ### [0.7.0](https://github.com/useElven/core/releases/tag/v0.7.0) (2023-06-18)
-- A new `useTokenTransfer` hook. It is a wrapper over `useTransaction` and should simplify transfering tokens, also to smart contracts with or without calling endpoints. You can still achieve the same using `useTransaction` with payload builders.
+- A new `useTokenTransfer` hook. It is a wrapper over `useTransaction` and should simplify transferring tokens, also to smart contracts with or without calling endpoints. You can still achieve the same using `useTransaction` with payload builders.
 - updated dependencies
 
 ### [0.6.1](https://github.com/useElven/core/releases/tag/v0.6.1) (2023-06-07)
 - fix native auth login token handling
 
 ### [0.6.0](https://github.com/useElven/core/releases/tag/v0.6.0) (2023-06-04)
-- improvements for nonce incrementation to let trigger multiple transactions at the same time. The logic is slightly different, but it shouldn't break anything (you can test it [here](https://useelven-react-vite-demo.netlify.app/). For now, additional steps are required for the Web Wallet to manage the pending states in UI properly. They solution is presented in the [demo here](https://github.com/useElven/react-vite/blob/main/src/components/demo/EgldTx.tsx)). There will be more improvements in that regard.
+- improvements for nonce incrementation to let trigger multiple transactions at the same time. The logic is slightly different, but it shouldn't break anything (you can test it [here](https://useelven-react-vite-demo.netlify.app/). For now, additional steps are required for the Web Wallet to manage the pending states in UI properly. The solution is presented in the [demo here](https://github.com/useElven/react-vite/blob/main/src/components/demo/EgldTx.tsx)). There will be more improvements in that regard.
 
 ### [0.5.0](https://github.com/useElven/core/releases/tag/v0.5.0) (2023-05-28)
-- Breaking: switch to using sdk-native-auth-client instead passing string-based login tokens. There is no fallback or other option, so it is a breaking change. Native Auth is recommended. The old way of doing that will be deprecated. Please freeze the previous version if you are not ready to switch yet
+- Breaking: switch to using sdk-native-auth-client instead of passing string-based login tokens. There is no fallback or other option, so it is a breaking change. Native Auth is recommended. The old way of doing that will be deprecated. Please freeze the previous version if you are not ready to switch yet
 - update dependencies
 
 ### [0.4.0](https://github.com/useElven/core/releases/tag/v0.4.0) (2023-05-14)
 - update HW and Web Wallet providers, adjust the code
-- fix HW initialization when other provider was used before
+- fix HW initialization when another provider was used before
 
 ### [0.3.0](https://github.com/useElven/core/releases/tag/v0.3.0) (2023-05-06)
 - update HW provider
@@ -77,11 +77,11 @@
 
 ### [0.2.0](https://github.com/useElven/core/releases/tag/v0.2.0) (2023-04-23)
 - migration to new major versions of `sdk-core` and `sdk-hw-provider`
-- other minor dependecies updates
+- other minor dependencies updates
 - adjustments in the code
 
 ### [0.1.0](https://github.com/useElven/core/releases/tag/v0.1.0) (2023-03-05)
-- migration to Wallet Connect 2. Check the changes in [configuration](https://www.useelven.com/docs/sdk-reference.html). You will need your own WC project id.
+- migration to Wallet Connect 2. Check the changes in [configuration](https://www.useelven.com/docs/sdk-reference.html). You will need your own WC project ID.
 
 ### [0.0.8](https://github.com/useElven/core/releases/tag/v0.0.8) (2023-03-04)
 - bugfix for not passing the configuration setup in `useNetworkSync`
@@ -101,8 +101,8 @@
 
 ### [0.0.3](https://github.com/useElven/core/releases/tag/v0.0.3) (2023-02-19)
 - fix package.json configuration
-- improvements in extension signing states management
-- return transaction data in useTransaction before it is completed on chain
+- improvements in extension signing state management
+- return transaction data in useTransaction before it is completed on the chain
 
 ### [0.0.2](https://github.com/useElven/core/releases/tag/v0.0.2) (2023-02-15)
 - fixed browser extension states handling
