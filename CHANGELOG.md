@@ -1,3 +1,7 @@
+### [0.11.0](https://github.com/useElven/core/releases/tag/v0.11.0) (2023-11-04)
+- add useMultiEsdtTransfer 
+- some changes in the useTransaction hook. Now you can also pass the whole Transaction object to triggerTx function (in such a case other param are not required). This is optional. Previous functionality stays the same. In some cases, it can be a breaking change.
+
 ### [0.10.3](https://github.com/useElven/core/releases/tag/v0.10.3) (2023-11-01)
 - update MulitversX sdk-core lib
 

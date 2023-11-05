@@ -21,10 +21,11 @@ import { useAccount } from './useAccount';
 import { useNetwork } from './useNetwork';
 
 export interface TransactionParams {
-  address: string;
-  gasLimit: IGasLimit;
+  address?: string;
+  gasLimit?: IGasLimit;
   data?: ITransactionPayload;
   value?: ITransactionValue;
+  tx?: Transaction; // When provided other params are not needed
 }
 
 export interface TransactionArgs {
@@ -56,10 +57,16 @@ export function useTransaction(
     data,
     gasLimit,
     value,
+    tx,
   }: TransactionParams) => {
     setTransaction(null);
     setTxResult(null);
     setError('');
+
+    if (!tx && !gasLimit) {
+      setError('You need to provide the gas limit in the triggerTx function!');
+      return;
+    }
 
     if (
       networkStateSnap.dappProvider &&
@@ -73,19 +80,22 @@ export function useTransaction(
       const sender = new Address(accountSnap.address);
       const activeGuardianAddress = accountSnap.activeGuardianAddress;
 
-      const tx = new Transaction({
-        nonce: currentNonce,
-        receiver: new Address(address),
-        gasLimit,
-        chainID: configStateSnap.shortId || 'D',
-        data,
-        value: value || 0,
-        sender,
-      });
+      // You can pass whole Transaction object or you can create it
+      const transaction =
+        tx ||
+        new Transaction({
+          nonce: currentNonce,
+          receiver: new Address(address),
+          gasLimit: gasLimit!,
+          chainID: configStateSnap.shortId || 'D',
+          data,
+          value: value || 0,
+          sender,
+        });
 
       signAndSendTxOperations(
         networkStateSnap.dappProvider as DappProvider,
-        tx,
+        transaction,
         loginInfoSnap,
         networkStateSnap.apiNetworkProvider as ApiNetworkProvider,
         setTransaction,
