@@ -6,7 +6,7 @@ import {
 } from '@multiversx/sdk-core';
 import { useTransaction, TransactionArgs } from './useTransaction';
 import { useAccount } from './useAccount';
-import { apiCall } from 'src/utils/apiCall';
+import { apiCall } from '../utils/apiCall';
 import { useConfig } from './useConfig';
 
 export enum MultiTransferTokenType {

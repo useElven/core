@@ -6,7 +6,7 @@ import {
   SessionEventTypes,
 } from '@multiversx/sdk-wallet-connect-provider';
 import { ExtensionProvider } from '@multiversx/sdk-extension-provider';
-import * as network from '../../store/network';
+import { setNetworkState } from '../../store/network';
 import { HWProvider } from '@multiversx/sdk-hw-provider';
 import { DappProvider } from '../../types/network';
 import { DAPP_INIT_ROUTE } from '../../config/network';
@@ -27,7 +27,7 @@ import { useLogout } from '../useLogout';
 import { useConfig } from '../useConfig';
 import { useAccount } from '../useAccount';
 import { useLoginInfo } from '../useLoginInfo';
-import { getNativeAuthClient } from 'src/utils/getNativeAuthClient';
+import { getNativeAuthClient } from '../../utils/getNativeAuthClient';
 
 export const useDappProvidersSync = (
   accountDone: boolean,
@@ -70,7 +70,7 @@ export const useDappProvidersSync = (
                 await logout();
               } else {
                 dappProvider.setAddress(accountSnap.address);
-                network.setNetworkState('dappProvider', dappProvider);
+                setNetworkState('dappProvider', dappProvider);
               }
             } catch (e) {
               console.warn("Can't initialize the Dapp Provider!");
@@ -132,7 +132,7 @@ export const useDappProvidersSync = (
                 );
                 await logout();
               } else {
-                network.setNetworkState('dappProvider', dappProvider);
+                setNetworkState('dappProvider', dappProvider);
               }
             } catch {
               console.warn("Can't initialize the Dapp Provider!");
@@ -151,7 +151,7 @@ export const useDappProvidersSync = (
               dappProvider = new WalletProvider(
                 `${configStateSnap.walletAddress}${DAPP_INIT_ROUTE}`
               );
-              network.setNetworkState('dappProvider', dappProvider);
+              setNetworkState('dappProvider', dappProvider);
               const userAddressInstance = new Address(address);
               const userAccountInstance = new Account(userAddressInstance);
               setAccountState('address', userAccountInstance.address.bech32());
@@ -181,7 +181,7 @@ export const useDappProvidersSync = (
               dappProvider = new WalletProvider(
                 `${configStateSnap.xAliasAddress}${DAPP_INIT_ROUTE}`
               );
-              network.setNetworkState('dappProvider', dappProvider);
+              setNetworkState('dappProvider', dappProvider);
               const userAddressInstance = new Address(address);
               const userAccountInstance = new Account(userAddressInstance);
               setAccountState('address', userAccountInstance.address.bech32());
@@ -202,7 +202,7 @@ export const useDappProvidersSync = (
           case LoginMethodsEnum.ledger: {
             dappProvider = new HWProvider();
             dappProviderRef.current = dappProvider;
-            network.setNetworkState('dappProvider', dappProvider);
+            setNetworkState('dappProvider', dappProvider);
             try {
               await dappProvider.init();
               if (!dappProvider.isInitialized()) {
@@ -212,7 +212,7 @@ export const useDappProvidersSync = (
                 await logout();
               } else {
                 dappProvider.setAddressIndex(accountSnap.addressIndex);
-                network.setNetworkState('dappProvider', dappProvider);
+                setNetworkState('dappProvider', dappProvider);
               }
             } catch {
               console.warn("Can't initialize the Dapp Provider!");

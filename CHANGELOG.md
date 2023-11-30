@@ -1,3 +1,8 @@
+### [0.12.0](https://github.com/useElven/core/releases/tag/v0.12.0) (2023-11-30)
+- add useSignMessage hook - check [docs](https://www.useElven.com) for more informations
+- min Node version is 18
+- update dependencies
+
 ### [0.11.0](https://github.com/useElven/core/releases/tag/v0.11.0) (2023-11-04)
 - add useMultiTokenTransfer 
 - some changes in the useTransaction hook. Now you can also pass the whole Transaction object to the triggerTx function (in such a case, other param are not required). This is optional. Previous functionality stays the same. In some cases, it can be a breaking change.
