@@ -16,6 +16,7 @@ export * from './hooks/useNetwork';
 export * from './hooks/useTokenTransfer';
 export * from './hooks/useMultiTokenTransfer';
 export * from './hooks/useSignMessage';
+export * from './hooks/useScDeploy';
 export { useApiCall } from './hooks/useApiCall';
 export { useScQuery } from './hooks/useScQuery';
 

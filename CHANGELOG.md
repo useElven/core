@@ -1,5 +1,8 @@
+### [0.13.0](https://github.com/useElven/core/releases/tag/v0.13.0) (2023-12-03)
+- add useScDeploy hook for smart contract deployments - check [docs](https://www.useElven.com/docs/sdk-reference.html#usescdeploy()) for more informations
+
 ### [0.12.0](https://github.com/useElven/core/releases/tag/v0.12.0) (2023-11-30)
-- add useSignMessage hook - check [docs](https://www.useElven.com) for more informations
+- add useSignMessage hook - check [docs](https://www.useElven.com/docs/sdk-reference.html#usesignmessage()) for more informations
 - min Node version is 18
 - update dependencies
 
