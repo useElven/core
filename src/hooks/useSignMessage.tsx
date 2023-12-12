@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNetwork } from './useNetwork';
-import { ExtensionProvider } from '@multiversx/sdk-extension-provider/out';
-import { WalletConnectV2Provider } from '@multiversx/sdk-wallet-connect-provider/out';
-import { WalletProvider } from '@multiversx/sdk-web-wallet-provider/out';
-import { SignableMessage } from '@multiversx/sdk-core/out';
+import { ExtensionProvider } from '@multiversx/sdk-extension-provider';
+import { WalletConnectV2Provider } from '@multiversx/sdk-wallet-connect-provider';
+import { WalletProvider } from '@multiversx/sdk-web-wallet-provider';
+import { SignableMessage } from '@multiversx/sdk-core';
 import { errorParse } from '../utils/errorParse';
 import { getParamFromUrl } from '../utils/getParamFromUrl';
 

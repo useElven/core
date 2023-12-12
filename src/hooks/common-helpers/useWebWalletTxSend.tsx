@@ -13,7 +13,7 @@ import {
   TransactionCallbackParams,
 } from './signAndSendTxOperations';
 import { errorParse } from '../../utils/errorParse';
-import { ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
+import { ApiNetworkProvider } from '@multiversx/sdk-network-providers';
 import { useAccount } from '../useAccount';
 import { setAccountState } from '../../store/auth';
 import { useConfig } from '../useConfig';

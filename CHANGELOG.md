@@ -1,3 +1,6 @@
+### [0.13.1](https://github.com/useElven/core/releases/tag/v0.13.1) (2023-12-12)
+- bugfix: wrong imports. In some cases, it was breaking the app that used it
+
 ### [0.13.0](https://github.com/useElven/core/releases/tag/v0.13.0) (2023-12-03)
 - add useScDeploy hook for smart contract deployments - check [docs](https://www.useElven.com/docs/sdk-reference.html#usescdeploy()) for more informations
 

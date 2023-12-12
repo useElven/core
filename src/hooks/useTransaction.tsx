@@ -14,7 +14,7 @@ import {
   signAndSendTxOperations,
 } from './common-helpers/signAndSendTxOperations';
 import { DappProvider } from '../types/network';
-import { ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
+import { ApiNetworkProvider } from '@multiversx/sdk-network-providers';
 import { useConfig } from './useConfig';
 import { useLoginInfo } from './useLoginInfo';
 import { useAccount } from './useAccount';

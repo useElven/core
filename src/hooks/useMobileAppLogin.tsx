@@ -21,7 +21,7 @@ import { Login } from '../types/account';
 import { useLoggingIn } from './useLoggingIn';
 import { errorParse } from '../utils/errorParse';
 import { DappProvider } from '../types/network';
-import { ApiNetworkProvider } from '@multiversx/sdk-network-providers/out';
+import { ApiNetworkProvider } from '@multiversx/sdk-network-providers';
 import { useConfig } from './useConfig';
 import { useNetwork } from './useNetwork';
 import { getLoginToken } from './common-helpers/getLoginToken';
