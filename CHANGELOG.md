@@ -1,3 +1,6 @@
+### [0.13.2](https://github.com/useElven/core/releases/tag/v0.13.2) (2023-12-23)
+ - update dependencies with npm audit fix
+
 ### [0.13.1](https://github.com/useElven/core/releases/tag/v0.13.1) (2023-12-12)
 - bugfix: wrong imports. In some cases, it was breaking the app that used it
 
