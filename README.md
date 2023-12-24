@@ -66,7 +66,7 @@ const handleSendTx = () => {
   const demoMessage = 'Transaction demo!';
   triggerTx({
     address: 'erd123.....',
-    gasLimit: 50000 + 1500 * demoMessage.length, // + 50000 when guarded
+    gasLimit: 50000 + 1500 * demoMessage.length, // When guarded additional 50000 will be added internally
     data: new TransactionPayload(demoMessage),
     value: TokenTransfer.egldFromBigInteger(1_000_000_000_000_000_000),
   });

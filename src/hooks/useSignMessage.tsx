@@ -6,6 +6,7 @@ import { WalletProvider } from '@multiversx/sdk-web-wallet-provider';
 import { SignableMessage } from '@multiversx/sdk-core';
 import { errorParse } from '../utils/errorParse';
 import { getParamFromUrl } from '../utils/getParamFromUrl';
+import { HWProvider } from '@multiversx/sdk-hw-provider/out';
 
 export type SignMessageArgs = {
   message: string;
@@ -60,6 +61,13 @@ export const useSignMessage = () => {
 
         setSignature(signedMessage.getSignature().toString('hex'));
       }
+      if (networkStateSnap.dappProvider instanceof HWProvider) {
+        const signedMessage = await networkStateSnap.dappProvider.signMessage(
+          new SignableMessage({ message: Buffer.from(message) })
+        );
+
+        setSignature(signedMessage.getSignature().toString('hex'));
+      }
       if (networkStateSnap.dappProvider instanceof WalletProvider) {
         const encodeRFC3986URIComponent = (str: string) => {
           return encodeURIComponent(str).replace(
@@ -68,7 +76,9 @@ export const useSignMessage = () => {
           );
         };
 
-        const url = options?.callbackUrl || window.location.origin;
+        const url =
+          `${window.location.origin}${options?.callbackUrl || ''}` ||
+          window?.location.href;
         await networkStateSnap.dappProvider.signMessage(
           new SignableMessage({ message: Buffer.from(message) }),
           {

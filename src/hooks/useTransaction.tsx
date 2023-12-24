@@ -86,7 +86,9 @@ export function useTransaction(
         new Transaction({
           nonce: currentNonce,
           receiver: new Address(address),
-          gasLimit: gasLimit!,
+          gasLimit:
+            (gasLimit?.valueOf() || 0) +
+            (accountSnap.activeGuardianAddress ? 50000 : 0),
           chainID: configStateSnap.shortId || 'D',
           data,
           value: value || 0,

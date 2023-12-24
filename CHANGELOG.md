@@ -1,3 +1,8 @@
+### [0.14.0](https://github.com/useElven/core/releases/tag/v0.14.0) (2023-12-24)
+- make the sign message callback work the same as in the case of transactions
+- add missing Ledger support in sign message hook
+- add more gas limit automatically when transaction is guarded
+
 ### [0.13.2](https://github.com/useElven/core/releases/tag/v0.13.2) (2023-12-23)
  - update dependencies with npm audit fix
 
