@@ -100,21 +100,36 @@ export const checkNeedsGuardianSigning = (
   return true;
 };
 
+const getCallbackUrl = (
+  ongoingTxId?: string,
+  webWalletRedirectUrl?: string
+) => {
+  const currentUrl = window?.location?.href;
+  const clbck =
+    webWalletRedirectUrl && window
+      ? `${window.location.origin}${webWalletRedirectUrl}`
+      : currentUrl;
+  if (!ongoingTxId) return clbck;
+
+  const alteredCallbackUrl = new URL(clbck);
+  alteredCallbackUrl.searchParams.set('ongoingTx', ongoingTxId);
+
+  return alteredCallbackUrl.toString();
+};
+
 export const sendTxToGuardian = async (
   signedTx: Transaction,
   walletAddress?: string,
-  webWalletRedirectUrl?: string
+  webWalletRedirectUrl?: string,
+  ongoingTxId?: string
 ) => {
   const webWalletProvider = new WalletProvider(
     `${walletAddress}${DAPP_INIT_ROUTE}`
   );
-  const currentUrl = window?.location.href;
-  const callbackUrl =
-    webWalletRedirectUrl && window
-      ? `${window.location.origin}${webWalletRedirectUrl}`
-      : currentUrl;
 
-  const alteredCallbackUrl = new URL(callbackUrl);
+  const clbck = getCallbackUrl(ongoingTxId, webWalletRedirectUrl);
+
+  const alteredCallbackUrl = new URL(clbck);
   alteredCallbackUrl.searchParams.set(
     WebWalletUrlParamsEnum.hasWebWalletGuardianSign,
     'true'
@@ -148,21 +163,10 @@ export const signAndSendTxOperations = async (
 
   try {
     if (dappProvider instanceof WalletProvider) {
-      const currentUrl = window?.location?.href;
-      const getCallback = () => {
-        const clbck =
-          webWalletRedirectUrl && window
-            ? `${window.location.origin}${webWalletRedirectUrl}`
-            : currentUrl;
-        if (!ongoingTxId) return clbck;
-        if (webWalletRedirectUrl?.includes('?')) {
-          return `${clbck}&ongoingTx=${ongoingTxId}`;
-        }
-        return `${clbck}?ongoingTx=${ongoingTxId}`;
-      };
-
       await dappProvider.signTransaction(tx, {
-        callbackUrl: encodeURIComponent(getCallback()),
+        callbackUrl: encodeURIComponent(
+          getCallbackUrl(ongoingTxId, webWalletRedirectUrl)
+        ),
       });
     }
     if (dappProvider instanceof ExtensionProvider) {
@@ -185,7 +189,12 @@ export const signAndSendTxOperations = async (
       );
 
       if (needsGuardianSign) {
-        await sendTxToGuardian(signedTx, walletAddress, webWalletRedirectUrl);
+        await sendTxToGuardian(
+          signedTx,
+          walletAddress,
+          webWalletRedirectUrl,
+          ongoingTxId
+        );
 
         return;
       }

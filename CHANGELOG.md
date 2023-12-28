@@ -1,3 +1,6 @@
+### [0.15.1](https://github.com/useElven/core/releases/tag/v0.15.1) (2023-12-29)
+- add missing transaction id logic for guardian 2FA hooks
+
 ### [0.15.0](https://github.com/useElven/core/releases/tag/v0.15.0) (2023-12-28)
 - change the way we're getting the smart contract address in the useScDeploy hook
 - add optional id for all hooks that use useTransaction. It helps with signing providers' logic based on redirections to diferentiate and track which hook triggered the redirection
