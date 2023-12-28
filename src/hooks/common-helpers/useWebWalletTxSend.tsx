@@ -28,6 +28,7 @@ interface UseWebWalletTxSendProps {
   setTxResult: Dispatch<SetStateAction<ITransactionOnNetwork | null>>;
   setError: Dispatch<SetStateAction<string>>;
   cb?: (params: TransactionCallbackParams) => void;
+  ongoingTxId?: string;
 }
 
 export const useWebWalletTxSend = ({
@@ -36,6 +37,7 @@ export const useWebWalletTxSend = ({
   setTxResult,
   cb,
   setError,
+  ongoingTxId,
 }: UseWebWalletTxSendProps) => {
   const accountSnap = useAccount();
   const networkStateSnap = useNetwork();
@@ -50,6 +52,12 @@ export const useWebWalletTxSend = ({
     const hasWebWalletGuardianSign = getParamFromUrl(
       WebWalletUrlParamsEnum.hasWebWalletGuardianSign
     );
+
+    const ongoingTxUrl = getParamFromUrl('ongoingTx') || undefined;
+
+    // Check if this is a transaction with defined id
+    // Compare to differentiate it from other useTransaction triggers
+    if (ongoingTxUrl !== ongoingTxId) return;
 
     const send = async () => {
       if (
@@ -89,7 +97,6 @@ export const useWebWalletTxSend = ({
         setPending(true);
         cb?.({ pending: true });
         const transaction = Transaction.fromPlainObject(transactionObj);
-
         try {
           preSendTxOperations(transaction);
           await networkStateSnap.apiNetworkProvider.sendTransaction(

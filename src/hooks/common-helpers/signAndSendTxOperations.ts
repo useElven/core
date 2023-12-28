@@ -137,7 +137,8 @@ export const signAndSendTxOperations = async (
   webWalletRedirectUrl?: string,
   cb?: (params: TransactionCallbackParams) => void,
   activeGuardianAddress?: string,
-  walletAddress?: string
+  walletAddress?: string,
+  ongoingTxId?: string
 ) => {
   let signedTx = guardianPreSignTxOperations(
     tx,
@@ -147,14 +148,21 @@ export const signAndSendTxOperations = async (
 
   try {
     if (dappProvider instanceof WalletProvider) {
-      const currentUrl = window?.location.href;
-      await dappProvider.signTransaction(tx, {
-        callbackUrl:
+      const currentUrl = window?.location?.href;
+      const getCallback = () => {
+        const clbck =
           webWalletRedirectUrl && window
-            ? encodeURIComponent(
-                `${window.location.origin}${webWalletRedirectUrl}`
-              )
-            : currentUrl,
+            ? `${window.location.origin}${webWalletRedirectUrl}`
+            : currentUrl;
+        if (!ongoingTxId) return clbck;
+        if (webWalletRedirectUrl?.includes('?')) {
+          return `${clbck}&ongoingTx=${ongoingTxId}`;
+        }
+        return `${clbck}?ongoingTx=${ongoingTxId}`;
+      };
+
+      await dappProvider.signTransaction(tx, {
+        callbackUrl: encodeURIComponent(getCallback()),
       });
     }
     if (dappProvider instanceof ExtensionProvider) {

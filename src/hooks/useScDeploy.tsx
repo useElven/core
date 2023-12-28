@@ -9,9 +9,9 @@ import { useTransaction, TransactionArgs } from './useTransaction';
 import { useAccount } from './useAccount';
 import { useConfig } from './useConfig';
 import { errorParse } from '../utils/errorParse';
-import { useState } from 'react';
 
 export interface ScDeployHookProps {
+  id?: TransactionArgs['id'];
   webWalletRedirectUrl?: TransactionArgs['webWalletRedirectUrl'];
   cb?: TransactionArgs['cb'];
 }
@@ -24,16 +24,17 @@ export interface ScDeployArgs {
 }
 
 export const useScDeploy = (
-  { webWalletRedirectUrl, cb }: ScDeployHookProps = {
+  { id, webWalletRedirectUrl, cb }: ScDeployHookProps = {
+    id: undefined,
     webWalletRedirectUrl: undefined,
     cb: undefined,
   }
 ) => {
-  const [scAddress, setScAddress] = useState<string>();
   const { address: accountAddress, nonce } = useAccount();
   const { shortId } = useConfig();
 
   const { triggerTx, pending, transaction, txResult, error } = useTransaction({
+    id,
     webWalletRedirectUrl,
     cb,
   });
@@ -65,13 +66,6 @@ export const useScDeploy = (
         chainID: shortId || 'D',
       });
 
-      setScAddress(
-        SmartContract.computeAddress(
-          new Address(accountAddress),
-          nonce
-        ).bech32()
-      );
-
       tx.setNonce(nonce);
 
       triggerTx({ tx });
@@ -79,6 +73,10 @@ export const useScDeploy = (
       throw new Error(errorParse(e));
     }
   };
+
+  const scAddress = txResult?.logs.events
+    ?.find((event) => event.identifier === 'SCDeploy')
+    ?.address?.bech32();
 
   return {
     deploy,

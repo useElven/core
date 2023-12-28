@@ -9,6 +9,8 @@ import { useLoggingIn } from '../useLoggingIn';
 import { errorParse } from '../../utils/errorParse';
 import { useConfig } from '../useConfig';
 import { getLoginToken } from '../common-helpers/getLoginToken';
+import { useEffect } from 'react';
+import { getParamFromUrl } from 'src/utils/getParamFromUrl';
 
 export const useWebWalletXaliasLogin = (
   type: 'webwallet' | 'xalias',
@@ -17,6 +19,15 @@ export const useWebWalletXaliasLogin = (
   const { logout } = useLogout();
   const { loggedIn, pending, error } = useLoggingIn();
   const configStateSnap = useConfig();
+
+  // Web wallet cleanup after logging in
+  useEffect(() => {
+    const addressUrl = getParamFromUrl('address');
+    const signatureUrl = getParamFromUrl('signature');
+    if (addressUrl && signatureUrl && loggedIn) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  }, [loggedIn]);
 
   const login = async () => {
     setLoggingInState('pending', true);

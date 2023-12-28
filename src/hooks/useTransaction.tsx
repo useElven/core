@@ -29,12 +29,14 @@ export interface TransactionParams {
 }
 
 export interface TransactionArgs {
+  id?: string;
   webWalletRedirectUrl?: string;
   cb?: (params: TransactionCallbackParams) => void;
 }
 
 export function useTransaction(
-  { webWalletRedirectUrl, cb }: TransactionArgs = {
+  { id, webWalletRedirectUrl, cb }: TransactionArgs = {
+    id: undefined,
     webWalletRedirectUrl: undefined,
     cb: undefined,
   }
@@ -50,7 +52,14 @@ export function useTransaction(
 
   const currentNonce = accountSnap.nonce;
 
-  useWebWalletTxSend({ setPending, setTransaction, setTxResult, setError, cb });
+  useWebWalletTxSend({
+    setPending,
+    setTransaction,
+    setTxResult,
+    setError,
+    cb,
+    ongoingTxId: id,
+  });
 
   const triggerTx = async ({
     address,
@@ -107,7 +116,8 @@ export function useTransaction(
         webWalletRedirectUrl,
         cb,
         activeGuardianAddress,
-        configStateSnap.walletAddress
+        configStateSnap.walletAddress,
+        id
       );
     } else {
       setError(

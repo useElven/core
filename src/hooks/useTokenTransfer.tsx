@@ -17,6 +17,7 @@ export enum ScTokenTransferType {
 }
 
 export interface ScTokenTransferHookProps {
+  id: TransactionArgs['id'];
   webWalletRedirectUrl?: TransactionArgs['webWalletRedirectUrl'];
   cb?: TransactionArgs['cb'];
 }
@@ -34,13 +35,15 @@ export interface ScTokenTransferArgs {
 }
 
 export const useTokenTransfer = (
-  { webWalletRedirectUrl, cb }: ScTokenTransferHookProps = {
+  { id, webWalletRedirectUrl, cb }: ScTokenTransferHookProps = {
+    id: undefined,
     webWalletRedirectUrl: undefined,
     cb: undefined,
   }
 ) => {
   const { address: accountAddress } = useAccount();
   const { triggerTx, pending, transaction, txResult, error } = useTransaction({
+    id,
     webWalletRedirectUrl,
     cb,
   });

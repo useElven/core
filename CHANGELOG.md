@@ -1,3 +1,8 @@
+### [0.15.0](https://github.com/useElven/core/releases/tag/v0.15.0) (2023-12-28)
+- change the way we're getting the smart contract address in the useScDeploy hook
+- add optional id for all hooks that use useTransaction. It helps with signing providers' logic based on redirections to diferentiate and track which hook triggered the redirection
+- url cleanup after redirect for useLogin hook and web wallet
+
 ### [0.14.0](https://github.com/useElven/core/releases/tag/v0.14.0) (2023-12-24)
 - make the sign message callback work the same as in the case of transactions
 - add missing Ledger support in sign message hook
