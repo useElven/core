@@ -6,7 +6,7 @@ import { WalletProvider } from '@multiversx/sdk-web-wallet-provider';
 import { SignableMessage } from '@multiversx/sdk-core';
 import { errorParse } from '../utils/errorParse';
 import { getParamFromUrl } from '../utils/getParamFromUrl';
-import { HWProvider } from '@multiversx/sdk-hw-provider/out';
+import { HWProvider } from '@multiversx/sdk-hw-provider';
 
 export type SignMessageArgs = {
   message: string;
