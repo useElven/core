@@ -1,6 +1,6 @@
 {
   "name": "@useelven/core",
-  "version": "0.15.2",
+  "version": "0.16.0",
   "description": "Core React hooks for MultiversX DApps",
   "license": "MIT",
   "author": "Julian Ćwirko <julian.io>",
@@ -74,14 +74,14 @@
     "@multiversx/sdk-web-wallet-provider": "3.1.0",
     "lodash.clonedeep": "4.5.0",
     "swr": "2.2.4",
-    "valtio": "1.12.1"
+    "valtio": "1.13.0"
   },
   "devDependencies": {
     "@types/lodash.clonedeep": "4.5.9",
-    "@types/node": "20.10.5",
-    "@types/react": "18.2.46",
-    "@typescript-eslint/eslint-plugin": "6.16.0",
-    "@typescript-eslint/parser": "6.16.0",
+    "@types/node": "20.10.7",
+    "@types/react": "18.2.47",
+    "@typescript-eslint/eslint-plugin": "6.18.0",
+    "@typescript-eslint/parser": "6.18.0",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.1.2",

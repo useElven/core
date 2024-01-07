@@ -1,13 +1,18 @@
 import {
-  Address,
   TokenTransfer,
-  TransferTransactionsFactory,
   GasEstimator,
+  ContractCallPayloadBuilder,
+  ContractFunction,
+  BytesValue,
+  BigUIntValue,
+  TypedValue,
+  U64Value,
+  AddressValue,
+  Address,
 } from '@multiversx/sdk-core';
 import { useTransaction, TransactionArgs } from './useTransaction';
-import { useAccount } from './useAccount';
 import { apiCall } from '../utils/apiCall';
-import { useConfig } from './useConfig';
+import { useAccount } from './useAccount';
 
 export enum MultiTransferTokenType {
   FungibleESDT = 'FungibleESDT',
@@ -25,6 +30,10 @@ export interface MultiTransferToken {
 export interface MultiTokenTransferArgs {
   tokens: MultiTransferToken[];
   receiver: string;
+  gasLimit?: number;
+  endpointName?: string;
+  endpointArgs?: TypedValue[];
+  value?: number;
 }
 
 export interface MultiTokenTransferHookProps {
@@ -40,16 +49,22 @@ export const useMultiTokenTransfer = (
     cb: undefined,
   }
 ) => {
-  const { address: accountAddress } = useAccount();
-  const { shortId } = useConfig();
-  const { nonce } = useAccount();
+  const { address } = useAccount();
+
   const { triggerTx, pending, transaction, txResult, error } = useTransaction({
     id,
     webWalletRedirectUrl,
     cb,
   });
 
-  const transfer = async ({ tokens, receiver }: MultiTokenTransferArgs) => {
+  const transfer = async ({
+    tokens,
+    receiver,
+    gasLimit,
+    endpointName,
+    endpointArgs,
+    value = 0,
+  }: MultiTokenTransferArgs) => {
     const transfers: TokenTransfer[] = [];
 
     for (const token of tokens) {
@@ -84,12 +99,14 @@ export const useMultiTokenTransfer = (
       }
 
       if (token.type === MultiTransferTokenType.NonFungibleESDT) {
-        transfers.push(TokenTransfer.nonFungible(result.ticker, result.nonce));
+        transfers.push(
+          TokenTransfer.nonFungible(result.collection, result.nonce)
+        );
       }
       if (token.type === MultiTransferTokenType.SemiFungibleESDT) {
         transfers.push(
           TokenTransfer.semiFungible(
-            result.ticker,
+            result.collection,
             result.nonce,
             parseInt(token.amount, 10)
           )
@@ -98,7 +115,7 @@ export const useMultiTokenTransfer = (
       if (token.type === MultiTransferTokenType.MetaESDT) {
         transfers.push(
           TokenTransfer.metaEsdtFromAmount(
-            result.ticker,
+            result.collection,
             result.nonce,
             parseFloat(token.amount),
             result.decimals
@@ -107,17 +124,31 @@ export const useMultiTokenTransfer = (
       }
     }
 
-    const factory = new TransferTransactionsFactory(new GasEstimator());
+    const data = new ContractCallPayloadBuilder()
+      .setFunction(new ContractFunction('MultiESDTNFTTransfer'))
+      .setArgs([
+        new AddressValue(new Address(receiver)),
+        new U64Value(transfers.length || 0),
+        ...transfers.flatMap((transfer) => [
+          BytesValue.fromUTF8(transfer.tokenIdentifier),
+          new U64Value(transfer.nonce || 0),
+          new BigUIntValue(transfer.amountAsBigInteger),
+        ]),
+        ...(endpointName ? [BytesValue.fromUTF8(endpointName)] : []),
+        ...(endpointArgs || []),
+      ])
+      .build();
 
-    const tx = factory.createMultiESDTNFTTransfer({
-      tokenTransfers: transfers,
-      nonce,
-      sender: new Address(accountAddress),
-      destination: new Address(receiver),
-      chainID: shortId || 'D',
+    const gasEstimator = new GasEstimator();
+
+    triggerTx({
+      address,
+      gasLimit:
+        gasLimit ||
+        gasEstimator.forMultiESDTNFTTransfer(data.length(), transfers.length),
+      value,
+      data,
     });
-
-    triggerTx({ tx });
   };
 
   return {

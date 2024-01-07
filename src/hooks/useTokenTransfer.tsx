@@ -7,6 +7,7 @@ import {
   Address,
   AddressValue,
   TypedValue,
+  GasEstimator,
 } from '@multiversx/sdk-core';
 import { useTransaction, TransactionArgs } from './useTransaction';
 import { useAccount } from './useAccount';
@@ -74,9 +75,11 @@ export const useTokenTransfer = (
         ])
         .build();
 
+      const gasEstimator = new GasEstimator();
+
       triggerTx({
         address,
-        gasLimit,
+        gasLimit: gasLimit || gasEstimator.forESDTTransfer(data.length()),
         value,
         data,
       });
@@ -99,9 +102,11 @@ export const useTokenTransfer = (
         ])
         .build();
 
+      const gasEstimator = new GasEstimator();
+
       triggerTx({
         address: accountAddress,
-        gasLimit,
+        gasLimit: gasLimit || gasEstimator.forESDTNFTTransfer(data.length()),
         value,
         data,
       });
