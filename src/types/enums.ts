@@ -23,3 +23,10 @@ export enum LocalstorageKeys {
 export enum WebWalletUrlParamsEnum {
   hasWebWalletGuardianSign = 'hasWebWalletGuardianSign',
 }
+
+export enum ESDTType {
+  FungibleESDT = 'FungibleESDT',
+  MetaESDT = 'MetaESDT',
+  NonFungibleESDT = 'NonFungibleESDT',
+  SemiFungibleESDT = 'SemiFungibleESDT',
+}

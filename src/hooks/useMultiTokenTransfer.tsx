@@ -12,17 +12,11 @@ import {
 } from '@multiversx/sdk-core';
 import { useTransaction, TransactionArgs } from './useTransaction';
 import { apiCall } from '../utils/apiCall';
+import { ESDTType } from '../types/enums';
 import { useAccount } from './useAccount';
 
-export enum MultiTransferTokenType {
-  FungibleESDT = 'FungibleESDT',
-  MetaESDT = 'MetaESDT',
-  NonFungibleESDT = 'NonFungibleESDT',
-  SemiFungibleESDT = 'SemiFungibleESDT',
-}
-
 export interface MultiTransferToken {
-  type: MultiTransferTokenType;
+  type: ESDTType;
   tokenId: string;
   amount: string;
 }
@@ -33,7 +27,6 @@ export interface MultiTokenTransferArgs {
   gasLimit?: number;
   endpointName?: string;
   endpointArgs?: TypedValue[];
-  value?: number;
 }
 
 export interface MultiTokenTransferHookProps {
@@ -63,13 +56,12 @@ export const useMultiTokenTransfer = (
     gasLimit,
     endpointName,
     endpointArgs,
-    value = 0,
   }: MultiTokenTransferArgs) => {
     const transfers: TokenTransfer[] = [];
 
     for (const token of tokens) {
       let result;
-      if (token.type === MultiTransferTokenType.FungibleESDT) {
+      if (token.type === ESDTType.FungibleESDT) {
         try {
           result = await apiCall.get(`/tokens/${token.tokenId.trim()}`);
           transfers.push(
@@ -86,9 +78,9 @@ export const useMultiTokenTransfer = (
 
       if (
         [
-          MultiTransferTokenType.NonFungibleESDT,
-          MultiTransferTokenType.MetaESDT,
-          MultiTransferTokenType.SemiFungibleESDT,
+          ESDTType.NonFungibleESDT,
+          ESDTType.MetaESDT,
+          ESDTType.SemiFungibleESDT,
         ].includes(token.type)
       ) {
         try {
@@ -98,12 +90,12 @@ export const useMultiTokenTransfer = (
         }
       }
 
-      if (token.type === MultiTransferTokenType.NonFungibleESDT) {
+      if (token.type === ESDTType.NonFungibleESDT) {
         transfers.push(
           TokenTransfer.nonFungible(result.collection, result.nonce)
         );
       }
-      if (token.type === MultiTransferTokenType.SemiFungibleESDT) {
+      if (token.type === ESDTType.SemiFungibleESDT) {
         transfers.push(
           TokenTransfer.semiFungible(
             result.collection,
@@ -112,7 +104,7 @@ export const useMultiTokenTransfer = (
           )
         );
       }
-      if (token.type === MultiTransferTokenType.MetaESDT) {
+      if (token.type === ESDTType.MetaESDT) {
         transfers.push(
           TokenTransfer.metaEsdtFromAmount(
             result.collection,
@@ -146,7 +138,6 @@ export const useMultiTokenTransfer = (
       gasLimit:
         gasLimit ||
         gasEstimator.forMultiESDTNFTTransfer(data.length(), transfers.length),
-      value,
       data,
     });
   };
