@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   TokenTransfer,
   GasEstimator,
@@ -14,6 +15,9 @@ import { useTransaction, TransactionArgs } from './useTransaction';
 import { apiCall } from '../utils/apiCall';
 import { ESDTType } from '../types/enums';
 import { useAccount } from './useAccount';
+
+const NETWORK_ERROR_MSG =
+  "Network error: Can't fetch the tokens data. Check whether the token identifiers are valid.";
 
 export interface MultiTransferToken {
   type: ESDTType;
@@ -42,6 +46,8 @@ export const useMultiTokenTransfer = (
     cb: undefined,
   }
 ) => {
+  const [networkError, setNetworkError] = useState<string>();
+
   const { address } = useAccount();
 
   const { triggerTx, pending, transaction, txResult, error } = useTransaction({
@@ -60,10 +66,9 @@ export const useMultiTokenTransfer = (
     const transfers: TokenTransfer[] = [];
 
     for (const token of tokens) {
-      let result;
       if (token.type === ESDTType.FungibleESDT) {
         try {
-          result = await apiCall.get(`/tokens/${token.tokenId.trim()}`);
+          const result = await apiCall.get(`/tokens/${token.tokenId.trim()}`);
           transfers.push(
             TokenTransfer.fungibleFromAmount(
               token.tokenId,
@@ -72,7 +77,8 @@ export const useMultiTokenTransfer = (
             )
           );
         } catch (e) {
-          console.log((e as Error)?.message);
+          setNetworkError(NETWORK_ERROR_MSG);
+          return;
         }
       }
 
@@ -84,35 +90,36 @@ export const useMultiTokenTransfer = (
         ].includes(token.type)
       ) {
         try {
-          result = await apiCall.get(`/nfts/${token.tokenId.trim()}`);
-        } catch (e) {
-          console.log((e as Error)?.message);
-        }
-      }
+          const result = await apiCall.get(`/nfts/${token.tokenId.trim()}`);
 
-      if (token.type === ESDTType.NonFungibleESDT) {
-        transfers.push(
-          TokenTransfer.nonFungible(result.collection, result.nonce)
-        );
-      }
-      if (token.type === ESDTType.SemiFungibleESDT) {
-        transfers.push(
-          TokenTransfer.semiFungible(
-            result.collection,
-            result.nonce,
-            parseInt(token.amount, 10)
-          )
-        );
-      }
-      if (token.type === ESDTType.MetaESDT) {
-        transfers.push(
-          TokenTransfer.metaEsdtFromAmount(
-            result.collection,
-            result.nonce,
-            parseFloat(token.amount),
-            result.decimals
-          )
-        );
+          if (token.type === ESDTType.NonFungibleESDT) {
+            transfers.push(
+              TokenTransfer.nonFungible(result.collection, result.nonce)
+            );
+          }
+          if (token.type === ESDTType.SemiFungibleESDT) {
+            transfers.push(
+              TokenTransfer.semiFungible(
+                result.collection,
+                result.nonce,
+                parseInt(token.amount, 10)
+              )
+            );
+          }
+          if (token.type === ESDTType.MetaESDT) {
+            transfers.push(
+              TokenTransfer.metaEsdtFromAmount(
+                result.collection,
+                result.nonce,
+                parseFloat(token.amount),
+                result.decimals
+              )
+            );
+          }
+        } catch (e) {
+          setNetworkError(NETWORK_ERROR_MSG);
+          return;
+        }
       }
     }
 
@@ -147,6 +154,6 @@ export const useMultiTokenTransfer = (
     pending,
     transaction,
     txResult,
-    error,
+    error: networkError || error,
   };
 };

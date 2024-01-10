@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   ContractCallPayloadBuilder,
   ContractFunction,
@@ -14,6 +15,9 @@ import { useTransaction, TransactionArgs } from './useTransaction';
 import { ESDTType } from '../types/enums';
 import { useAccount } from './useAccount';
 import { apiCall } from '../utils/apiCall';
+
+const NETWORK_ERROR_MSG =
+  "Network error: Can't fetch the token data. Check whether the token identifier is valid.";
 
 export interface ScTokenTransferHookProps {
   id: TransactionArgs['id'];
@@ -38,7 +42,10 @@ export const useTokenTransfer = (
     cb: undefined,
   }
 ) => {
+  const [networkError, setNetworkError] = useState<string>();
+
   const { address: accountAddress } = useAccount();
+
   const { triggerTx, pending, transaction, txResult, error } = useTransaction({
     id,
     webWalletRedirectUrl,
@@ -69,38 +76,39 @@ export const useTokenTransfer = (
           result.decimals
         );
       } catch (e) {
-        console.log((e as Error)?.message);
+        setNetworkError(NETWORK_ERROR_MSG);
+        return;
       }
     }
 
-    let result;
     if (type !== ESDTType.FungibleESDT && tokenId) {
       try {
-        result = await apiCall.get(`/nfts/${tokenId.trim()}`);
+        const result = await apiCall.get(`/nfts/${tokenId.trim()}`);
+
+        if (type === ESDTType.NonFungibleESDT) {
+          transfer = TokenTransfer.nonFungible(result.collection, result.nonce);
+        }
+
+        if (type === ESDTType.SemiFungibleESDT && amount !== undefined) {
+          transfer = TokenTransfer.semiFungible(
+            result.collection,
+            result.nonce,
+            parseInt(amount, 10)
+          );
+        }
+
+        if (type === ESDTType.MetaESDT && amount !== undefined) {
+          transfer = TokenTransfer.metaEsdtFromAmount(
+            result.collection,
+            result.nonce,
+            parseFloat(amount),
+            result.decimals
+          );
+        }
       } catch (e) {
-        console.log((e as Error)?.message);
+        setNetworkError(NETWORK_ERROR_MSG);
+        return;
       }
-    }
-
-    if (type === ESDTType.NonFungibleESDT) {
-      transfer = TokenTransfer.nonFungible(result.collection, result.nonce);
-    }
-
-    if (type === ESDTType.SemiFungibleESDT && amount !== undefined) {
-      transfer = TokenTransfer.semiFungible(
-        result.collection,
-        result.nonce,
-        parseInt(amount, 10)
-      );
-    }
-
-    if (type === ESDTType.MetaESDT && amount !== undefined) {
-      transfer = TokenTransfer.metaEsdtFromAmount(
-        result.collection,
-        result.nonce,
-        parseFloat(amount),
-        result.decimals
-      );
     }
 
     if (!transfer) {
@@ -156,6 +164,6 @@ export const useTokenTransfer = (
     pending,
     transaction,
     txResult,
-    error,
+    error: networkError || error,
   };
 };
