@@ -77,16 +77,14 @@ Check all of the hooks here: [SDK Reference](https://www.useElven.com/docs/sdk-r
 
 ### UI
 
-There will be a separate package for React UI components. These will be simple components required in every dapp. Like auth button, QR code, WC pairings list, ProtectedRoute, Authenticated, etc.
-
-All of these you can already find in [Next.js Dapp Template](https://github.com/xdevguild/nextjs-dapp-template), but soon they will land in a separate package. They won't rely on any CSS framework or way of styling.
+Components required in every dapp. Like auth button, QR code, WC pairings list, ProtectedRoute, Authenticated, etc. are implemented in [Next.js Dapp Template](https://github.com/xdevguild/nextjs-dapp-template) and [React + Vite Dapp Template](https://github.com/useElven/react-vite).
 
 ### Examples
 
 See ready to use demo templates: 
 
-- [Next.js Dapp Template (with Shadcn UI, Tailwind, Radix UI)](https://github.com/xdevguild/nextjs-dapp-template)
-- [React + Vite Dapp Template (witch Chakra UI)](https://github.com/useElven/react-vite)
+- [Next.js Dapp Template (App Router with Shadcn UI, Tailwind, Radix UI)](https://github.com/xdevguild/nextjs-dapp-template)
+- [React + Vite Dapp Template (with Chakra UI)](https://github.com/useElven/react-vite)
 
 ### Development
 
@@ -96,6 +94,11 @@ See ready to use demo templates:
 - `npm link @useelven/core` or `npm install ./link/to/the/package.gz`
 
 ### More tools
-- [Buildo Begins](https://github.com/xdevguild/buildo-begins) - command line interface for interacting with the MultiversX blockchain
+
+- [Buildo.dev](https://www.buildo.dev) - Buildo.dev is a MultiversX app that helps with blockchain interactions, like issuing tokens and querying smart contracts.
 - [Elven Tools](https://www.elven.tools) - a set of tools for running your PFP NFT collection on the MultiversX blockchain
 - [Elven.js](https://www.elvenjs.com) - compact browser only SDK for MultiversX blockchain interaction - no build steps 
+
+### Contact me
+
+- [@theJulianIo](https://twitter.com/theJulianIo)
