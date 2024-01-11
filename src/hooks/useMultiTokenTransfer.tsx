@@ -1,23 +1,26 @@
+import { useState } from 'react';
 import {
-  Address,
   TokenTransfer,
-  TransferTransactionsFactory,
   GasEstimator,
+  ContractCallPayloadBuilder,
+  ContractFunction,
+  BytesValue,
+  BigUIntValue,
+  TypedValue,
+  U64Value,
+  AddressValue,
+  Address,
 } from '@multiversx/sdk-core';
 import { useTransaction, TransactionArgs } from './useTransaction';
-import { useAccount } from './useAccount';
 import { apiCall } from '../utils/apiCall';
-import { useConfig } from './useConfig';
+import { ESDTType } from '../types/enums';
+import { useAccount } from './useAccount';
 
-export enum MultiTransferTokenType {
-  FungibleESDT = 'FungibleESDT',
-  MetaESDT = 'MetaESDT',
-  NonFungibleESDT = 'NonFungibleESDT',
-  SemiFungibleESDT = 'SemiFungibleESDT',
-}
+const NETWORK_ERROR_MSG =
+  "Network error: Can't fetch the tokens data. Check whether the token identifiers are valid.";
 
 export interface MultiTransferToken {
-  type: MultiTransferTokenType;
+  type: ESDTType;
   tokenId: string;
   amount: string;
 }
@@ -25,6 +28,9 @@ export interface MultiTransferToken {
 export interface MultiTokenTransferArgs {
   tokens: MultiTransferToken[];
   receiver: string;
+  gasLimit?: number;
+  endpointName?: string;
+  endpointArgs?: TypedValue[];
 }
 
 export interface MultiTokenTransferHookProps {
@@ -40,23 +46,29 @@ export const useMultiTokenTransfer = (
     cb: undefined,
   }
 ) => {
-  const { address: accountAddress } = useAccount();
-  const { shortId } = useConfig();
-  const { nonce } = useAccount();
+  const [networkError, setNetworkError] = useState<string>();
+
+  const { address } = useAccount();
+
   const { triggerTx, pending, transaction, txResult, error } = useTransaction({
     id,
     webWalletRedirectUrl,
     cb,
   });
 
-  const transfer = async ({ tokens, receiver }: MultiTokenTransferArgs) => {
+  const transfer = async ({
+    tokens,
+    receiver,
+    gasLimit,
+    endpointName,
+    endpointArgs,
+  }: MultiTokenTransferArgs) => {
     const transfers: TokenTransfer[] = [];
 
     for (const token of tokens) {
-      let result;
-      if (token.type === MultiTransferTokenType.FungibleESDT) {
+      if (token.type === ESDTType.FungibleESDT) {
         try {
-          result = await apiCall.get(`/tokens/${token.tokenId.trim()}`);
+          const result = await apiCall.get(`/tokens/${token.tokenId.trim()}`);
           transfers.push(
             TokenTransfer.fungibleFromAmount(
               token.tokenId,
@@ -65,59 +77,76 @@ export const useMultiTokenTransfer = (
             )
           );
         } catch (e) {
-          console.log((e as Error)?.message);
+          setNetworkError(NETWORK_ERROR_MSG);
+          return;
         }
       }
 
       if (
         [
-          MultiTransferTokenType.NonFungibleESDT,
-          MultiTransferTokenType.MetaESDT,
-          MultiTransferTokenType.SemiFungibleESDT,
+          ESDTType.NonFungibleESDT,
+          ESDTType.MetaESDT,
+          ESDTType.SemiFungibleESDT,
         ].includes(token.type)
       ) {
         try {
-          result = await apiCall.get(`/nfts/${token.tokenId.trim()}`);
-        } catch (e) {
-          console.log((e as Error)?.message);
-        }
-      }
+          const result = await apiCall.get(`/nfts/${token.tokenId.trim()}`);
 
-      if (token.type === MultiTransferTokenType.NonFungibleESDT) {
-        transfers.push(TokenTransfer.nonFungible(result.ticker, result.nonce));
-      }
-      if (token.type === MultiTransferTokenType.SemiFungibleESDT) {
-        transfers.push(
-          TokenTransfer.semiFungible(
-            result.ticker,
-            result.nonce,
-            parseInt(token.amount, 10)
-          )
-        );
-      }
-      if (token.type === MultiTransferTokenType.MetaESDT) {
-        transfers.push(
-          TokenTransfer.metaEsdtFromAmount(
-            result.ticker,
-            result.nonce,
-            parseFloat(token.amount),
-            result.decimals
-          )
-        );
+          if (token.type === ESDTType.NonFungibleESDT) {
+            transfers.push(
+              TokenTransfer.nonFungible(result.collection, result.nonce)
+            );
+          }
+          if (token.type === ESDTType.SemiFungibleESDT) {
+            transfers.push(
+              TokenTransfer.semiFungible(
+                result.collection,
+                result.nonce,
+                parseInt(token.amount, 10)
+              )
+            );
+          }
+          if (token.type === ESDTType.MetaESDT) {
+            transfers.push(
+              TokenTransfer.metaEsdtFromAmount(
+                result.collection,
+                result.nonce,
+                parseFloat(token.amount),
+                result.decimals
+              )
+            );
+          }
+        } catch (e) {
+          setNetworkError(NETWORK_ERROR_MSG);
+          return;
+        }
       }
     }
 
-    const factory = new TransferTransactionsFactory(new GasEstimator());
+    const data = new ContractCallPayloadBuilder()
+      .setFunction(new ContractFunction('MultiESDTNFTTransfer'))
+      .setArgs([
+        new AddressValue(new Address(receiver)),
+        new U64Value(transfers.length || 0),
+        ...transfers.flatMap((transfer) => [
+          BytesValue.fromUTF8(transfer.tokenIdentifier),
+          new U64Value(transfer.nonce || 0),
+          new BigUIntValue(transfer.amountAsBigInteger),
+        ]),
+        ...(endpointName ? [BytesValue.fromUTF8(endpointName)] : []),
+        ...(endpointArgs || []),
+      ])
+      .build();
 
-    const tx = factory.createMultiESDTNFTTransfer({
-      tokenTransfers: transfers,
-      nonce,
-      sender: new Address(accountAddress),
-      destination: new Address(receiver),
-      chainID: shortId || 'D',
+    const gasEstimator = new GasEstimator();
+
+    triggerTx({
+      address,
+      gasLimit:
+        gasLimit ||
+        gasEstimator.forMultiESDTNFTTransfer(data.length(), transfers.length),
+      data,
     });
-
-    triggerTx({ tx });
   };
 
   return {
@@ -125,6 +154,6 @@ export const useMultiTokenTransfer = (
     pending,
     transaction,
     txResult,
-    error,
+    error: networkError || error,
   };
 };
