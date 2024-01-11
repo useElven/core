@@ -1,4 +1,4 @@
-### [0.16.0](https://github.com/useElven/core/releases/tag/v0.16.0) (2024-01-...)
+### [0.16.0](https://github.com/useElven/core/releases/tag/v0.16.0) (2024-01-11)
 - allow useMultiTransfer to call the endpoint
 - some breaking changes when it comes to useTransfer and useMultiTransfer types and logic (check [docs](https://www.useElven.com))
 - update dependencies

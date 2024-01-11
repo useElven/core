@@ -20,7 +20,7 @@ const NETWORK_ERROR_MSG =
   "Network error: Can't fetch the token data. Check whether the token identifier is valid.";
 
 export interface ScTokenTransferHookProps {
-  id: TransactionArgs['id'];
+  id?: TransactionArgs['id'];
   webWalletRedirectUrl?: TransactionArgs['webWalletRedirectUrl'];
   cb?: TransactionArgs['cb'];
 }
