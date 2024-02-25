@@ -1,3 +1,8 @@
+### [0.17.0](https://github.com/useElven/core/releases/tag/v0.17.0) (2024-02-25)
+- unify callbacks naming (could be a breaking change, see [docs](https://www.useelven.com/docs/sdk-reference.html) for updates)
+- add transaction watcher timeout and patience configuration
+- update dependencies
+
 ### [0.16.0](https://github.com/useElven/core/releases/tag/v0.16.0) (2024-01-11)
 - allow `useMultiTokenTransfer` to call the endpoint
 - some breaking changes when it comes to `useTokenTransfer` and `useMultiTokenTransfer` types and logic (check [docs](https://www.useElven.com))

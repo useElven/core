@@ -23,6 +23,8 @@ export const networkConfig: Record<string, NetworkType> = {
     explorerAddress: 'https://devnet-explorer.multiversx.com',
     IPFSGateway: 'https://devnet-media.multiversx.com/nfts/asset/',
     apiTimeout: '4000',
+    txWatcherTimeout: '90000',
+    txWatcherPatience: '0',
   },
 
   testnet: {
@@ -43,6 +45,8 @@ export const networkConfig: Record<string, NetworkType> = {
     explorerAddress: 'https://testnet-explorer.multiversx.com',
     IPFSGateway: 'https://testnet-media.multiversx.com/nfts/asset/',
     apiTimeout: '4000',
+    txWatcherTimeout: '90000',
+    txWatcherPatience: '0',
   },
 
   mainnet: {
@@ -63,5 +67,7 @@ export const networkConfig: Record<string, NetworkType> = {
     explorerAddress: 'https://explorer.multiversx.com',
     IPFSGateway: 'https://media.multiversx.com/nfts/asset/',
     apiTimeout: '4000',
+    txWatcherTimeout: '90000',
+    txWatcherPatience: '0',
   },
 };

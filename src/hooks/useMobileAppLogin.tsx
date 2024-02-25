@@ -64,7 +64,7 @@ export const useMobileAppLogin = (params?: Login) => {
 
   const handleOnLogout = () => {
     logout({
-      callbackRoute: params?.callbackRoute,
+      callbackUrl: params?.callbackUrl,
       dappProvider: dappProviderRef?.current,
     });
   };
@@ -130,7 +130,7 @@ export const useMobileAppLogin = (params?: Login) => {
           WcOnLogin(
             networkStateSnap.apiNetworkProvider as ApiNetworkProvider,
             dappProviderRef.current,
-            params?.callbackRoute
+            params?.callbackUrl
           );
         }
       },

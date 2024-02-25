@@ -21,7 +21,7 @@ const NETWORK_ERROR_MSG =
 
 export interface ScTokenTransferHookProps {
   id?: TransactionArgs['id'];
-  webWalletRedirectUrl?: TransactionArgs['webWalletRedirectUrl'];
+  callbackUrl?: TransactionArgs['callbackUrl'];
   cb?: TransactionArgs['cb'];
 }
 
@@ -36,9 +36,9 @@ export interface ScTokenTransferArgs {
 }
 
 export const useTokenTransfer = (
-  { id, webWalletRedirectUrl, cb }: ScTokenTransferHookProps = {
+  { id, callbackUrl, cb }: ScTokenTransferHookProps = {
     id: undefined,
-    webWalletRedirectUrl: undefined,
+    callbackUrl: undefined,
     cb: undefined,
   }
 ) => {
@@ -48,7 +48,7 @@ export const useTokenTransfer = (
 
   const { triggerTx, pending, transaction, txResult, error } = useTransaction({
     id,
-    webWalletRedirectUrl,
+    callbackUrl,
     cb,
   });
 

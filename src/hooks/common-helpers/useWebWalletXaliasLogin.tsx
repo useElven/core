@@ -43,7 +43,7 @@ export const useWebWalletXaliasLogin = (
     const callbackUrl: string =
       typeof window !== 'undefined'
         ? encodeURIComponent(
-            `${window.location.origin}${params?.callbackRoute || '/'}`
+            `${window.location.origin}${params?.callbackUrl || '/'}`
           )
         : '/';
     const providerLoginData = {

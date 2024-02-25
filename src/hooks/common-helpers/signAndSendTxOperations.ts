@@ -60,11 +60,20 @@ export const postSendTxOperations = async (
   setTransaction: Dispatch<SetStateAction<Transaction | null>>,
   setTxResult: Dispatch<SetStateAction<ITransactionOnNetwork | null>>,
   apiNetworkProvider: NetworkState['apiNetworkProvider'],
-  cb?: (params: TransactionCallbackParams) => void
+  cb?: (params: TransactionCallbackParams) => void,
+  txWatcherTimeout?: string,
+  txWatcherPatience?: string
 ) => {
   setTransaction(signedTx);
   if (apiNetworkProvider) {
-    const transactionWatcher = new TransactionWatcher(apiNetworkProvider);
+    const transactionWatcher = new TransactionWatcher(apiNetworkProvider, {
+      ...(txWatcherTimeout
+        ? { timeoutMilliseconds: parseInt(txWatcherTimeout) }
+        : {}),
+      ...(txWatcherPatience
+        ? { patienceMilliseconds: parseInt(txWatcherPatience) }
+        : {}),
+    });
     const txResult = await transactionWatcher.awaitCompleted(signedTx);
     setTransaction(signedTx);
     setTxResult(txResult);
@@ -100,14 +109,11 @@ export const checkNeedsGuardianSigning = (
   return true;
 };
 
-const getCallbackUrl = (
-  ongoingTxId?: string,
-  webWalletRedirectUrl?: string
-) => {
+const getCallbackUrl = (ongoingTxId?: string, callbackUrl?: string) => {
   const currentUrl = window?.location?.href;
   const clbck =
-    webWalletRedirectUrl && window
-      ? `${window.location.origin}${webWalletRedirectUrl}`
+    callbackUrl && window
+      ? `${window.location.origin}${callbackUrl}`
       : currentUrl;
   if (!ongoingTxId) return clbck;
 
@@ -120,14 +126,14 @@ const getCallbackUrl = (
 export const sendTxToGuardian = async (
   signedTx: Transaction,
   walletAddress?: string,
-  webWalletRedirectUrl?: string,
+  callbackUrl?: string,
   ongoingTxId?: string
 ) => {
   const webWalletProvider = new WalletProvider(
     `${walletAddress}${DAPP_INIT_ROUTE}`
   );
 
-  const clbck = getCallbackUrl(ongoingTxId, webWalletRedirectUrl);
+  const clbck = getCallbackUrl(ongoingTxId, callbackUrl);
 
   const alteredCallbackUrl = new URL(clbck);
   alteredCallbackUrl.searchParams.set(
@@ -149,11 +155,13 @@ export const signAndSendTxOperations = async (
   setTxResult: Dispatch<SetStateAction<ITransactionOnNetwork | null>>,
   setError: Dispatch<SetStateAction<string>>,
   setPending: Dispatch<SetStateAction<boolean>>,
-  webWalletRedirectUrl?: string,
+  callbackUrl?: string,
   cb?: (params: TransactionCallbackParams) => void,
   activeGuardianAddress?: string,
   walletAddress?: string,
-  ongoingTxId?: string
+  ongoingTxId?: string,
+  txWatcherTimeout?: string,
+  txWatcherPatience?: string
 ) => {
   let signedTx = guardianPreSignTxOperations(
     tx,
@@ -165,7 +173,7 @@ export const signAndSendTxOperations = async (
     if (dappProvider instanceof WalletProvider) {
       await dappProvider.signTransaction(tx, {
         callbackUrl: encodeURIComponent(
-          getCallbackUrl(ongoingTxId, webWalletRedirectUrl)
+          getCallbackUrl(ongoingTxId, callbackUrl)
         ),
       });
     }
@@ -192,7 +200,7 @@ export const signAndSendTxOperations = async (
         await sendTxToGuardian(
           signedTx,
           walletAddress,
-          webWalletRedirectUrl,
+          callbackUrl,
           ongoingTxId
         );
 
@@ -206,7 +214,9 @@ export const signAndSendTxOperations = async (
         setTransaction,
         setTxResult,
         apiNetworkProvider,
-        cb
+        cb,
+        txWatcherTimeout,
+        txWatcherPatience
       );
     }
   } catch (e) {

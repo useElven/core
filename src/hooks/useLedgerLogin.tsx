@@ -102,7 +102,7 @@ export const useLedgerLogin = (params?: Login) => {
 
       setLoginInfoState('expires', getNewLoginExpiresTimestamp());
 
-      optionalRedirect(params?.callbackRoute);
+      optionalRedirect(params?.callbackUrl);
     } catch (e) {
       const err = errorParse(e);
       setLoggingInState('error', `Error logging in ${err}`);

@@ -7,8 +7,8 @@ import { useNetwork } from './useNetwork';
 
 export interface Logout {
   dappProvider?: DappProvider;
-  callbackRoute?: string;
-  redirectFn?: (callbackRoute?: string) => void;
+  callbackUrl?: string;
+  redirectFn?: (callbackUrl?: string) => void;
 }
 
 export const useLogout = () => {
@@ -26,11 +26,11 @@ export const useLogout = () => {
         setLoggingInState('pending', true);
         await dappProvider.logout();
 
-        if (params?.callbackRoute) {
+        if (params?.callbackUrl) {
           if (typeof params?.redirectFn === 'function') {
-            params?.redirectFn(params?.callbackRoute);
+            params?.redirectFn(params?.callbackUrl);
           } else if (typeof window !== 'undefined') {
-            window.location.href = params?.callbackRoute;
+            window.location.href = params?.callbackUrl;
           }
         }
 

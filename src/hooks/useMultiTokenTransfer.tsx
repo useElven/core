@@ -35,14 +35,14 @@ export interface MultiTokenTransferArgs {
 
 export interface MultiTokenTransferHookProps {
   id?: TransactionArgs['id'];
-  webWalletRedirectUrl?: TransactionArgs['webWalletRedirectUrl'];
+  callbackUrl?: TransactionArgs['callbackUrl'];
   cb?: TransactionArgs['cb'];
 }
 
 export const useMultiTokenTransfer = (
-  { id, webWalletRedirectUrl, cb }: MultiTokenTransferHookProps = {
+  { id, callbackUrl, cb }: MultiTokenTransferHookProps = {
     id: undefined,
-    webWalletRedirectUrl: undefined,
+    callbackUrl: undefined,
     cb: undefined,
   }
 ) => {
@@ -52,7 +52,7 @@ export const useMultiTokenTransfer = (
 
   const { triggerTx, pending, transaction, txResult, error } = useTransaction({
     id,
-    webWalletRedirectUrl,
+    callbackUrl,
     cb,
   });
 

@@ -9,7 +9,7 @@ import { errorParse } from './errorParse';
 export const WcOnLogin = async (
   apiNetworkProvider?: ApiNetworkProvider,
   dappProvider?: WalletConnectV2Provider,
-  callbackRoute?: string
+  callbackUrl?: string
 ) => {
   const address = await dappProvider?.getAddress();
 
@@ -41,5 +41,5 @@ export const WcOnLogin = async (
 
   setLoginInfoState('loginMethod', LoginMethodsEnum.walletconnect);
 
-  optionalRedirect(callbackRoute);
+  optionalRedirect(callbackUrl);
 };

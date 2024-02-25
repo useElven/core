@@ -46,7 +46,7 @@ export const useExtensionLogin = (params?: Login) => {
       const callbackUrl: string =
         typeof window !== 'undefined'
           ? encodeURIComponent(
-              `${window.location.origin}${params?.callbackRoute}`
+              `${window.location.origin}${params?.callbackUrl}`
             )
           : '/';
       const providerLoginData = {
@@ -119,7 +119,7 @@ export const useExtensionLogin = (params?: Login) => {
         setLoginInfoState('accessToken', accessToken);
       }
 
-      optionalRedirect(params?.callbackRoute);
+      optionalRedirect(params?.callbackUrl);
     } catch (e) {
       const err = errorParse(e);
       setLoggingInState('error', `Error logging in ${err}`);

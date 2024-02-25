@@ -23,6 +23,8 @@ export interface BaseNetworkType
   explorerAddress?: string;
   IPFSGateway?: string;
   apiTimeout?: string;
+  txWatcherTimeout?: string;
+  txWatcherPatience?: string;
 }
 
 export interface NetworkType extends BaseNetworkType {

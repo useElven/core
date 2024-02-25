@@ -30,14 +30,14 @@ export interface TransactionParams {
 
 export interface TransactionArgs {
   id?: string;
-  webWalletRedirectUrl?: string;
+  callbackUrl?: string;
   cb?: (params: TransactionCallbackParams) => void;
 }
 
 export function useTransaction(
-  { id, webWalletRedirectUrl, cb }: TransactionArgs = {
+  { id, callbackUrl, cb }: TransactionArgs = {
     id: undefined,
-    webWalletRedirectUrl: undefined,
+    callbackUrl: undefined,
     cb: undefined,
   }
 ) {
@@ -113,11 +113,13 @@ export function useTransaction(
         setTxResult,
         setError,
         setPending,
-        webWalletRedirectUrl,
+        callbackUrl,
         cb,
         activeGuardianAddress,
         configStateSnap.walletAddress,
-        id
+        id,
+        configStateSnap.txWatcherTimeout,
+        configStateSnap.txWatcherPatience
       );
     } else {
       setError(

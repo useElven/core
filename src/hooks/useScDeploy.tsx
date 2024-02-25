@@ -12,7 +12,7 @@ import { errorParse } from '../utils/errorParse';
 
 export interface ScDeployHookProps {
   id?: TransactionArgs['id'];
-  webWalletRedirectUrl?: TransactionArgs['webWalletRedirectUrl'];
+  callbackUrl?: TransactionArgs['callbackUrl'];
   cb?: TransactionArgs['cb'];
 }
 
@@ -24,9 +24,9 @@ export interface ScDeployArgs {
 }
 
 export const useScDeploy = (
-  { id, webWalletRedirectUrl, cb }: ScDeployHookProps = {
+  { id, callbackUrl, cb }: ScDeployHookProps = {
     id: undefined,
-    webWalletRedirectUrl: undefined,
+    callbackUrl: undefined,
     cb: undefined,
   }
 ) => {
@@ -35,7 +35,7 @@ export const useScDeploy = (
 
   const { triggerTx, pending, transaction, txResult, error } = useTransaction({
     id,
-    webWalletRedirectUrl,
+    callbackUrl,
     cb,
   });
 
