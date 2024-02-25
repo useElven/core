@@ -32,12 +32,11 @@ const NextJSDappTemplate = ({ Component, pageProps }: AppProps) => {
     // If you want to use xPortal signing, 
     // you would need to configure your Wallet Connect project id here: https://cloud.walletconnect.com
     walletConnectV2ProjectId: '<your_wallet_connect_project_id_here>'
+    // Check for all configuration options in the docs
   });
 
   return (
-    <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
-    </ChakraProvider>
+    <Component {...pageProps} />
   );
 };
 ```
