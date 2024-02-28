@@ -7,9 +7,9 @@ import {
   BigUIntValue,
   Address,
   AddressValue,
-  TypedValue,
   GasEstimator,
   TokenTransfer,
+  TypedValue,
 } from '@multiversx/sdk-core';
 import { useTransaction, TransactionArgs } from './useTransaction';
 import { ESDTType } from '../types/enums';
@@ -25,14 +25,14 @@ export interface ScTokenTransferHookProps {
   cb?: TransactionArgs['cb'];
 }
 
-export interface ScTokenTransferArgs {
+export interface ScTokenTransferArgs<T> {
   type: ESDTType;
   tokenId: string;
   gasLimit?: number;
   receiver: string;
   amount?: string;
   endpointName?: string;
-  endpointArgs?: TypedValue[];
+  endpointArgs?: T[];
 }
 
 export const useTokenTransfer = (
@@ -52,7 +52,7 @@ export const useTokenTransfer = (
     cb,
   });
 
-  const transfer = async ({
+  const transfer = async function <T extends TypedValue>({
     type,
     tokenId,
     gasLimit,
@@ -60,7 +60,7 @@ export const useTokenTransfer = (
     amount,
     endpointName,
     endpointArgs,
-  }: ScTokenTransferArgs) => {
+  }: ScTokenTransferArgs<T>) {
     if (type === ESDTType.FungibleESDT && amount === undefined) {
       throw new Error('Amount to send is required in ESDTTransfer type!');
     }
@@ -121,7 +121,6 @@ export const useTokenTransfer = (
         .setArgs([
           BytesValue.fromUTF8(transfer.tokenIdentifier),
           new BigUIntValue(transfer.amountAsBigInteger),
-          new AddressValue(new Address(receiver)),
           ...(endpointName ? [BytesValue.fromUTF8(endpointName)] : []),
           ...(endpointArgs || []),
         ])

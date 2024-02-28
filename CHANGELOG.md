@@ -1,3 +1,8 @@
+### [0.17.1](https://github.com/useElven/core/releases/tag/v0.17.1) (2024-02-28)
+- fix the useTokenTransfer payload for Fungible ESDT
+- fix typings where TypedValue was used
+- update dependencies
+
 ### [0.17.0](https://github.com/useElven/core/releases/tag/v0.17.0) (2024-02-25)
 - unify callbacks naming (could be a breaking change, see [docs](https://www.useelven.com/docs/sdk-reference.html) for updates)
 - add transaction watcher timeout and patience configuration

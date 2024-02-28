@@ -25,12 +25,12 @@ export interface MultiTransferToken {
   amount: string;
 }
 
-export interface MultiTokenTransferArgs {
+export interface MultiTokenTransferArgs<T> {
   tokens: MultiTransferToken[];
   receiver: string;
   gasLimit?: number;
   endpointName?: string;
-  endpointArgs?: TypedValue[];
+  endpointArgs?: T[];
 }
 
 export interface MultiTokenTransferHookProps {
@@ -56,13 +56,13 @@ export const useMultiTokenTransfer = (
     cb,
   });
 
-  const transfer = async ({
+  const transfer = async function <T extends TypedValue>({
     tokens,
     receiver,
     gasLimit,
     endpointName,
     endpointArgs,
-  }: MultiTokenTransferArgs) => {
+  }: MultiTokenTransferArgs<T>) {
     const transfers: TokenTransfer[] = [];
 
     for (const token of tokens) {

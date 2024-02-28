@@ -16,11 +16,11 @@ export interface ScDeployHookProps {
   cb?: TransactionArgs['cb'];
 }
 
-export interface ScDeployArgs {
+export interface ScDeployArgs<T> {
   source: Buffer | string;
   gasLimit?: number;
   codeMetadata?: [boolean, boolean, boolean, boolean];
-  initArguments?: TypedValue[];
+  initArguments?: T[];
 }
 
 export const useScDeploy = (
@@ -39,12 +39,12 @@ export const useScDeploy = (
     cb,
   });
 
-  const deploy = async ({
+  const deploy = async function <T extends TypedValue>({
     source,
     gasLimit = 10_000_000,
     codeMetadata = [true, false, false, false],
     initArguments = [],
-  }: ScDeployArgs) => {
+  }: ScDeployArgs<T>) {
     try {
       let code: Code;
 
