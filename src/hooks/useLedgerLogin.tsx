@@ -16,6 +16,7 @@ import { errorParse } from '../utils/errorParse';
 import { useNetwork } from './useNetwork';
 import { getLoginToken } from './common-helpers/getLoginToken';
 import { getNativeAuthClient } from '../utils/getNativeAuthClient';
+import { getCallbackUrl } from '../utils/getCallbackUrl';
 
 export const useLedgerLogin = (params?: Login) => {
   const { logout } = useLogout();
@@ -102,7 +103,9 @@ export const useLedgerLogin = (params?: Login) => {
 
       setLoginInfoState('expires', getNewLoginExpiresTimestamp());
 
-      optionalRedirect(params?.callbackUrl);
+      if (params?.callbackUrl) {
+        optionalRedirect(getCallbackUrl(params?.callbackUrl));
+      }
     } catch (e) {
       const err = errorParse(e);
       setLoggingInState('error', `Error logging in ${err}`);

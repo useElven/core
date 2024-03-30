@@ -26,6 +26,7 @@ import { useConfig } from './useConfig';
 import { useNetwork } from './useNetwork';
 import { getLoginToken } from './common-helpers/getLoginToken';
 import { getNativeAuthClient } from '../utils/getNativeAuthClient';
+import { getCallbackUrl } from '../utils/getCallbackUrl';
 
 export interface PairingTypesStruct {
   topic: string;
@@ -64,7 +65,7 @@ export const useMobileAppLogin = (params?: Login) => {
 
   const handleOnLogout = () => {
     logout({
-      callbackUrl: params?.callbackUrl,
+      callbackUrl: getCallbackUrl(params?.callbackUrl),
       dappProvider: dappProviderRef?.current,
     });
   };

@@ -5,6 +5,7 @@ import { setAccountState, setLoginInfoState } from '../store/auth';
 import { LoginMethodsEnum } from '../types/enums';
 import { optionalRedirect } from '../utils/optionalRedirect';
 import { errorParse } from './errorParse';
+import { getCallbackUrl } from './getCallbackUrl';
 
 export const WcOnLogin = async (
   apiNetworkProvider?: ApiNetworkProvider,
@@ -41,5 +42,7 @@ export const WcOnLogin = async (
 
   setLoginInfoState('loginMethod', LoginMethodsEnum.walletconnect);
 
-  optionalRedirect(callbackUrl);
+  if (callbackUrl) {
+    optionalRedirect(getCallbackUrl(callbackUrl));
+  }
 };

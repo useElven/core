@@ -20,6 +20,7 @@ import { WalletProvider } from '@multiversx/sdk-web-wallet-provider';
 import { DappProvider } from '../../types/network';
 import { errorParse } from '../../utils/errorParse';
 import { DAPP_INIT_ROUTE } from '../../config/network';
+import { getCallbackUrl } from '../../utils/getCallbackUrl';
 
 export interface TransactionCallbackParams {
   transaction?: Transaction | null;
@@ -109,12 +110,9 @@ export const checkNeedsGuardianSigning = (
   return true;
 };
 
-const getCallbackUrl = (ongoingTxId?: string, callbackUrl?: string) => {
-  const currentUrl = window?.location?.href;
-  const clbck =
-    callbackUrl && window
-      ? `${window.location.origin}${callbackUrl}`
-      : currentUrl;
+const getClbckUrl = (ongoingTxId?: string, callbackUrl?: string) => {
+  const clbck = getCallbackUrl(callbackUrl);
+
   if (!ongoingTxId) return clbck;
 
   const alteredCallbackUrl = new URL(clbck);
@@ -133,7 +131,7 @@ export const sendTxToGuardian = async (
     `${walletAddress}${DAPP_INIT_ROUTE}`
   );
 
-  const clbck = getCallbackUrl(ongoingTxId, callbackUrl);
+  const clbck = getClbckUrl(ongoingTxId, callbackUrl);
 
   const alteredCallbackUrl = new URL(clbck);
   alteredCallbackUrl.searchParams.set(
@@ -172,9 +170,7 @@ export const signAndSendTxOperations = async (
   try {
     if (dappProvider instanceof WalletProvider) {
       await dappProvider.signTransaction(tx, {
-        callbackUrl: encodeURIComponent(
-          getCallbackUrl(ongoingTxId, callbackUrl)
-        ),
+        callbackUrl: encodeURIComponent(getClbckUrl(ongoingTxId, callbackUrl)),
       });
     }
     if (dappProvider instanceof ExtensionProvider) {

@@ -4,11 +4,12 @@ import { DappProvider } from '../types/network';
 import { errorParse } from '../utils/errorParse';
 import { useLoggingIn } from './useLoggingIn';
 import { useNetwork } from './useNetwork';
+import { optionalRedirect } from '../utils/optionalRedirect';
+import { getCallbackUrl } from '../utils/getCallbackUrl';
 
 export interface Logout {
   dappProvider?: DappProvider;
   callbackUrl?: string;
-  redirectFn?: (callbackUrl?: string) => void;
 }
 
 export const useLogout = () => {
@@ -27,11 +28,7 @@ export const useLogout = () => {
         await dappProvider.logout();
 
         if (params?.callbackUrl) {
-          if (typeof params?.redirectFn === 'function') {
-            params?.redirectFn(params?.callbackUrl);
-          } else if (typeof window !== 'undefined') {
-            window.location.href = params?.callbackUrl;
-          }
+          optionalRedirect(getCallbackUrl(params?.callbackUrl));
         }
 
         setLoggingInState('loggedIn', false);

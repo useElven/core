@@ -16,6 +16,7 @@ import { errorParse } from '../utils/errorParse';
 import { getLoginToken } from './common-helpers/getLoginToken';
 import { useNetwork } from './useNetwork';
 import { getNativeAuthClient } from '../utils/getNativeAuthClient';
+import { getCallbackUrl } from '../utils/getCallbackUrl';
 
 export const useExtensionLogin = (params?: Login) => {
   const { logout } = useLogout();
@@ -43,14 +44,8 @@ export const useExtensionLogin = (params?: Login) => {
 
       setLoginInfoState('loginMethod', LoginMethodsEnum.extension);
 
-      const callbackUrl: string =
-        typeof window !== 'undefined'
-          ? encodeURIComponent(
-              `${window.location.origin}${params?.callbackUrl}`
-            )
-          : '/';
       const providerLoginData = {
-        callbackUrl,
+        callbackUrl: getCallbackUrl(params?.callbackUrl),
         token: loginToken,
       };
 
@@ -119,7 +114,9 @@ export const useExtensionLogin = (params?: Login) => {
         setLoginInfoState('accessToken', accessToken);
       }
 
-      optionalRedirect(params?.callbackUrl);
+      if (params?.callbackUrl) {
+        optionalRedirect(getCallbackUrl(params?.callbackUrl));
+      }
     } catch (e) {
       const err = errorParse(e);
       setLoggingInState('error', `Error logging in ${err}`);

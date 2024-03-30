@@ -10,7 +10,8 @@ import { errorParse } from '../../utils/errorParse';
 import { useConfig } from '../useConfig';
 import { getLoginToken } from '../common-helpers/getLoginToken';
 import { useEffect } from 'react';
-import { getParamFromUrl } from 'src/utils/getParamFromUrl';
+import { getParamFromUrl } from '../../utils/getParamFromUrl';
+import { getCallbackUrl } from '../../utils/getCallbackUrl';
 
 export const useWebWalletXaliasLogin = (
   type: 'webwallet' | 'xalias',
@@ -40,14 +41,8 @@ export const useWebWalletXaliasLogin = (
       }${DAPP_INIT_ROUTE}`
     );
 
-    const callbackUrl: string =
-      typeof window !== 'undefined'
-        ? encodeURIComponent(
-            `${window.location.origin}${params?.callbackUrl || '/'}`
-          )
-        : '/';
     const providerLoginData = {
-      callbackUrl,
+      callbackUrl: getCallbackUrl(params?.callbackUrl),
       token: loginToken,
     };
 

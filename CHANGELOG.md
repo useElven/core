@@ -1,3 +1,7 @@
+### [0.18.0](https://github.com/useElven/core/releases/tag/v0.18.0) (2024-03-30)
+- unify path calbacks for useLogin
+- update dependencies
+
 ### [0.17.1](https://github.com/useElven/core/releases/tag/v0.17.1) (2024-02-28)
 - fix the useTokenTransfer payload for Fungible ESDT
 - fix typings where TypedValue was used
