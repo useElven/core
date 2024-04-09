@@ -14,10 +14,10 @@ export const WcOnLogin = async (
 ) => {
   const address = await dappProvider?.getAddress();
 
-  const userAddressInstance = new Address(address);
-  const userAccountInstance = new Account(userAddressInstance);
-
   if (apiNetworkProvider && address) {
+    const userAddressInstance = new Address(address);
+    const userAccountInstance = new Account(userAddressInstance);
+
     try {
       const userAccountOnNetwork =
         await apiNetworkProvider.getAccount(userAddressInstance);

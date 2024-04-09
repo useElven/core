@@ -116,6 +116,7 @@ export const useTokenTransfer = (
     }
 
     if (type === ESDTType.FungibleESDT) {
+      // TODO: migrate to SmartContractTransactionsFactory
       const data = new ContractCallPayloadBuilder()
         .setFunction(new ContractFunction('ESDTTransfer'))
         .setArgs([
@@ -134,6 +135,7 @@ export const useTokenTransfer = (
         data,
       });
     } else {
+      // TODO: migrate to SmartContractTransactionsFactory
       const data = new ContractCallPayloadBuilder()
         .setFunction(new ContractFunction('ESDTNFTTransfer'))
         .setArgs([

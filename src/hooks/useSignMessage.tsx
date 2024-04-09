@@ -49,6 +49,7 @@ export const useSignMessage = () => {
 
       if (networkStateSnap.dappProvider instanceof ExtensionProvider) {
         const signedMessage = await networkStateSnap.dappProvider.signMessage(
+          // TODO: replace SignableMessage when signing providers are ready
           new SignableMessage({ message: Buffer.from(message) })
         );
 
