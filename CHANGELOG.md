@@ -1,7 +1,8 @@
 ### [0.19.0](https://github.com/useElven/core/releases/tag/v0.19.0) (2024-04-...)
 - update @multiversx/sdk-core library (v13)
 - breaking: with this version the @multiversx/sdk-core is now a peer dependency, you must have it in your project to work with useElven, at least v13.0.0. So, as always, freeze on 0.18.0 if you still need to use older sdk-core
-- breaking: useScDeploy hook accepts different set of arguments
+- breaking: `useScDeploy` hook accepts different set of arguments
+- breaking: `useMultiTokenTransfer` hook now requires gasLimit when transfering to smart contract with provided endpoint name. For standard transfers the gas limit isn't required
 
 ### [0.18.0](https://github.com/useElven/core/releases/tag/v0.18.0) (2024-03-30)
 - unify path calbacks for useLogin

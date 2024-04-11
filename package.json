@@ -76,10 +76,10 @@
     "valtio": "1.13.2"
   },
   "devDependencies": {
-    "@multiversx/sdk-core": "13.0.0",
+    "@multiversx/sdk-core": "13.0.1",
     "@types/lodash.clonedeep": "4.5.9",
-    "@types/node": "20.12.5",
-    "@types/react": "18.2.74",
+    "@types/node": "20.12.7",
+    "@types/react": "18.2.75",
     "@typescript-eslint/eslint-plugin": "7.6.0",
     "@typescript-eslint/parser": "7.6.0",
     "eslint": "8.57.0",
@@ -90,7 +90,7 @@
     "prettier": "3.2.5",
     "rimraf": "5.0.5",
     "tsup": "8.0.2",
-    "typescript": "5.4.4"
+    "typescript": "5.4.5"
   },
   "peerDependencies": {
     "@multiversx/sdk-core": "^13.0.0",

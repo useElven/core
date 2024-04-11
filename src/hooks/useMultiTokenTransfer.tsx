@@ -1,20 +1,17 @@
 import { useState } from 'react';
 import {
   TokenTransfer,
-  GasEstimator,
-  ContractCallPayloadBuilder,
-  ContractFunction,
-  BytesValue,
-  BigUIntValue,
   TypedValue,
-  U64Value,
-  AddressValue,
   Address,
+  SmartContractTransactionsFactory,
+  TransactionsFactoryConfig,
+  TransferTransactionsFactory,
 } from '@multiversx/sdk-core';
 import { useTransaction, TransactionArgs } from './useTransaction';
 import { apiCall } from '../utils/apiCall';
 import { ESDTType } from '../types/enums';
 import { useAccount } from './useAccount';
+import { useConfig } from './useConfig';
 
 const NETWORK_ERROR_MSG =
   "Network error: Can't fetch the tokens data. Check whether the token identifiers are valid.";
@@ -25,13 +22,25 @@ export interface MultiTransferToken {
   amount: string;
 }
 
-export interface MultiTokenTransferArgs<T> {
+export type MultiTokenTransferTxArgs = {
   tokens: MultiTransferToken[];
   receiver: string;
-  gasLimit?: number;
-  endpointName?: string;
+  gasLimit?: never;
+  endpointName?: never;
+  endpointArgs?: never;
+};
+
+export type MultiTokenTransferScArgs<T> = {
+  tokens: MultiTransferToken[];
+  receiver: string;
+  gasLimit: number;
+  endpointName: string;
   endpointArgs?: T[];
-}
+};
+
+export type MultiTokenTransferArgs<T> =
+  | MultiTokenTransferTxArgs
+  | MultiTokenTransferScArgs<T>;
 
 export interface MultiTokenTransferHookProps {
   id?: TransactionArgs['id'];
@@ -49,6 +58,7 @@ export const useMultiTokenTransfer = (
   const [networkError, setNetworkError] = useState<string>();
 
   const { address } = useAccount();
+  const { shortId } = useConfig();
 
   const { triggerTx, pending, transaction, txResult, error } = useTransaction({
     id,
@@ -70,6 +80,7 @@ export const useMultiTokenTransfer = (
         try {
           const result = await apiCall.get(`/tokens/${token.tokenId.trim()}`);
           transfers.push(
+            // TODO: Legacy TokenTransfer usage, use constructor instead
             TokenTransfer.fungibleFromAmount(
               token.tokenId,
               token.amount,
@@ -94,11 +105,13 @@ export const useMultiTokenTransfer = (
 
           if (token.type === ESDTType.NonFungibleESDT) {
             transfers.push(
+              // TODO: Legacy TokenTransfer usage, use constructor instead
               TokenTransfer.nonFungible(result.collection, result.nonce)
             );
           }
           if (token.type === ESDTType.SemiFungibleESDT) {
             transfers.push(
+              // TODO: Legacy TokenTransfer usage, use constructor instead
               TokenTransfer.semiFungible(
                 result.collection,
                 result.nonce,
@@ -108,6 +121,7 @@ export const useMultiTokenTransfer = (
           }
           if (token.type === ESDTType.MetaESDT) {
             transfers.push(
+              // TODO: Legacy TokenTransfer usage, use constructor instead
               TokenTransfer.metaEsdtFromAmount(
                 result.collection,
                 result.nonce,
@@ -123,31 +137,38 @@ export const useMultiTokenTransfer = (
       }
     }
 
-    // TODO: SmartContractTransactionsFactory
-    const data = new ContractCallPayloadBuilder()
-      .setFunction(new ContractFunction('MultiESDTNFTTransfer'))
-      .setArgs([
-        new AddressValue(new Address(receiver)),
-        new U64Value(transfers.length || 0),
-        ...transfers.flatMap((transfer) => [
-          BytesValue.fromUTF8(transfer.tokenIdentifier),
-          new U64Value(transfer.nonce || 0),
-          new BigUIntValue(transfer.amountAsBigInteger),
-        ]),
-        ...(endpointName ? [BytesValue.fromUTF8(endpointName)] : []),
-        ...(endpointArgs || []),
-      ])
-      .build();
-
-    const gasEstimator = new GasEstimator();
-
-    triggerTx({
-      address,
-      gasLimit:
-        gasLimit ||
-        gasEstimator.forMultiESDTNFTTransfer(data.length(), transfers.length),
-      data,
+    const factoryConfig = new TransactionsFactoryConfig({
+      chainID: shortId || 'D',
     });
+
+    const scTxFactory = new SmartContractTransactionsFactory({
+      config: factoryConfig,
+    });
+
+    const txFactory = new TransferTransactionsFactory({
+      config: factoryConfig,
+    });
+
+    let tx;
+
+    if (endpointName) {
+      tx = scTxFactory.createTransactionForExecute({
+        sender: Address.fromBech32(address),
+        contract: Address.fromBech32(receiver),
+        gasLimit: BigInt(gasLimit!),
+        tokenTransfers: transfers,
+        function: endpointName,
+        ...(endpointArgs ? { arguments: endpointArgs } : {}),
+      });
+    } else {
+      tx = txFactory.createTransactionForESDTTokenTransfer({
+        sender: Address.fromBech32(address),
+        receiver: Address.fromBech32(receiver),
+        tokenTransfers: transfers,
+      });
+    }
+
+    triggerTx({ tx });
   };
 
   return {
