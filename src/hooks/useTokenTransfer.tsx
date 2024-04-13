@@ -1,42 +1,65 @@
 import { useState } from 'react';
 import {
-  ContractCallPayloadBuilder,
-  ContractFunction,
-  BytesValue,
-  U64Value,
-  BigUIntValue,
-  Address,
-  AddressValue,
-  GasEstimator,
   TokenTransfer,
   TypedValue,
+  Address,
+  SmartContractTransactionsFactory,
+  TransactionsFactoryConfig,
+  TransferTransactionsFactory,
+  Token,
 } from '@multiversx/sdk-core';
 import { useTransaction, TransactionArgs } from './useTransaction';
+import { apiCall } from '../utils/apiCall';
 import { ESDTType } from '../types/enums';
 import { useAccount } from './useAccount';
-import { apiCall } from '../utils/apiCall';
+import { useConfig } from './useConfig';
+import { parseAmount } from '../utils/amount';
 
-const NETWORK_ERROR_MSG =
-  "Network error: Can't fetch the token data. Check whether the token identifier is valid.";
+interface BaseToken {
+  type: ESDTType;
+  tokenId: string;
+}
 
-export interface ScTokenTransferHookProps {
+interface NonFungibleESDTToken extends BaseToken {
+  type: ESDTType.NonFungibleESDT;
+  amount?: never;
+}
+
+interface OtherToken extends BaseToken {
+  type: ESDTType.FungibleESDT | ESDTType.SemiFungibleESDT | ESDTType.MetaESDT;
+  amount: string;
+}
+
+type MultiTransferToken = NonFungibleESDTToken | OtherToken;
+
+type MultiTokenTransferTxArgs = {
+  tokens: MultiTransferToken[];
+  receiver: string;
+  gasLimit?: never;
+  endpointName?: never;
+  endpointArgs?: never;
+};
+
+type MultiTokenTransferScArgs<T> = {
+  tokens: MultiTransferToken[];
+  receiver: string;
+  gasLimit: number;
+  endpointName: string;
+  endpointArgs?: T[];
+};
+
+export type MultiTokenTransferArgs<T> =
+  | MultiTokenTransferTxArgs
+  | MultiTokenTransferScArgs<T>;
+
+export interface MultiTokenTransferHookProps {
   id?: TransactionArgs['id'];
   callbackUrl?: TransactionArgs['callbackUrl'];
   cb?: TransactionArgs['cb'];
 }
 
-export interface ScTokenTransferArgs<T> {
-  type: ESDTType;
-  tokenId: string;
-  gasLimit?: number;
-  receiver: string;
-  amount?: string;
-  endpointName?: string;
-  endpointArgs?: T[];
-}
-
 export const useTokenTransfer = (
-  { id, callbackUrl, cb }: ScTokenTransferHookProps = {
+  { id, callbackUrl, cb }: MultiTokenTransferHookProps = {
     id: undefined,
     callbackUrl: undefined,
     cb: undefined,
@@ -44,7 +67,8 @@ export const useTokenTransfer = (
 ) => {
   const [networkError, setNetworkError] = useState<string>();
 
-  const { address: accountAddress } = useAccount();
+  const { address, nonce } = useAccount();
+  const { shortId } = useConfig();
 
   const { triggerTx, pending, transaction, txResult, error } = useTransaction({
     id,
@@ -53,109 +77,114 @@ export const useTokenTransfer = (
   });
 
   const transfer = async function <T extends TypedValue>({
-    type,
-    tokenId,
-    gasLimit,
+    tokens,
     receiver,
-    amount,
+    gasLimit,
     endpointName,
     endpointArgs,
-  }: ScTokenTransferArgs<T>) {
-    if (type === ESDTType.FungibleESDT && amount === undefined) {
-      throw new Error('Amount to send is required in ESDTTransfer type!');
-    }
-
-    let transfer;
-
-    if (type === ESDTType.FungibleESDT && amount !== undefined) {
-      try {
-        const result = await apiCall.get(`/tokens/${tokenId.trim()}`);
-        transfer = TokenTransfer.fungibleFromAmount(
-          tokenId,
-          amount,
-          result.decimals
-        );
-      } catch (e) {
-        setNetworkError(NETWORK_ERROR_MSG);
-        return;
-      }
-    }
-
-    if (type !== ESDTType.FungibleESDT && tokenId) {
-      try {
-        const result = await apiCall.get(`/nfts/${tokenId.trim()}`);
-
-        if (type === ESDTType.NonFungibleESDT) {
-          transfer = TokenTransfer.nonFungible(result.collection, result.nonce);
-        }
-
-        if (type === ESDTType.SemiFungibleESDT && amount !== undefined) {
-          transfer = TokenTransfer.semiFungible(
-            result.collection,
-            result.nonce,
-            parseInt(amount, 10)
+  }: MultiTokenTransferArgs<T>) {
+    const transfers: TokenTransfer[] = [];
+    try {
+      for (const token of tokens) {
+        if (token.type === ESDTType.FungibleESDT) {
+          const result = await apiCall.get(`/tokens/${token.tokenId.trim()}`);
+          transfers.push(
+            new TokenTransfer({
+              token: new Token({ identifier: token.tokenId.trim() }),
+              amount: parseAmount({
+                amount: token.amount,
+                decimals: result.decimals,
+              }),
+            })
           );
         }
 
-        if (type === ESDTType.MetaESDT && amount !== undefined) {
-          transfer = TokenTransfer.metaEsdtFromAmount(
-            result.collection,
-            result.nonce,
-            parseFloat(amount),
-            result.decimals
-          );
+        if (
+          [
+            ESDTType.NonFungibleESDT,
+            ESDTType.MetaESDT,
+            ESDTType.SemiFungibleESDT,
+          ].includes(token.type)
+        ) {
+          const result = await apiCall.get(`/nfts/${token.tokenId.trim()}`);
+
+          if (token.type === ESDTType.NonFungibleESDT) {
+            transfers.push(
+              new TokenTransfer({
+                token: new Token({
+                  identifier: result.collection,
+                  nonce: result.nonce,
+                }),
+                amount: 1n,
+              })
+            );
+          }
+          if (token.type === ESDTType.SemiFungibleESDT) {
+            transfers.push(
+              new TokenTransfer({
+                token: new Token({
+                  identifier: result.collection,
+                  nonce: result.nonce,
+                }),
+                amount: BigInt(token.amount),
+              })
+            );
+          }
+          if (token.type === ESDTType.MetaESDT) {
+            transfers.push(
+              new TokenTransfer({
+                token: new Token({
+                  identifier: result.collection,
+                  nonce: result.nonce,
+                }),
+                amount: parseAmount({
+                  amount: token.amount,
+                  decimals: result.decimals,
+                }),
+              })
+            );
+          }
         }
-      } catch (e) {
-        setNetworkError(NETWORK_ERROR_MSG);
-        return;
       }
+    } catch (e) {
+      setNetworkError(`Something went wrong: ${e}`);
+      return;
     }
 
-    if (!transfer) {
-      throw new Error("The transfer can't be processed!");
-    }
+    const factoryConfig = new TransactionsFactoryConfig({
+      chainID: shortId || 'D',
+    });
 
-    if (type === ESDTType.FungibleESDT) {
-      const data = new ContractCallPayloadBuilder()
-        .setFunction(new ContractFunction('ESDTTransfer'))
-        .setArgs([
-          BytesValue.fromUTF8(transfer.tokenIdentifier),
-          new BigUIntValue(transfer.amountAsBigInteger),
-          ...(endpointName ? [BytesValue.fromUTF8(endpointName)] : []),
-          ...(endpointArgs || []),
-        ])
-        .build();
+    const scTxFactory = new SmartContractTransactionsFactory({
+      config: factoryConfig,
+    });
 
-      const gasEstimator = new GasEstimator();
+    const txFactory = new TransferTransactionsFactory({
+      config: factoryConfig,
+    });
 
-      triggerTx({
-        address: receiver,
-        gasLimit: gasLimit || gasEstimator.forESDTTransfer(data.length()),
-        data,
+    let tx;
+
+    if (endpointName) {
+      tx = scTxFactory.createTransactionForExecute({
+        sender: Address.fromBech32(address),
+        contract: Address.fromBech32(receiver),
+        gasLimit: BigInt(gasLimit!),
+        tokenTransfers: transfers,
+        function: endpointName,
+        ...(endpointArgs ? { arguments: endpointArgs } : {}),
       });
     } else {
-      const data = new ContractCallPayloadBuilder()
-        .setFunction(new ContractFunction('ESDTNFTTransfer'))
-        .setArgs([
-          BytesValue.fromUTF8(transfer.tokenIdentifier),
-          new U64Value(transfer.nonce || 0),
-          new BigUIntValue(
-            type !== ESDTType.NonFungibleESDT ? transfer.amountAsBigInteger : 1
-          ),
-          new AddressValue(new Address(receiver)),
-          ...(endpointName ? [BytesValue.fromUTF8(endpointName)] : []),
-          ...(endpointArgs || []),
-        ])
-        .build();
-
-      const gasEstimator = new GasEstimator();
-
-      triggerTx({
-        address: accountAddress,
-        gasLimit: gasLimit || gasEstimator.forESDTNFTTransfer(data.length()),
-        data,
+      tx = txFactory.createTransactionForESDTTokenTransfer({
+        sender: Address.fromBech32(address),
+        receiver: Address.fromBech32(receiver),
+        tokenTransfers: transfers,
       });
     }
+
+    tx.nonce = BigInt(nonce);
+
+    triggerTx({ tx });
   };
 
   return {

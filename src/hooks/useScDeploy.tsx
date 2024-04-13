@@ -1,9 +1,9 @@
 import {
   Address,
-  Code,
-  SmartContract,
-  CodeMetadata,
   TypedValue,
+  SmartContractTransactionsFactory,
+  TransactionsFactoryConfig,
+  Code,
 } from '@multiversx/sdk-core';
 import { useTransaction, TransactionArgs } from './useTransaction';
 import { useAccount } from './useAccount';
@@ -19,7 +19,10 @@ export interface ScDeployHookProps {
 export interface ScDeployArgs<T> {
   source: Buffer | string;
   gasLimit?: number;
-  codeMetadata?: [boolean, boolean, boolean, boolean];
+  isUpgradeable?: boolean;
+  isReadable?: boolean;
+  isPayable?: boolean;
+  isPayableBySmartContract?: boolean;
   initArguments?: T[];
 }
 
@@ -42,28 +45,40 @@ export const useScDeploy = (
   const deploy = async function <T extends TypedValue>({
     source,
     gasLimit = 10_000_000,
-    codeMetadata = [true, false, false, false],
     initArguments = [],
+    isUpgradeable = true,
+    isReadable = false,
+    isPayable = false,
+    isPayableBySmartContract = false,
   }: ScDeployArgs<T>) {
     try {
-      let code: Code;
+      let code: Uint8Array;
 
       if (Buffer.isBuffer(source)) {
-        code = Code.fromBuffer(source);
+        code = Code.fromBuffer(source).valueOf();
       } else {
         const response = await fetch(source);
         const bytes = await response.arrayBuffer();
-        code = Code.fromBuffer(Buffer.from(bytes));
+        code = Code.fromBuffer(Buffer.from(bytes)).valueOf();
       }
 
-      const smartContract = new SmartContract();
-      const tx = smartContract.deploy({
-        deployer: new Address(accountAddress),
-        code,
-        codeMetadata: new CodeMetadata(...codeMetadata),
-        initArguments,
-        gasLimit,
+      const factoryConfig = new TransactionsFactoryConfig({
         chainID: shortId || 'D',
+      });
+
+      const factory = new SmartContractTransactionsFactory({
+        config: factoryConfig,
+      });
+
+      const tx = factory.createTransactionForDeploy({
+        sender: new Address(accountAddress),
+        bytecode: code,
+        isUpgradeable,
+        isReadable,
+        isPayable,
+        isPayableBySmartContract,
+        arguments: initArguments,
+        gasLimit: BigInt(gasLimit),
       });
 
       tx.setNonce(nonce);

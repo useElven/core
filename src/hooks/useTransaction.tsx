@@ -23,7 +23,7 @@ import { useNetwork } from './useNetwork';
 export interface TransactionParams {
   address?: string;
   gasLimit?: IGasLimit;
-  data?: ITransactionPayload;
+  data?: ITransactionPayload | Uint8Array;
   value?: ITransactionValue;
   tx?: Transaction; // When provided other params are not needed
 }
@@ -94,7 +94,7 @@ export function useTransaction(
         tx ||
         new Transaction({
           nonce: currentNonce,
-          receiver: new Address(address),
+          receiver: new Address(address!),
           gasLimit:
             (gasLimit?.valueOf() || 0) +
             (accountSnap.activeGuardianAddress ? 50000 : 0),

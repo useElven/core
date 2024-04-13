@@ -33,13 +33,13 @@ interface FetcherArgs {
   payload: Record<string, unknown> | undefined;
 }
 
-export interface VMOutput {
+interface VMOutput {
   data: { data: string | number };
   error: string;
   code: string;
 }
 
-export const scQueryFetcher: Fetcher<VMOutput, FetcherArgs> = async ({
+const scQueryFetcher: Fetcher<VMOutput, FetcherArgs> = async ({
   url,
   payload,
 }) => await apiCall.post(url, payload || {});

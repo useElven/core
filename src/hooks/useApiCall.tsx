@@ -18,7 +18,7 @@ interface FetcherArgs {
   baseEndpoint?: string;
 }
 
-export async function apiCallFetcher({
+async function apiCallFetcher({
   url,
   type,
   payload,
