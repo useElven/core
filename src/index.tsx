@@ -14,15 +14,16 @@ export * from './hooks/useAccount';
 export * from './hooks/useConfig';
 export * from './hooks/useNetwork';
 export * from './hooks/useTokenTransfer';
-export * from './hooks/useMultiTokenTransfer';
 export * from './hooks/useSignMessage';
 export * from './hooks/useScDeploy';
-export { useApiCall } from './hooks/useApiCall';
-export { useScQuery } from './hooks/useScQuery';
+export * from './hooks/useScQuery';
+export * from './hooks/useApiCall';
 
 // Types
 export * from './types/account';
 export * from './types/enums';
 export * from './types/network';
 export { TransactionCallbackParams } from './hooks/common-helpers/signAndSendTxOperations';
-export { SCQueryType } from './hooks/useScQuery';
+
+// Utils
+export * from './utils/amount';

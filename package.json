@@ -71,6 +71,7 @@
     "@multiversx/sdk-network-providers": "2.4.3",
     "@multiversx/sdk-wallet-connect-provider": "4.1.1",
     "@multiversx/sdk-web-wallet-provider": "3.2.1",
+    "bignumber.js": "9.1.2",
     "lodash.clonedeep": "4.5.0",
     "swr": "2.2.5",
     "valtio": "1.13.2"
@@ -79,7 +80,7 @@
     "@multiversx/sdk-core": "13.0.1",
     "@types/lodash.clonedeep": "4.5.9",
     "@types/node": "20.12.7",
-    "@types/react": "18.2.75",
+    "@types/react": "18.2.78",
     "@typescript-eslint/eslint-plugin": "7.6.0",
     "@typescript-eslint/parser": "7.6.0",
     "eslint": "8.57.0",
