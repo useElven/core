@@ -222,8 +222,6 @@ export const useDappProvidersSync = (
         }
       }
     };
-    if (accountDone && loginInfoDone) {
-      askForDappProvider();
-    }
+    askForDappProvider();
   }, [accountDone, loginInfoDone]);
 };

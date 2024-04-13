@@ -1,3 +1,6 @@
+### [0.19.1](https://github.com/useElven/core/releases/tag/v0.19.1) (2024-04-13)
+- fix web wallet connect regression
+
 ### [0.19.0](https://github.com/useElven/core/releases/tag/v0.19.0) (2024-04-13)
 - update @multiversx/sdk-core library (v13)
 - **breaking**: with this version the @multiversx/sdk-core is now a peer dependency, you must have it in your project to work with useElven, at least v13.0.0. So, as always, freeze on 0.18.0 if you still need to use older sdk-core
