@@ -67,7 +67,7 @@ const handleSendTx = () => {
     address: 'erd123.....',
     gasLimit: 50000 + 1500 * demoMessage.length, // When guarded additional 50000 will be added internally
     data: new TransactionPayload(demoMessage),
-    value: TokenTransfer.egldFromBigInteger(1_000_000_000_000_000_000),
+    value: BigInt('1000000000000000000'),
   });
 };
 ```
@@ -84,6 +84,8 @@ See ready to use demo templates:
 
 - [Next.js Dapp Template (App Router with Shadcn UI, Tailwind, Radix UI)](https://github.com/xdevguild/nextjs-dapp-template)
 - [React + Vite Dapp Template (with Chakra UI)](https://github.com/useElven/react-vite)
+
+Check [buildo.dev](https://www.buildo.dev) as a real world app that uses useElven lib.
 
 ### Development
 
