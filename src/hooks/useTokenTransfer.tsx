@@ -30,7 +30,7 @@ interface OtherToken extends BaseToken {
   amount: string;
 }
 
-type MultiTransferToken = NonFungibleESDTToken | OtherToken;
+export type MultiTransferToken = NonFungibleESDTToken | OtherToken;
 
 type MultiTokenTransferTxArgs = {
   tokens: MultiTransferToken[];

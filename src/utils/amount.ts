@@ -6,7 +6,6 @@ type AmountArgs = {
   amount: string;
   decimals: number;
   rounding?: number;
-  digits?: number | null;
 };
 
 /**
@@ -18,7 +17,7 @@ type AmountArgs = {
 export const parseAmount = ({
   amount,
   decimals,
-}: Omit<AmountArgs, 'digits' | 'rounding'>) => {
+}: Omit<AmountArgs, 'rounding'>) => {
   if (decimals < 0)
     throw new Error("Decimal places shouldn't be negative number!");
 

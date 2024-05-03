@@ -1,3 +1,7 @@
+### [0.19.2](https://github.com/useElven/core/releases/tag/v0.19.2) (2024-05-03)
+- export missing type
+- update dependencies
+
 ### [0.19.1](https://github.com/useElven/core/releases/tag/v0.19.1) (2024-04-13)
 - fix web wallet connect regression
 
