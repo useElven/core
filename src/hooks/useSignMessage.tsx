@@ -7,6 +7,7 @@ import { SignableMessage } from '@multiversx/sdk-core';
 import { errorParse } from '../utils/errorParse';
 import { getParamFromUrl } from '../utils/getParamFromUrl';
 import { HWProvider } from '@multiversx/sdk-hw-provider';
+import { getCallbackUrl } from '../utils/getCallbackUrl';
 
 export type SignMessageArgs = {
   message: string;
@@ -79,9 +80,7 @@ export const useSignMessage = () => {
           );
         };
 
-        const url =
-          `${window.location.origin}${options?.callbackUrl || ''}` ||
-          window?.location.href;
+        const url = getCallbackUrl(options?.callbackUrl);
         await networkStateSnap.dappProvider.signMessage(
           // TODO: SignableMessage is deprecated, replace when signing providers are ready
           new SignableMessage({ message: Buffer.from(message) }),
