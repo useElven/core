@@ -6,6 +6,7 @@ import {
   ProxyNetworkProvider,
 } from '@multiversx/sdk-network-providers';
 import { HWProvider } from '@multiversx/sdk-hw-provider';
+import { WebviewProvider } from '@multiversx/sdk-webview-provider/out';
 
 export interface BaseNetworkType
   extends Record<string, string | string[] | undefined> {
@@ -36,6 +37,7 @@ export type DappProvider =
   | ExtensionProvider
   | WalletConnectV2Provider
   | WalletProvider
-  | HWProvider;
+  | HWProvider
+  | WebviewProvider;
 
 export type NetworkProvider = ApiNetworkProvider | ProxyNetworkProvider;

@@ -20,7 +20,10 @@ import {
   setAccountState,
   setLoginInfoState,
 } from '../../store/auth';
-import { isLoginExpired } from '../../utils/expiresAt';
+import {
+  getNewLoginExpiresTimestamp,
+  isLoginExpired,
+} from '../../utils/expiresAt';
 import { useEffectOnlyOnUpdate } from '../useEffectOnlyOnUpdate';
 import { Address, Account } from '@multiversx/sdk-core';
 import { useLogout } from '../useLogout';
@@ -28,6 +31,8 @@ import { useConfig } from '../useConfig';
 import { useAccount } from '../useAccount';
 import { useLoginInfo } from '../useLoginInfo';
 import { getNativeAuthClient } from '../../utils/getNativeAuthClient';
+import { decodeNativeAuthToken } from 'src/utils/decode-native-auth-token';
+import { WebviewProvider } from '@multiversx/sdk-webview-provider';
 
 export const useDappProvidersSync = (
   accountDone: boolean,
@@ -46,6 +51,7 @@ export const useDappProvidersSync = (
       const loginMethod = loginInfoSnap.loginMethod;
       const loginToken = loginInfoSnap.loginToken;
       const loginExpires = loginInfoSnap.expires;
+
       let dappProvider = dappProviderRef?.current;
 
       if (loginExpires && isLoginExpired(loginExpires)) {
@@ -58,7 +64,7 @@ export const useDappProvidersSync = (
 
       if (!dappProvider) {
         switch (loginMethod) {
-          // Browser extension auth (MultiversX defi wallet)
+          // Browser extension auth
           case LoginMethodsEnum.extension: {
             dappProvider = ExtensionProvider.getInstance();
             try {
@@ -199,6 +205,7 @@ export const useDappProvidersSync = (
             }
             break;
           }
+          // Ledger Hardware Wallet auth
           case LoginMethodsEnum.ledger: {
             dappProvider = new HWProvider();
             dappProviderRef.current = dappProvider;
@@ -217,6 +224,34 @@ export const useDappProvidersSync = (
             } catch {
               console.warn("Can't initialize the Dapp Provider!");
             }
+            break;
+          }
+          // xPortal or Web wallet apps hub auth
+          case LoginMethodsEnum.hub: {
+            const accessToken = getParamFromUrl('accessToken');
+            if (accessToken) {
+              const nativeAuthInfo = decodeNativeAuthToken(accessToken);
+
+              if (!nativeAuthInfo) {
+                localStorage.removeItem(LocalstorageKeys.loginInfo);
+                return;
+              }
+
+              const { signature, address, body } = nativeAuthInfo;
+
+              setLoginInfoState('loginToken', body);
+              setLoginInfoState('accessToken', accessToken);
+              setLoginInfoState('signature', signature);
+              setLoginInfoState('loginMethod', LoginMethodsEnum.hub);
+              setLoginInfoState('expires', getNewLoginExpiresTimestamp());
+
+              setAccountState('address', address);
+
+              dappProvider = new WebviewProvider();
+
+              setNetworkState('dappProvider', dappProvider);
+            }
+
             break;
           }
         }

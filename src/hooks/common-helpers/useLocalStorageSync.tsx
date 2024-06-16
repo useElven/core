@@ -8,7 +8,8 @@ import {
 import { useEffectOnlyOnUpdate } from '../useEffectOnlyOnUpdate';
 import { useAccount } from '../useAccount';
 import { useLoginInfo } from '../useLoginInfo';
-import { LocalstorageKeys } from '../../types/enums';
+import { LocalstorageKeys, LoginMethodsEnum } from '../../types/enums';
+import { getParamFromUrl } from '../../utils/getParamFromUrl';
 
 export const useLocalStorageSync = (
   setAccountDone: (state: boolean) => void,
@@ -16,6 +17,17 @@ export const useLocalStorageSync = (
 ) => {
   const accountSnap = useAccount();
   const loginInfoSnap = useLoginInfo();
+
+  // Set Hub login method when detected
+  useEffect(() => {
+    const nativeAuthTokenFromUrl = getParamFromUrl('accessToken');
+    if (nativeAuthTokenFromUrl) {
+      localStorage.setItem(
+        LocalstorageKeys.loginInfo,
+        JSON.stringify({ loginMethod: LoginMethodsEnum.hub })
+      );
+    }
+  }, []);
 
   useEffect(() => {
     const accountStorage = localStorage.getItem(LocalstorageKeys.account);

@@ -1,3 +1,6 @@
+### [0.20.0](https://github.com/useElven/core/releases/tag/v0.20.0) (2024-06-...)
+- xPortal and Web Wallet Hub integration
+
 ### [0.19.3](https://github.com/useElven/core/releases/tag/v0.19.3) (2024-05-04)
 - fix callback path in `useSignMessage`
 

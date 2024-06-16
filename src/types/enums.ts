@@ -4,7 +4,7 @@ export enum LoginMethodsEnum {
   wallet = 'wallet',
   extension = 'extension',
   xalias = 'xalias',
-  extra = 'extra',
+  hub = 'hub',
   none = '',
 }
 

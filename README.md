@@ -1,12 +1,13 @@
 ## useElven core
 
-Please be aware that versions below 1.0.0 will still have breaking changes. Till then, please 'freeze' the version of useElven in your app, and decide when to upgrade.
+> [!NOTE]  
+> Please be aware that versions below 1.0.0 will still have breaking changes. Till then, please 'freeze' the version of useElven in your app, and decide when to upgrade.
 
-### About
+> [!NOTE]  
+> Please remember that the scope of functionality is limited and does not correspond to that of sdk-dapp. But over time, functionalities are added. Check the docs for more info
 
-`useElven` is a set of hooks and tools designed to work with React-base applications.
-
-It is a wrapper for [sdk-js](https://docs.multiversx.com/sdk-and-tools/sdk-js/) - a set of Typescript/Javascript libraries.
+> [!NOTE]  
+> It incorporates [sdk-js](https://docs.multiversx.com/sdk-and-tools/sdk-js/) - a set of MultiversX Typescript/Javascript libraries.
 
 ### Docs
 
@@ -14,7 +15,7 @@ It is a wrapper for [sdk-js](https://docs.multiversx.com/sdk-and-tools/sdk-js/) 
 
 Below are a couple of steps for a quick start, but please check the docs and example apps.
 
-### Install
+### Usage examples
 
 ```bash
 npm install @useelven/core --save
@@ -77,6 +78,11 @@ Check all of the hooks here: [SDK Reference](https://www.useElven.com/docs/sdk-r
 ### UI
 
 Components required in every dapp. Like auth button, QR code, WC pairings list, ProtectedRoute, Authenticated, etc. are implemented in [Next.js Dapp Template](https://github.com/xdevguild/nextjs-dapp-template) and [React + Vite Dapp Template](https://github.com/useElven/react-vite).
+
+### To do
+
+useElven lacks some functionalities and needs improvements in code structure and testing. 
+To monitor the progress, please refer to the project's [Kanban board](https://github.com/orgs/useElven/projects/1/views/1).
 
 ### Examples
 

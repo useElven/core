@@ -8,6 +8,7 @@ import { errorParse } from '../utils/errorParse';
 import { getParamFromUrl } from '../utils/getParamFromUrl';
 import { HWProvider } from '@multiversx/sdk-hw-provider';
 import { getCallbackUrl } from '../utils/getCallbackUrl';
+import { WebviewProvider } from '@multiversx/sdk-webview-provider';
 
 export type SignMessageArgs = {
   message: string;
@@ -69,6 +70,14 @@ export const useSignMessage = () => {
           // TODO: SignableMessage is deprecated, replace when signing providers are ready
           new SignableMessage({ message: Buffer.from(message) })
         );
+
+        setSignature(signedMessage.getSignature().toString('hex'));
+      }
+      if (networkStateSnap.dappProvider instanceof WebviewProvider) {
+        const signedMessage = (await networkStateSnap.dappProvider.signMessage(
+          // TODO: SignableMessage is deprecated, replace when signing providers are ready
+          new SignableMessage({ message: Buffer.from(message) })
+        )) as SignableMessage;
 
         setSignature(signedMessage.getSignature().toString('hex'));
       }

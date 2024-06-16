@@ -19,7 +19,7 @@ export const useAccountNetworkSync = (
       const address = accountSnap.address;
       const loginExpires = loginInfoSnap.expires;
       const apiNetworkProvider = apiNetworkProviderRef.current;
-      const loginExpired = loginExpires > 0 && isLoginExpired(loginExpires);
+      const loginExpired = loginExpires && isLoginExpired(loginExpires);
       if (!loginExpired && address && apiNetworkProvider) {
         setLoggingInState('pending', true);
         const userAddressInstance = new Address(address);
