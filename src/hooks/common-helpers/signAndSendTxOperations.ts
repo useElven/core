@@ -21,6 +21,7 @@ import { DappProvider } from '../../types/network';
 import { errorParse } from '../../utils/errorParse';
 import { DAPP_INIT_ROUTE } from '../../config/network';
 import { getCallbackUrl } from '../../utils/getCallbackUrl';
+import { WebviewProvider } from '@multiversx/sdk-webview-provider';
 
 export interface TransactionCallbackParams {
   transaction?: Transaction | null;
@@ -178,6 +179,9 @@ export const signAndSendTxOperations = async (
     }
     if (dappProvider instanceof WalletConnectV2Provider) {
       signedTx = await dappProvider.signTransaction(tx);
+    }
+    if (dappProvider instanceof WebviewProvider) {
+      signedTx = (await dappProvider.signTransaction(tx)) as Transaction;
     }
     if (dappProvider instanceof HWProvider) {
       signedTx = await dappProvider.signTransaction(tx);
