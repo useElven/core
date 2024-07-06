@@ -1,3 +1,6 @@
+### [0.20.1](https://github.com/useElven/core/releases/tag/v0.20.1) (2024-07-06)
+- update MultiversX dependencies
+
 ### [0.20.0](https://github.com/useElven/core/releases/tag/v0.20.0) (2024-06-20)
 - xPortal and Web Wallet Hub integration
 - update dependencies
