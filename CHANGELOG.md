@@ -1,3 +1,8 @@
+### [0.21.0](https://github.com/useElven/core/releases/tag/v0.21.0) (2024-07-13)
+- fix nonce sync when working with multiple browser tabs
+- update dependencies
+- Node 20 or >=22 is now required
+
 ### [0.20.1](https://github.com/useElven/core/releases/tag/v0.20.1) (2024-07-06)
 - update MultiversX dependencies
 

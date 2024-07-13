@@ -62,6 +62,26 @@ export const useLocalStorageSync = (
     }
   }, []);
 
+  // When working for example with multiple tabs we need to synchronize at least the nonce
+  useEffect(() => {
+    function handleStorageChange(event: StorageEvent) {
+      if (event.key === LocalstorageKeys.account) {
+        const accountStorage = localStorage.getItem(LocalstorageKeys.account);
+        if (accountStorage) {
+          const parsedStorage = JSON.parse(accountStorage);
+          setAccountState('nonce', parsedStorage.nonce);
+          setAccountState('balance', parsedStorage.balance);
+        }
+      }
+    }
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
   useEffectOnlyOnUpdate(() => {
     localStorage.setItem(LocalstorageKeys.account, JSON.stringify(accountSnap));
   }, [

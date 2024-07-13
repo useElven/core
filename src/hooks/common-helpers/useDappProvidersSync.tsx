@@ -31,7 +31,7 @@ import { useConfig } from '../useConfig';
 import { useAccount } from '../useAccount';
 import { useLoginInfo } from '../useLoginInfo';
 import { getNativeAuthClient } from '../../utils/getNativeAuthClient';
-import { decodeNativeAuthToken } from 'src/utils/decode-native-auth-token';
+import { decodeNativeAuthToken } from '../../utils/decode-native-auth-token';
 import { WebviewProvider } from '@multiversx/sdk-webview-provider';
 
 export const useDappProvidersSync = (
