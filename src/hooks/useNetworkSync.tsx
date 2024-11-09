@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { ApiNetworkProvider } from '@multiversx/sdk-network-providers';
+import { ApiNetworkProvider } from '@multiversx/sdk-core';
 import { NetworkType } from '../types/network';
 
 import { useLocalStorageSync } from './common-helpers/useLocalStorageSync';

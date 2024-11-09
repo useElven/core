@@ -1,5 +1,5 @@
 import { MutableRefObject } from 'react';
-import { ApiNetworkProvider } from '@multiversx/sdk-network-providers';
+import { ApiNetworkProvider } from '@multiversx/sdk-core';
 import { errorParse } from '../../utils/errorParse';
 import { useEffectOnlyOnUpdate } from '../useEffectOnlyOnUpdate';
 import { isLoginExpired } from '../../utils/expiresAt';

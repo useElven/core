@@ -8,4 +8,5 @@ export const getNativeAuthClient = () =>
       typeof window !== 'undefined' && typeof window.location !== 'undefined'
         ? window.location.origin
         : '',
+    expirySeconds: 60 * 60 * 2,
   });

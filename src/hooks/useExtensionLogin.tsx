@@ -49,8 +49,10 @@ export const useExtensionLogin = (params?: Login) => {
         token: loginToken,
       };
 
+      let account;
+
       try {
-        await providerInstance.login(providerLoginData);
+        account = await providerInstance.login(providerLoginData);
         setLoggingInState('pending', true);
       } catch (e) {
         const err = errorParse(e);
@@ -61,7 +63,7 @@ export const useExtensionLogin = (params?: Login) => {
 
       setNetworkState('dappProvider', providerInstance);
 
-      const { signature, address } = providerInstance.account;
+      const { signature, address } = account;
 
       const userAddressInstance = new Address(address);
       const userAccountInstance = new Account(userAddressInstance);

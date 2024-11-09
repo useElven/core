@@ -14,7 +14,7 @@ import { WalletConnectV2Provider } from '@multiversx/sdk-wallet-connect-provider
 import { HWProvider } from '@multiversx/sdk-hw-provider';
 import { setAccountState, LoginInfoState } from '../../store/auth';
 import { NetworkState } from '../../store/network';
-import { ApiNetworkProvider } from '@multiversx/sdk-network-providers';
+import { ApiNetworkProvider } from '@multiversx/sdk-core';
 import { LoginMethodsEnum, WebWalletUrlParamsEnum } from '../../types/enums';
 import { WalletProvider } from '@multiversx/sdk-web-wallet-provider';
 import { DappProvider } from '../../types/network';

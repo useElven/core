@@ -1,5 +1,5 @@
 import { useRef, MutableRefObject } from 'react';
-import { ApiNetworkProvider } from '@multiversx/sdk-network-providers';
+import { ApiNetworkProvider } from '@multiversx/sdk-core';
 import { WalletProvider } from '@multiversx/sdk-web-wallet-provider';
 import {
   WalletConnectV2Provider,
@@ -33,6 +33,7 @@ import { useLoginInfo } from '../useLoginInfo';
 import { getNativeAuthClient } from '../../utils/getNativeAuthClient';
 import { decodeNativeAuthToken } from '../../utils/decode-native-auth-token';
 import { WebviewProvider } from '@multiversx/sdk-webview-provider';
+import { errorParse } from '../../utils/errorParse';
 
 export const useDappProvidersSync = (
   accountDone: boolean,
@@ -79,7 +80,8 @@ export const useDappProvidersSync = (
                 setNetworkState('dappProvider', dappProvider);
               }
             } catch (e) {
-              console.warn("Can't initialize the Dapp Provider!");
+              const err = errorParse(e);
+              console.warn("Can't initialize the Dapp Provider! ", err);
             }
             break;
           }

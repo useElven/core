@@ -5,7 +5,7 @@ import {
   Address,
   AbiRegistry,
 } from '@multiversx/sdk-core';
-import { ContractQueryResponse } from '@multiversx/sdk-network-providers';
+import { ContractQueryResponse } from '@multiversx/sdk-core';
 import useSwrMutation, { SWRMutationResponse } from 'swr/mutation';
 import { apiCall } from '../utils/apiCall';
 

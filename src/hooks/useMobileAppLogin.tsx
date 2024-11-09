@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useRef } from 'react';
 import { Account, Address } from '@multiversx/sdk-core';
 import {
@@ -21,7 +20,6 @@ import { Login } from '../types/account';
 import { useLoggingIn } from './useLoggingIn';
 import { errorParse } from '../utils/errorParse';
 import { DappProvider } from '../types/network';
-import { ApiNetworkProvider } from '@multiversx/sdk-network-providers';
 import { useConfig } from './useConfig';
 import { useNetwork } from './useNetwork';
 import { getLoginToken } from './common-helpers/getLoginToken';
@@ -103,8 +101,8 @@ export const useMobileAppLogin = (params?: Login) => {
     const providerHandlers = {
       onClientLogin: async () => {
         if (dappProviderRef.current instanceof WalletConnectV2Provider) {
-          const address = await dappProviderRef.current.getAddress();
-          const signature = await dappProviderRef.current.getSignature();
+          const address = dappProviderRef.current.getAddress();
+          const signature = dappProviderRef.current.getSignature();
           const account = new Account(new Address(address));
 
           setAccountState('address', address);
@@ -129,7 +127,7 @@ export const useMobileAppLogin = (params?: Login) => {
           setNetworkState('dappProvider', dappProviderRef.current);
 
           WcOnLogin(
-            networkStateSnap.apiNetworkProvider as ApiNetworkProvider,
+            networkStateSnap.apiNetworkProvider!,
             dappProviderRef.current,
             params?.callbackUrl
           );

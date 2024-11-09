@@ -1,3 +1,7 @@
+### [0.22.0](https://github.com/useElven/core/releases/tag/v0.22.0) (2024-11-09)
+- update core dependencies and adjust the codebase
+- native auth configuration improvements
+
 ### [0.21.0](https://github.com/useElven/core/releases/tag/v0.21.0) (2024-07-13)
 - fix nonce sync when working with multiple browser tabs
 - update dependencies

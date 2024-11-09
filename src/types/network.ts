@@ -1,10 +1,7 @@
 import { WalletProvider } from '@multiversx/sdk-web-wallet-provider';
 import { WalletConnectV2Provider } from '@multiversx/sdk-wallet-connect-provider';
 import { ExtensionProvider } from '@multiversx/sdk-extension-provider';
-import {
-  ApiNetworkProvider,
-  ProxyNetworkProvider,
-} from '@multiversx/sdk-network-providers';
+import { ApiNetworkProvider, ProxyNetworkProvider } from '@multiversx/sdk-core';
 import { HWProvider } from '@multiversx/sdk-hw-provider';
 import { WebviewProvider } from '@multiversx/sdk-webview-provider/out';
 

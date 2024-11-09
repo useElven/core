@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useState } from 'react';
 import {
   Address,
@@ -14,7 +13,7 @@ import {
   signAndSendTxOperations,
 } from './common-helpers/signAndSendTxOperations';
 import { DappProvider } from '../types/network';
-import { ApiNetworkProvider } from '@multiversx/sdk-network-providers';
+import { ApiNetworkProvider } from '@multiversx/sdk-core';
 import { useConfig } from './useConfig';
 import { useLoginInfo } from './useLoginInfo';
 import { useAccount } from './useAccount';

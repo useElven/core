@@ -120,7 +120,9 @@ export const useLedgerLogin = (params?: Login) => {
         networkStateSnap.dappProvider instanceof HWProvider
           ? networkStateSnap.dappProvider
           : new HWProvider();
-      !hwWalletProvider.isInitialized() && (await hwWalletProvider.init());
+      if (!hwWalletProvider.isInitialized()) {
+        await hwWalletProvider.init();
+      }
       setNetworkState('dappProvider', hwWalletProvider);
       return await hwWalletProvider.getAccounts(page, pageSize);
     } catch (e) {

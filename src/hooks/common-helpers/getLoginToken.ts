@@ -13,7 +13,9 @@ export const getLoginToken = async () => {
   if (!token) {
     try {
       setLoggingInState('pending', true);
-      token = await client.initialize();
+      token = await client.initialize({
+        timestamp: `${Math.floor(Date.now() / 1000)}`,
+      });
     } catch (e) {
       setLoggingInState('error', errorParse(e));
     } finally {

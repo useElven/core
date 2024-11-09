@@ -1,6 +1,6 @@
 import { proxy, ref } from 'valtio';
 import { DappProvider } from '../types/network';
-import { ApiNetworkProvider } from '@multiversx/sdk-network-providers';
+import { ApiNetworkProvider } from '@multiversx/sdk-core';
 
 export interface NetworkState extends Record<string, unknown> {
   dappProvider: DappProvider | null;

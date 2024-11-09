@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNetwork } from './useNetwork';
-import { ExtensionProvider } from '@multiversx/sdk-extension-provider';
-import { WalletConnectV2Provider } from '@multiversx/sdk-wallet-connect-provider';
+import { Address, Message } from '@multiversx/sdk-core';
 import { WalletProvider } from '@multiversx/sdk-web-wallet-provider';
-import { SignableMessage } from '@multiversx/sdk-core';
 import { errorParse } from '../utils/errorParse';
 import { getParamFromUrl } from '../utils/getParamFromUrl';
-import { HWProvider } from '@multiversx/sdk-hw-provider';
 import { getCallbackUrl } from '../utils/getCallbackUrl';
-import { WebviewProvider } from '@multiversx/sdk-webview-provider';
+import { useAccount } from './useAccount';
 
 export type SignMessageArgs = {
   message: string;
@@ -17,6 +14,7 @@ export type SignMessageArgs = {
 
 export const useSignMessage = () => {
   const networkStateSnap = useNetwork();
+  const { address } = useAccount();
   const [error, setError] = useState<string>();
   const [pending, setPending] = useState<boolean>();
   const [signature, setSignature] = useState<string>();
@@ -49,38 +47,6 @@ export const useSignMessage = () => {
     try {
       setPending(true);
 
-      if (networkStateSnap.dappProvider instanceof ExtensionProvider) {
-        const signedMessage = await networkStateSnap.dappProvider.signMessage(
-          // TODO: SignableMessage is deprecated, replace when signing providers are ready
-          new SignableMessage({ message: Buffer.from(message) })
-        );
-
-        setSignature(signedMessage.getSignature().toString('hex'));
-      }
-      if (networkStateSnap.dappProvider instanceof WalletConnectV2Provider) {
-        const signedMessage = await networkStateSnap.dappProvider.signMessage(
-          // TODO: SignableMessage is deprecated, replace when signing providers are ready
-          new SignableMessage({ message: Buffer.from(message) })
-        );
-
-        setSignature(signedMessage.getSignature().toString('hex'));
-      }
-      if (networkStateSnap.dappProvider instanceof HWProvider) {
-        const signedMessage = await networkStateSnap.dappProvider.signMessage(
-          // TODO: SignableMessage is deprecated, replace when signing providers are ready
-          new SignableMessage({ message: Buffer.from(message) })
-        );
-
-        setSignature(signedMessage.getSignature().toString('hex'));
-      }
-      if (networkStateSnap.dappProvider instanceof WebviewProvider) {
-        const signedMessage = (await networkStateSnap.dappProvider.signMessage(
-          // TODO: SignableMessage is deprecated, replace when signing providers are ready
-          new SignableMessage({ message: Buffer.from(message) })
-        )) as SignableMessage;
-
-        setSignature(signedMessage.getSignature().toString('hex'));
-      }
       if (networkStateSnap.dappProvider instanceof WalletProvider) {
         const encodeRFC3986URIComponent = (str: string) => {
           return encodeURIComponent(str).replace(
@@ -91,8 +57,10 @@ export const useSignMessage = () => {
 
         const url = getCallbackUrl(options?.callbackUrl);
         await networkStateSnap.dappProvider.signMessage(
-          // TODO: SignableMessage is deprecated, replace when signing providers are ready
-          new SignableMessage({ message: Buffer.from(message) }),
+          new Message({
+            data: Buffer.from(message),
+            address: new Address(address),
+          }),
           {
             callbackUrl: encodeURIComponent(
               `${url}${
@@ -101,6 +69,17 @@ export const useSignMessage = () => {
             ),
           }
         );
+      } else {
+        const signedMessage = (await networkStateSnap.dappProvider.signMessage(
+          new Message({
+            data: Buffer.from(message),
+            address: new Address(address),
+          })
+        )) as Message;
+
+        if (signedMessage?.signature) {
+          setSignature(Buffer.from(signedMessage.signature).toString('hex'));
+        }
       }
     } catch (e) {
       const err = errorParse(e);
