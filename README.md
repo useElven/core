@@ -1,7 +1,8 @@
 ## useElven core
 
 > [!NOTE]  
-> Please be aware that versions below 1.0.0 will still have breaking changes. Till then, please 'freeze' the version of useElven in your app, and decide when to upgrade.
+> Please be aware that versions below 1.0.0 will still have breaking changes. The major rewrite is planned.  
+> Till then, please 'freeze' the version of useElven in your app, and decide when to upgrade.
 
 > [!NOTE]  
 > Please remember that the scope of functionality is limited and does not correspond to that of sdk-dapp. But over time, functionalities are added. Check the docs for more info
