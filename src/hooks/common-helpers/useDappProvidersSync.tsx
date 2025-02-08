@@ -1,4 +1,4 @@
-import { useRef, MutableRefObject } from 'react';
+import { useRef, RefObject } from 'react';
 import { ApiNetworkProvider } from '@multiversx/sdk-core';
 import { WalletProvider } from '@multiversx/sdk-web-wallet-provider';
 import {
@@ -38,9 +38,9 @@ import { errorParse } from '../../utils/errorParse';
 export const useDappProvidersSync = (
   accountDone: boolean,
   loginInfoDone: boolean,
-  apiNetworkProviderRef: MutableRefObject<ApiNetworkProvider | undefined>
+  apiNetworkProviderRef: RefObject<ApiNetworkProvider | undefined>
 ) => {
-  const dappProviderRef = useRef<DappProvider>();
+  const dappProviderRef = useRef<DappProvider>(undefined);
   const { logout } = useLogout();
 
   const accountSnap = useAccount();

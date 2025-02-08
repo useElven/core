@@ -1,3 +1,6 @@
+### [0.23.0](https://github.com/useElven/core/releases/tag/v0.23.0) (2025-02-08)
+- update core dependencies and adjust the codebase
+
 ### [0.22.0](https://github.com/useElven/core/releases/tag/v0.22.0) (2024-11-09)
 - update core dependencies and adjust the codebase
 - native auth configuration improvements

@@ -15,7 +15,7 @@ export const useNetworkSync = (config?: NetworkType) => {
   const [accountDone, setAccountDone] = useState(false);
   const [loginInfoDone, setLoginInfoDone] = useState(false);
 
-  const apiNetworkProviderRef = useRef<ApiNetworkProvider>();
+  const apiNetworkProviderRef = useRef<ApiNetworkProvider>(undefined);
 
   // Sync data from local storage
   useLocalStorageSync(setAccountDone, setLoginInfoDone);
