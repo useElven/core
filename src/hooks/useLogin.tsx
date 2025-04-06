@@ -26,7 +26,12 @@ export const useLogin = (params?: Login) => {
 
   const { login: ledgerLogin, getHWAccounts } = useLedgerLogin(params);
 
-  const login = async (type: LoginMethodsEnum, ledgerAccountIndex?: number) => {
+  const login = async (
+    type: LoginMethodsEnum,
+    ledgerAccountIndex?: number,
+    ledgerPage?: number,
+    ledgerPageSize?: number
+  ) => {
     if (type === LoginMethodsEnum.extension) {
       await extensionLogin();
     }
@@ -40,7 +45,7 @@ export const useLogin = (params?: Login) => {
       await mobileLogin();
     }
     if (type === LoginMethodsEnum.ledger) {
-      await ledgerLogin(ledgerAccountIndex);
+      await ledgerLogin(ledgerAccountIndex, ledgerPage, ledgerPageSize);
     }
     return null;
   };

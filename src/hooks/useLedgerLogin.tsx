@@ -23,7 +23,9 @@ export const useLedgerLogin = (params?: Login) => {
   const { loggedIn, pending, error } = useLoggingIn();
   const networkStateSnap = useNetwork();
 
-  const login = async (addressIndex = 0) => {
+  const login = async (addressIndex = 0, page = 0, pageSize = 10) => {
+    const absoluteAddressIndex = page * pageSize + addressIndex;
+
     const loginToken = await getLoginToken();
 
     const apiNetworkProvider = networkStateSnap.apiNetworkProvider;
@@ -44,7 +46,7 @@ export const useLedgerLogin = (params?: Login) => {
 
     setLoginInfoState('loginMethod', LoginMethodsEnum.ledger);
     setLoginInfoState('loginToken', loginToken);
-    setAccountState('addressIndex', addressIndex);
+    setAccountState('addressIndex', absoluteAddressIndex);
 
     let userAddress;
 
@@ -52,7 +54,7 @@ export const useLedgerLogin = (params?: Login) => {
       if (dappProvider instanceof HWProvider) {
         const loginInfo = await dappProvider.tokenLogin({
           token: Buffer.from(`${loginToken}{}`),
-          addressIndex,
+          addressIndex: absoluteAddressIndex,
         });
 
         if (loginInfo.address) {

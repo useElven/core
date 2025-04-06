@@ -1,3 +1,6 @@
+### [0.23.1](https://github.com/useElven/core/releases/tag/v0.23.1) (2025-04-06)
+- fix Ledger connection bug when choosing addresses. Pass also page and pageSize.
+
 ### [0.23.0](https://github.com/useElven/core/releases/tag/v0.23.0) (2025-02-08)
 - update core dependencies and adjust the codebase
 
